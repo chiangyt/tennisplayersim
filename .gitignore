@@ -1,0 +1,38 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+.history/
+
+# Claude Code
+.claude/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+tasks/.md
+
+pngtrim.py
+
+# Python backend (kept locally, not tracked)
+*.py
+requirements.txt
+render.yaml
+templates/
+
+

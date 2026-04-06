@@ -1,0 +1,1248 @@
+{
+  "timestamp": "2026-02-21 14:10",
+  "display": "a · 2024年1月",
+  "player": {
+    "age": 12,
+    "agility": null,
+    "background": null,
+    "ctj_first_champion_sent": false,
+    "general_stats": 30.0,
+    "height": 165.0,
+    "log": [
+      "12岁的夏天，你的职业球员之路正式开启了。"
+    ],
+    "money": 5000,
+    "month": 1,
+    "mood": 100,
+    "name": "a",
+    "perseverance": 10.0,
+    "playstyle": "灵巧战术型",
+    "power": null,
+    "scheduled_tournaments": {},
+    "stamina": 100,
+    "technique": null,
+    "week": 1,
+    "wisdom": 10.0,
+    "year": 2024
+  },
+  "ranking": {
+    "CTJ": {
+      "summary": {
+        "total_effective_points": 950,
+        "ranking_system": "Best-of-8",
+        "last_updated": "2024-03"
+      },
+      "point_history": [
+        {
+          "points": 100,
+          "year": 2023,
+          "month": 4,
+          "desc": "B市锦标赛U12冠军(折算)",
+          "system": "CTJ",
+          "is_effective": true,
+          "is_expired": false
+        },
+        {
+          "points": 150,
+          "year": 2023,
+          "month": 8,
+          "desc": "A市锦标赛U12冠军(折算)",
+          "system": "CTJ",
+          "is_effective": true,
+          "is_expired": false
+        },
+        {
+          "points": 200,
+          "year": 2023,
+          "month": 10,
+          "desc": "全国冠军赛U12冠军(折算)",
+          "system": "CTJ",
+          "is_effective": true,
+          "is_expired": false
+        },
+        {
+          "points": 500,
+          "year": 2023,
+          "month": 12,
+          "desc": "U12全国年终总决赛冠军(折算)",
+          "system": "CTJ",
+          "is_effective": true,
+          "is_expired": false
+        }
+      ]
+    },
+    "ITF_Junior": {
+      "summary": {
+        "total_effective_points": 0,
+        "ranking_system": "Best-of-6",
+        "last_updated": ""
+      },
+      "point_history": []
+    }
+  },
+  "social": {
+    "mom": {
+      "name": "妈妈",
+      "theme": "#ff9fb2",
+      "avatar_icon": "bi-person-heart",
+      "unread_count": 0,
+      "last_time": "19:30",
+      "history": [
+        {
+          "role": "other",
+          "content": "宝贝，在那边训练别太累了。"
+        },
+        {
+          "role": "me",
+          "content": "知道啦，不用担心我。"
+        }
+      ],
+      "pending_options": [],
+      "msg_queue": [],
+      "msg_pool": [
+        {
+          "id": "mom_001",
+          "content": "降温了，记得加衣服。",
+          "options": [
+            {
+              "text": "我已经穿上厚外套了。",
+              "effect": {
+                "mood": 5
+              },
+              "next_story": {
+                "content": "那就好。训练后要不要喝点热汤？",
+                "options": [
+                  {
+                    "text": "好啊，谢谢妈咪！",
+                    "effect": {
+                      "mood": 5
+                    },
+                    "next_story": {
+                      "content": "谢什么，宝贝早点回来。"
+                    }
+                  },
+                  {
+                    "text": "今天有点累了，想回去直接躺尸。",
+                    "effect": {
+                      "stamina": 5
+                    },
+                    "next_story": {
+                      "content": "行，早点回来休息。"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "text": "还没来得及，等会儿加。",
+              "effect": {
+                "mood": 0
+              },
+              "next_story": {
+                "content": "要记得哦，小心别感冒了。",
+                "options": [
+                  {
+                    "text": "好，我马上去。",
+                    "effect": {
+                      "stamina": 5
+                    },
+                    "next_story": {
+                      "content": "这才对，身体第一。"
+                    }
+                  },
+                  {
+                    "text": "我体质好，问题不大。",
+                    "effect": {
+                      "mood": 0
+                    },
+                    "next_story": {
+                      "content": "那你注意点，感冒会影响训练的。"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mom_002",
+          "content": "这周吃饭规律吗？别总凑合。",
+          "options": [
+            {
+              "text": "我按时吃饭了，还加了水果。",
+              "effect": {
+                "mood": 3,
+                "stamina": 2
+              }
+            },
+            {
+              "text": "训练后太晚了，偶尔会简单吃点。",
+              "effect": {
+                "mood": -1
+              },
+              "next_story": {
+                "content": "至少备点酸奶和全麦面包，别空着肚子睡。"
+              }
+            }
+          ]
+        }
+      ],
+      "proactive_pool": [
+        {
+          "id": "mom_p001",
+          "title": "我今天主动给妈妈发消息报平安。",
+          "options": [
+            {
+              "text": "妈，我这周末有训练赛，一切顺利。",
+              "effect": {
+                "mood": 4
+              },
+              "next_story": {
+                "content": "收到，有你这句我就放心了。比赛加油！",
+                "options": [
+                  {
+                    "text": "我会稳住心态去打。",
+                    "effect": {
+                      "perseverance": 2
+                    }
+                  },
+                  {
+                    "text": "要是紧张了我再跟你说。",
+                    "effect": {
+                      "mood": 2
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "text": "妈，我最近有点累。",
+              "effect": {
+                "mood": -1
+              },
+              "next_story": {
+                "content": "累就先恢复，状态比硬撑重要。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "mom_p002",
+          "content": "我准备和妈妈聊聊睡眠。",
+          "options": [
+            {
+              "text": "我最近睡得比之前好了很多。",
+              "effect": {
+                "mood": 3,
+                "perseverance": 1
+              },
+              "next_story": {
+                "content": "太好了，继续保持这个节奏。"
+              }
+            },
+            {
+              "text": "最近入睡慢，可能训练太兴奋。",
+              "next_story": {
+                "content": "睡前少看手机，拉伸十分钟会好很多。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "mom_p_champion",
+          "title": "我拿到冠军了！给妈妈发个好消息。",
+          "options": [
+            {
+              "text": "妈咪我这站比赛拿冠军啦！",
+              "send_image": true,
+              "image_url": "/static/images/win1.png",
+              "next_story": {
+                "content": "宝贝太棒了！比赛辛苦，要好好休息放松。",
+                "options": [
+                  {
+                    "text": "安啦妈咪，我会好好调整的！",
+                    "effect": {
+                      "stamina": 10
+                    }
+                  },
+                  {
+                    "text": "想吃妈咪做的糖醋排骨了！",
+                    "next_story": {
+                      "content": "好啊，等你回来妈咪亲自下厨！",
+                      "options": [
+                        {
+                          "text": "太好了，谢谢妈咪！",
+                          "effect": {
+                            "mood": 5,
+                            "stamina": 5
+                          }
+                        },
+                        {
+                          "text": "就知道妈咪最好了！",
+                          "effect": {
+                            "mood": 5,
+                            "stamina": 5
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "text": "妈，我是冠军！",
+              "next_story": {
+                "content": "恭喜宝贝！继续加油！",
+                "options": [
+                  {
+                    "text": "谢谢妈咪，我会保持状态！",
+                    "effect": {
+                      "mood": 5,
+                      "stamina": 5
+                    }
+                  },
+                  {
+                    "text": "妈咪有没有奖励呀！",
+                    "next_story": {
+                      "content": "奖励你一个亲亲！",
+                      "text": "幼稚，我已经长大了！",
+                      "effect": {
+                        "mood": 5,
+                        "stamina": 5
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "friend": {
+      "name": "闺蜜",
+      "theme": "#ffd56b",
+      "avatar_icon": "bi-emoji-sunglasses",
+      "unread_count": 0,
+      "last_time": "10:45",
+      "history": [
+        {
+          "role": "other",
+          "content": "喂！周日晚上出来撸串不？"
+        },
+        {
+          "role": "me",
+          "content": "周日我有加练，要不改周一？"
+        }
+      ],
+      "pending_options": [],
+      "msg_queue": [],
+      "msg_pool": [
+        {
+          "id": "friend_001",
+          "content": "听说你下周要去外地比赛？带点特产回来呗。",
+          "options": [
+            {
+              "text": "没问题，包在我身上！",
+              "effect": {
+                "mood": 5
+              },
+              "next_story": {
+                "content": "就知道你靠谱！顺便给你做张打卡清单？",
+                "options": [
+                  {
+                    "text": "要！你做的清单最实用。",
+                    "effect": {
+                      "mood": 3,
+                      "perseverance": 1
+                    }
+                  },
+                  {
+                    "text": "我先自己试试规划。",
+                    "effect": {
+                      "perseverance": 2
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "text": "看心情吧，比赛会很累。",
+              "effect": {
+                "mood": -2
+              },
+              "next_story": {
+                "content": "那我给你准备点能量零食，别太绷着。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "friend_002",
+          "content": "我给你做了个赛前歌单，训练时要不要听？",
+          "options": [
+            {
+              "text": "必须听，发我链接！",
+              "effect": {
+                "mood": 4
+              }
+            },
+            {
+              "text": "先收藏，比赛前我会循环播放。",
+              "effect": {
+                "perseverance": 1
+              }
+            }
+          ]
+        }
+      ],
+      "proactive_pool": [
+        {
+          "id": "friend_p001",
+          "title": "我想主动找闺蜜聊聊，放松一下。",
+          "options": [
+            {
+              "text": "我这周训练强度有点大，想吐槽两句。",
+              "effect": {
+                "mood": 4
+              },
+              "next_story": {
+                "content": "随时在线，先深呼吸，我请你奶茶。",
+                "options": [
+                  {
+                    "text": "被你安慰到了，明天继续冲。",
+                    "effect": {
+                      "perseverance": 2
+                    }
+                  },
+                  {
+                    "text": "我今晚先好好睡一觉。",
+                    "effect": {
+                      "mood": 2,
+                      "stamina": 2
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "text": "其实我还好，想听你讲讲近况。",
+              "next_story": {
+                "content": "行，我最近也有一堆趣事，等你来听。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "friend_p002",
+          "content": "我想和闺蜜说说报名新比赛后的心情。",
+          "options": [
+            {
+              "text": "我报了新比赛，突然有点紧张。",
+              "effect": {
+                "mood": -1
+              },
+              "next_story": {
+                "content": "你能打到现在已经很厉害了，稳住节奏就行。",
+                "options": [
+                  {
+                    "text": "你这话让我踏实多了。",
+                    "effect": {
+                      "mood": 3
+                    }
+                  },
+                  {
+                    "text": "我会把紧张转成专注。",
+                    "effect": {
+                      "perseverance": 2
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "text": "我状态不错，想冲一把。",
+              "effect": {
+                "perseverance": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "coach": {
+      "name": "李教练",
+      "theme": "#85e3ff",
+      "avatar_icon": "bi-person-workspace",
+      "unread_count": 0,
+      "last_time": "昨天",
+      "history": [
+        {
+          "role": "other",
+          "content": "下周的体能测试，你有信心突破 60 吗？"
+        },
+        {
+          "role": "me",
+          "content": "没问题，我一直在加强训练。"
+        }
+      ],
+      "pending_options": [],
+      "msg_queue": [],
+      "msg_pool": [
+        {
+          "id": "coach_001",
+          "content": "今天训练表现不错，保持状态，下个月排名有机会进前50。",
+          "options": [
+            {
+              "text": "我会继续努力！",
+              "effect": {
+                "exp": 10,
+                "perseverance": 2
+              },
+              "next_story": {
+                "content": "很好。那你自己定个更细的周目标。",
+                "options": [
+                  {
+                    "text": "本周一发进球率提升到65%。",
+                    "effect": {
+                      "perseverance": 3
+                    }
+                  },
+                  {
+                    "text": "先把失误率降到每盘3次以内。",
+                    "effect": {
+                      "exp": 5,
+                      "perseverance": 2
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "text": "前50太慢了，我想进前30。",
+              "effect": {
+                "perseverance": 1
+              },
+              "next_story": {
+                "content": "目标可以高，但要有配套计划。今晚把计划发我。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "coach_002",
+          "content": "明天加一组核心训练，今晚注意恢复。",
+          "options": [
+            {
+              "text": "收到，我今晚按计划恢复。",
+              "effect": {
+                "stamina": 3,
+                "perseverance": 1
+              }
+            },
+            {
+              "text": "能不能把强度分散到两天？",
+              "next_story": {
+                "content": "可以，前提是你两天都按质完成，不打折。",
+                "options": [
+                  {
+                    "text": "明白，我会严格执行。",
+                    "effect": {
+                      "perseverance": 2
+                    }
+                  },
+                  {
+                    "text": "那我先试一天，状态好再加。",
+                    "effect": {
+                      "mood": 1
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "proactive_pool": [
+        {
+          "id": "coach_p001",
+          "title": "我想主动和教练申请一次补练。",
+          "options": [
+            {
+              "text": "教练，我想周末补一节发球专项。",
+              "effect": {
+                "perseverance": 3
+              },
+              "next_story": {
+                "content": "可以，先把本周训练日志发我，我来安排。",
+                "options": [
+                  {
+                    "text": "今晚就发，按你要求写完整。",
+                    "effect": {
+                      "exp": 5,
+                      "perseverance": 1
+                    }
+                  },
+                  {
+                    "text": "我先整理数据，明早发你。",
+                    "effect": {
+                      "perseverance": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "text": "我想先把日常训练稳定住再补练。",
+              "effect": {
+                "perseverance": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "coach_p002",
+          "content": "我想和教练复盘上一场比赛的二发得分率。",
+          "options": [
+            {
+              "text": "教练，我想重点看二发得分率。",
+              "effect": {
+                "exp": 6
+              },
+              "next_story": {
+                "content": "方向很好，明天训练后做20分钟视频复盘。",
+                "options": [
+                  {
+                    "text": "好，我会提前记下问题。",
+                    "effect": {
+                      "perseverance": 2
+                    }
+                  },
+                  {
+                    "text": "能加上接发站位一起看吗？",
+                    "effect": {
+                      "exp": 4
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "text": "我先自己复盘一版，再给你看。",
+              "effect": {
+                "perseverance": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "world": {
+    "competitors": [
+      {
+        "rank": 1,
+        "name": "苏漫",
+        "points": 2777
+      },
+      {
+        "rank": 2,
+        "name": "苏安",
+        "points": 2750
+      },
+      {
+        "rank": 3,
+        "name": "乔婉",
+        "points": 2721
+      },
+      {
+        "rank": 4,
+        "name": "白晚晚",
+        "points": 2701
+      },
+      {
+        "rank": 5,
+        "name": "顾星遥",
+        "points": 2671
+      },
+      {
+        "rank": 6,
+        "name": "秦若冰",
+        "points": 2649
+      },
+      {
+        "rank": 7,
+        "name": "叶星遥",
+        "points": 2626
+      },
+      {
+        "rank": 8,
+        "name": "苏然",
+        "points": 2611
+      },
+      {
+        "rank": 9,
+        "name": "乔微",
+        "points": 2592
+      },
+      {
+        "rank": 10,
+        "name": "时舒",
+        "points": 2572
+      },
+      {
+        "rank": 11,
+        "name": "时若冰",
+        "points": 2542
+      },
+      {
+        "rank": 12,
+        "name": "秦予宁",
+        "points": 2525
+      },
+      {
+        "rank": 13,
+        "name": "白安",
+        "points": 2495
+      },
+      {
+        "rank": 14,
+        "name": "时悦",
+        "points": 2468
+      },
+      {
+        "rank": 15,
+        "name": "贺漫",
+        "points": 2440
+      },
+      {
+        "rank": 16,
+        "name": "时星遥",
+        "points": 2417
+      },
+      {
+        "rank": 17,
+        "name": "江晚晚",
+        "points": 2402
+      },
+      {
+        "rank": 18,
+        "name": "林嘉仪",
+        "points": 2381
+      },
+      {
+        "rank": 19,
+        "name": "白悦",
+        "points": 2365
+      },
+      {
+        "rank": 20,
+        "name": "秦漫",
+        "points": 2337
+      },
+      {
+        "rank": 21,
+        "name": "叶晚晚",
+        "points": 2315
+      },
+      {
+        "rank": 22,
+        "name": "林星遥",
+        "points": 2286
+      },
+      {
+        "rank": 23,
+        "name": "贺一曼",
+        "points": 2261
+      },
+      {
+        "rank": 24,
+        "name": "贺羽",
+        "points": 2238
+      },
+      {
+        "rank": 25,
+        "name": "裴然",
+        "points": 2223
+      },
+      {
+        "rank": 26,
+        "name": "叶悦",
+        "points": 2207
+      },
+      {
+        "rank": 27,
+        "name": "林若冰",
+        "points": 2177
+      },
+      {
+        "rank": 28,
+        "name": "白微",
+        "points": 2150
+      },
+      {
+        "rank": 29,
+        "name": "苏之柔",
+        "points": 2132
+      },
+      {
+        "rank": 30,
+        "name": "时微",
+        "points": 2116
+      },
+      {
+        "rank": 31,
+        "name": "贺婉",
+        "points": 2089
+      },
+      {
+        "rank": 32,
+        "name": "贺星遥",
+        "points": 2059
+      },
+      {
+        "rank": 33,
+        "name": "顾予宁",
+        "points": 2042
+      },
+      {
+        "rank": 34,
+        "name": "顾微",
+        "points": 2018
+      },
+      {
+        "rank": 35,
+        "name": "林予宁",
+        "points": 1993
+      },
+      {
+        "rank": 36,
+        "name": "时然",
+        "points": 1978
+      },
+      {
+        "rank": 37,
+        "name": "陆羽",
+        "points": 1953
+      },
+      {
+        "rank": 38,
+        "name": "苏悦",
+        "points": 1931
+      },
+      {
+        "rank": 39,
+        "name": "沈安",
+        "points": 1905
+      },
+      {
+        "rank": 40,
+        "name": "孟之柔",
+        "points": 1887
+      },
+      {
+        "rank": 41,
+        "name": "江星遥",
+        "points": 1866
+      },
+      {
+        "rank": 42,
+        "name": "苏微",
+        "points": 1846
+      },
+      {
+        "rank": 43,
+        "name": "简漫",
+        "points": 1824
+      },
+      {
+        "rank": 44,
+        "name": "叶婉",
+        "points": 1801
+      },
+      {
+        "rank": 45,
+        "name": "陆微",
+        "points": 1780
+      },
+      {
+        "rank": 46,
+        "name": "顾嘉仪",
+        "points": 1750
+      },
+      {
+        "rank": 47,
+        "name": "贺清秋",
+        "points": 1723
+      },
+      {
+        "rank": 48,
+        "name": "贺之柔",
+        "points": 1701
+      },
+      {
+        "rank": 49,
+        "name": "秦微",
+        "points": 1675
+      },
+      {
+        "rank": 50,
+        "name": "盛舒",
+        "points": 1656
+      },
+      {
+        "rank": 51,
+        "name": "陆之柔",
+        "points": 1638
+      },
+      {
+        "rank": 52,
+        "name": "林安",
+        "points": 1609
+      },
+      {
+        "rank": 53,
+        "name": "苏一曼",
+        "points": 1587
+      },
+      {
+        "rank": 54,
+        "name": "秦一曼",
+        "points": 1558
+      },
+      {
+        "rank": 55,
+        "name": "顾若冰",
+        "points": 1528
+      },
+      {
+        "rank": 56,
+        "name": "叶若冰",
+        "points": 1499
+      },
+      {
+        "rank": 57,
+        "name": "叶嘉仪",
+        "points": 1474
+      },
+      {
+        "rank": 58,
+        "name": "顾悦",
+        "points": 1455
+      },
+      {
+        "rank": 59,
+        "name": "乔嘉仪",
+        "points": 1435
+      },
+      {
+        "rank": 60,
+        "name": "苏晚晚",
+        "points": 1420
+      },
+      {
+        "rank": 61,
+        "name": "盛漫",
+        "points": 1402
+      },
+      {
+        "rank": 62,
+        "name": "秦悦",
+        "points": 1375
+      },
+      {
+        "rank": 63,
+        "name": "林悦",
+        "points": 1352
+      },
+      {
+        "rank": 64,
+        "name": "孟晚晚",
+        "points": 1334
+      },
+      {
+        "rank": 65,
+        "name": "沈若冰",
+        "points": 1312
+      },
+      {
+        "rank": 66,
+        "name": "盛嘉仪",
+        "points": 1286
+      },
+      {
+        "rank": 67,
+        "name": "沈之柔",
+        "points": 1261
+      },
+      {
+        "rank": 68,
+        "name": "盛星遥",
+        "points": 1235
+      },
+      {
+        "rank": 69,
+        "name": "乔然",
+        "points": 1219
+      },
+      {
+        "rank": 70,
+        "name": "乔安",
+        "points": 1196
+      },
+      {
+        "rank": 71,
+        "name": "白然",
+        "points": 1177
+      },
+      {
+        "rank": 72,
+        "name": "沈羽",
+        "points": 1151
+      },
+      {
+        "rank": 73,
+        "name": "江悦",
+        "points": 1126
+      },
+      {
+        "rank": 74,
+        "name": "乔予宁",
+        "points": 1097
+      },
+      {
+        "rank": 75,
+        "name": "裴漫",
+        "points": 1081
+      },
+      {
+        "rank": 76,
+        "name": "顾一曼",
+        "points": 1066
+      },
+      {
+        "rank": 77,
+        "name": "江微",
+        "points": 1051
+      },
+      {
+        "rank": 78,
+        "name": "简然",
+        "points": 1024
+      },
+      {
+        "rank": 79,
+        "name": "苏羽",
+        "points": 1003
+      },
+      {
+        "rank": 80,
+        "name": "时安",
+        "points": 979
+      },
+      {
+        "rank": 81,
+        "name": "白予宁",
+        "points": 958
+      },
+      {
+        "rank": 82,
+        "name": "乔舒",
+        "points": 936
+      },
+      {
+        "rank": 83,
+        "name": "贺嘉仪",
+        "points": 911
+      },
+      {
+        "rank": 84,
+        "name": "江羽",
+        "points": 895
+      },
+      {
+        "rank": 85,
+        "name": "顾然",
+        "points": 865
+      },
+      {
+        "rank": 86,
+        "name": "乔悦",
+        "points": 849
+      },
+      {
+        "rank": 87,
+        "name": "沈一曼",
+        "points": 829
+      },
+      {
+        "rank": 88,
+        "name": "顾羽",
+        "points": 805
+      },
+      {
+        "rank": 89,
+        "name": "江安",
+        "points": 775
+      },
+      {
+        "rank": 90,
+        "name": "林微",
+        "points": 756
+      },
+      {
+        "rank": 91,
+        "name": "林之柔",
+        "points": 731
+      },
+      {
+        "rank": 92,
+        "name": "林舒",
+        "points": 711
+      },
+      {
+        "rank": 93,
+        "name": "苏星遥",
+        "points": 693
+      },
+      {
+        "rank": 94,
+        "name": "简之柔",
+        "points": 672
+      },
+      {
+        "rank": 95,
+        "name": "时嘉仪",
+        "points": 649
+      },
+      {
+        "rank": 96,
+        "name": "陆婉",
+        "points": 630
+      },
+      {
+        "rank": 97,
+        "name": "孟嘉仪",
+        "points": 602
+      },
+      {
+        "rank": 98,
+        "name": "盛婉",
+        "points": 578
+      },
+      {
+        "rank": 99,
+        "name": "沈予宁",
+        "points": 552
+      },
+      {
+        "rank": 100,
+        "name": "陆嘉仪",
+        "points": 533
+      }
+    ],
+    "wta": [
+      {
+        "rank": 1,
+        "name": "S. Sterling",
+        "points": 9595
+      },
+      {
+        "rank": 2,
+        "name": "A. Volkova",
+        "points": 9071
+      },
+      {
+        "rank": 3,
+        "name": "C. Alan",
+        "points": 8680
+      },
+      {
+        "rank": 4,
+        "name": "E. Larsson",
+        "points": 8248
+      },
+      {
+        "rank": 5,
+        "name": "J. Miller",
+        "points": 7930
+      },
+      {
+        "rank": 6,
+        "name": "Y. Lin",
+        "points": 7481
+      },
+      {
+        "rank": 7,
+        "name": "V. Romano",
+        "points": 7126
+      },
+      {
+        "rank": 8,
+        "name": "N. Novakova",
+        "points": 6673
+      },
+      {
+        "rank": 9,
+        "name": "L. Dubois",
+        "points": 6210
+      },
+      {
+        "rank": 10,
+        "name": "P. Silva",
+        "points": 5821
+      },
+      {
+        "rank": 11,
+        "name": "M. Tanaka",
+        "points": 5563
+      },
+      {
+        "rank": 12,
+        "name": "K. Bauer",
+        "points": 5135
+      },
+      {
+        "rank": 13,
+        "name": "T. Fernandez",
+        "points": 4666
+      },
+      {
+        "rank": 14,
+        "name": "I. Popescu",
+        "points": 4331
+      },
+      {
+        "rank": 15,
+        "name": "B. Chen",
+        "points": 3817
+      },
+      {
+        "rank": 16,
+        "name": "O. Jabara",
+        "points": 3467
+      },
+      {
+        "rank": 17,
+        "name": "R. Panova",
+        "points": 3066
+      },
+      {
+        "rank": 18,
+        "name": "Z. Williams",
+        "points": 2620
+      },
+      {
+        "rank": 19,
+        "name": "W. Santos",
+        "points": 2362
+      },
+      {
+        "rank": 20,
+        "name": "D. Kowalski",
+        "points": 2000
+      }
+    ]
+  }
+}

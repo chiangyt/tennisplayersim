@@ -1,0 +1,644 @@
+{
+  "J500": [
+    {
+      "id": 9501,
+      "name": "Australian Open Juniors",
+      "month": 1,
+      "location": "墨尔本",
+      "level_code": "J500",
+      "req_stats": 118,
+      "points": [5, 20, 50, 125, 250, 500]
+    },
+    {
+      "id": 9502,
+      "name": "Roland Garros Juniors",
+      "month": 5,
+      "location": "巴黎",
+      "level_code": "J500",
+      "req_stats": 118,
+      "points": [5, 20, 50, 125, 250, 500]
+    },
+    {
+      "id": 9503,
+      "name": "Wimbledon Juniors",
+      "month": 7,
+      "location": "伦敦",
+      "level_code": "J500",
+      "req_stats": 118,
+      "points": [5, 20, 50, 125, 250, 500]
+    },
+    {
+      "id": 9504,
+      "name": "US Open Juniors",
+      "month": 9,
+      "location": "纽约",
+      "level_code": "J500",
+      "req_stats": 118,
+      "points": [5, 20, 50, 125, 250, 500]
+    },
+    {
+      "id": 9505,
+      "name": "Orange Bowl",
+      "month": 11,
+      "location": "迈阿密",
+      "level_code": "J500",
+      "req_stats": 118,
+      "points": [5, 20, 50, 125, 250, 500]
+    }
+  ],
+  "J300": [
+    {
+      "id": 9401,
+      "name": "Traralgon Junior International",
+      "month": 1,
+      "location": "特拉尔冈",
+      "level_code": "J300",
+      "req_stats": 100,
+      "points": [3, 12, 30, 75, 150, 300]
+    },
+    {
+      "id": 9402,
+      "name": "Copa Gerdau Junior",
+      "month": 2,
+      "location": "圣保罗",
+      "level_code": "J300",
+      "req_stats": 100,
+      "points": [3, 12, 30, 75, 150, 300]
+    },
+    {
+      "id": 9403,
+      "name": "Easter Bowl",
+      "month": 3,
+      "location": "棕榈泉",
+      "level_code": "J300",
+      "req_stats": 100,
+      "points": [3, 12, 30, 75, 150, 300]
+    },
+    {
+      "id": 9404,
+      "name": "Roehampton Club Junior",
+      "month": 6,
+      "location": "伦敦",
+      "level_code": "J300",
+      "req_stats": 100,
+      "points": [3, 12, 30, 75, 150, 300]
+    },
+    {
+      "id": 9405,
+      "name": "Eddie Herr International",
+      "month": 11,
+      "location": "布雷登顿",
+      "level_code": "J300",
+      "req_stats": 100,
+      "points": [3, 12, 30, 75, 150, 300]
+    }
+  ],
+  "J200": [
+    {
+      "id": 9301,
+      "name": "Wellington Junior Open",
+      "month": 1,
+      "location": "惠灵顿",
+      "level_code": "J200",
+      "req_stats": 86,
+      "points": [2, 8, 20, 50, 100, 200]
+    },
+    {
+      "id": 9302,
+      "name": "Mar del Plata Junior",
+      "month": 2,
+      "location": "马德普拉塔",
+      "level_code": "J200",
+      "req_stats": 86,
+      "points": [2, 8, 20, 50, 100, 200]
+    },
+    {
+      "id": 9303,
+      "name": "San Diego Junior Open",
+      "month": 3,
+      "location": "圣迭戈",
+      "level_code": "J200",
+      "req_stats": 86,
+      "points": [2, 8, 20, 50, 100, 200]
+    },
+    {
+      "id": 9304,
+      "name": "Barcelona Junior Open",
+      "month": 4,
+      "location": "巴塞罗那",
+      "level_code": "J200",
+      "req_stats": 86,
+      "points": [2, 8, 20, 50, 100, 200]
+    },
+    {
+      "id": 9305,
+      "name": "Hamburg Junior Open",
+      "month": 5,
+      "location": "汉堡",
+      "level_code": "J200",
+      "req_stats": 86,
+      "points": [2, 8, 20, 50, 100, 200]
+    },
+    {
+      "id": 9306,
+      "name": "Birmingham Junior Open",
+      "month": 6,
+      "location": "伯明翰",
+      "level_code": "J200",
+      "req_stats": 86,
+      "points": [2, 8, 20, 50, 100, 200]
+    },
+    {
+      "id": 9307,
+      "name": "Uppsala Junior Open",
+      "month": 7,
+      "location": "乌普萨拉",
+      "level_code": "J200",
+      "req_stats": 86,
+      "points": [2, 8, 20, 50, 100, 200]
+    },
+    {
+      "id": 9308,
+      "name": "Toronto Junior Open",
+      "month": 8,
+      "location": "多伦多",
+      "level_code": "J200",
+      "req_stats": 86,
+      "points": [2, 8, 20, 50, 100, 200]
+    },
+    {
+      "id": 9309,
+      "name": "Osaka Junior Open",
+      "month": 9,
+      "location": "大阪",
+      "level_code": "J200",
+      "req_stats": 86,
+      "points": [2, 8, 20, 50, 100, 200]
+    },
+    {
+      "id": 9310,
+      "name": "Wuhan Junior Open",
+      "month": 10,
+      "location": "武汉",
+      "level_code": "J200",
+      "req_stats": 86,
+      "points": [2, 8, 20, 50, 100, 200]
+    },
+    {
+      "id": 9311,
+      "name": "Santiago Junior Open",
+      "month": 11,
+      "location": "圣地亚哥",
+      "level_code": "J200",
+      "req_stats": 86,
+      "points": [2, 8, 20, 50, 100, 200]
+    },
+    {
+      "id": 9312,
+      "name": "Lima Junior Open",
+      "month": 12,
+      "location": "利马",
+      "level_code": "J200",
+      "req_stats": 86,
+      "points": [2, 8, 20, 50, 100, 200]
+    }
+  ],
+  "J100": [
+    {
+      "id": 9201,
+      "name": "Burnie International",
+      "month": 1,
+      "location": "伯尼",
+      "level_code": "J100",
+      "req_stats": 72,
+      "points": [1, 4, 10, 25, 50, 100]
+    },
+    {
+      "id": 9202,
+      "name": "Buenos Aires Junior",
+      "month": 2,
+      "location": "布宜诺斯艾利斯",
+      "level_code": "J100",
+      "req_stats": 72,
+      "points": [1, 4, 10, 25, 50, 100]
+    },
+    {
+      "id": 9203,
+      "name": "Los Angeles Junior",
+      "month": 3,
+      "location": "洛杉矶",
+      "level_code": "J100",
+      "req_stats": 72,
+      "points": [1, 4, 10, 25, 50, 100]
+    },
+    {
+      "id": 9204,
+      "name": "Madrid Junior",
+      "month": 4,
+      "location": "马德里",
+      "level_code": "J100",
+      "req_stats": 72,
+      "points": [1, 4, 10, 25, 50, 100]
+    },
+    {
+      "id": 9205,
+      "name": "Prague Junior",
+      "month": 5,
+      "location": "布拉格",
+      "level_code": "J100",
+      "req_stats": 72,
+      "points": [1, 4, 10, 25, 50, 100]
+    },
+    {
+      "id": 9206,
+      "name": "Nottingham Junior",
+      "month": 6,
+      "location": "诺丁汉",
+      "level_code": "J100",
+      "req_stats": 72,
+      "points": [1, 4, 10, 25, 50, 100]
+    },
+    {
+      "id": 9207,
+      "name": "Umag Junior",
+      "month": 7,
+      "location": "乌马格",
+      "level_code": "J100",
+      "req_stats": 72,
+      "points": [1, 4, 10, 25, 50, 100]
+    },
+    {
+      "id": 9208,
+      "name": "Cincinnati Junior",
+      "month": 8,
+      "location": "辛辛那提",
+      "level_code": "J100",
+      "req_stats": 72,
+      "points": [1, 4, 10, 25, 50, 100]
+    },
+    {
+      "id": 9209,
+      "name": "Seoul Junior",
+      "month": 9,
+      "location": "首尔",
+      "level_code": "J100",
+      "req_stats": 72,
+      "points": [1, 4, 10, 25, 50, 100]
+    },
+    {
+      "id": 9210,
+      "name": "Moscow Indoor Junior",
+      "month": 10,
+      "location": "莫斯科",
+      "level_code": "J100",
+      "req_stats": 72,
+      "points": [1, 4, 10, 25, 50, 100]
+    },
+    {
+      "id": 9211,
+      "name": "Salinas Junior",
+      "month": 11,
+      "location": "萨利纳斯",
+      "level_code": "J100",
+      "req_stats": 72,
+      "points": [1, 4, 10, 25, 50, 100]
+    },
+    {
+      "id": 9212,
+      "name": "Porto Alegre Junior",
+      "month": 12,
+      "location": "阿雷格里港",
+      "level_code": "J100",
+      "req_stats": 72,
+      "points": [1, 4, 10, 25, 50, 100]
+    }
+  ],
+  "J60": [
+    {
+      "id": 9161,
+      "name": "Auckland Junior Bowl",
+      "month": 1,
+      "location": "奥克兰",
+      "level_code": "J60",
+      "req_stats": 60,
+      "points": [0, 2, 6, 15, 30, 60]
+    },
+    {
+      "id": 9162,
+      "name": "Bogota Junior Bowl",
+      "month": 2,
+      "location": "波哥大",
+      "level_code": "J60",
+      "req_stats": 60,
+      "points": [0, 2, 6, 15, 30, 60]
+    },
+    {
+      "id": 9163,
+      "name": "Lima Junior Bowl",
+      "month": 3,
+      "location": "利马",
+      "level_code": "J60",
+      "req_stats": 60,
+      "points": [0, 2, 6, 15, 30, 60]
+    },
+    {
+      "id": 9164,
+      "name": "Valencia Junior Bowl",
+      "month": 4,
+      "location": "巴伦西亚",
+      "level_code": "J60",
+      "req_stats": 60,
+      "points": [0, 2, 6, 15, 30, 60]
+    },
+    {
+      "id": 9165,
+      "name": "Lyon Junior Bowl",
+      "month": 5,
+      "location": "里昂",
+      "level_code": "J60",
+      "req_stats": 60,
+      "points": [0, 2, 6, 15, 30, 60]
+    },
+    {
+      "id": 9166,
+      "name": "Paris Junior Bowl",
+      "month": 6,
+      "location": "巴黎",
+      "level_code": "J60",
+      "req_stats": 60,
+      "points": [0, 2, 6, 15, 30, 60]
+    },
+    {
+      "id": 9167,
+      "name": "Bastad Junior Bowl",
+      "month": 7,
+      "location": "巴斯塔德",
+      "level_code": "J60",
+      "req_stats": 60,
+      "points": [0, 2, 6, 15, 30, 60]
+    },
+    {
+      "id": 9168,
+      "name": "Granby Junior Bowl",
+      "month": 8,
+      "location": "格兰比",
+      "level_code": "J60",
+      "req_stats": 60,
+      "points": [0, 2, 6, 15, 30, 60]
+    },
+    {
+      "id": 9169,
+      "name": "Taipei Junior Bowl",
+      "month": 9,
+      "location": "台北",
+      "level_code": "J60",
+      "req_stats": 60,
+      "points": [0, 2, 6, 15, 30, 60]
+    },
+    {
+      "id": 9170,
+      "name": "Hong Kong Junior Bowl",
+      "month": 10,
+      "location": "香港",
+      "level_code": "J60",
+      "req_stats": 60,
+      "points": [0, 2, 6, 15, 30, 60]
+    },
+    {
+      "id": 9171,
+      "name": "Cali Junior Bowl",
+      "month": 11,
+      "location": "卡利",
+      "level_code": "J60",
+      "req_stats": 60,
+      "points": [0, 2, 6, 15, 30, 60]
+    },
+    {
+      "id": 9172,
+      "name": "Maracaibo Junior Bowl",
+      "month": 12,
+      "location": "马拉开波",
+      "level_code": "J60",
+      "req_stats": 60,
+      "points": [0, 2, 6, 15, 30, 60]
+    }
+  ],
+  "J30": [
+    {
+      "id": 9001,
+      "name": "ITF Junior J30 Bangkok",
+      "month": 8,
+      "location": "曼谷",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9002,
+      "name": "Bendigo Junior",
+      "month": 1,
+      "location": "本迪戈",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9003,
+      "name": "Darwin Junior",
+      "month": 1,
+      "location": "达尔文",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9004,
+      "name": "Santa Fe Junior",
+      "month": 2,
+      "location": "圣菲",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9005,
+      "name": "Sharm El Sheikh Junior",
+      "month": 2,
+      "location": "沙姆沙伊赫",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9006,
+      "name": "Puebla Junior",
+      "month": 3,
+      "location": "普埃布拉",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9007,
+      "name": "Tunis Junior",
+      "month": 3,
+      "location": "突尼斯",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9008,
+      "name": "Marbella Junior",
+      "month": 4,
+      "location": "马贝拉",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9009,
+      "name": "Thessaloniki Junior",
+      "month": 4,
+      "location": "塞萨洛尼基",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9010,
+      "name": "Perugia Junior",
+      "month": 5,
+      "location": "佩鲁贾",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9011,
+      "name": "Prostejov Junior",
+      "month": 5,
+      "location": "普罗斯捷约夫",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9012,
+      "name": "Eastbourne Junior",
+      "month": 6,
+      "location": "伊斯特本",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9013,
+      "name": "Warsaw Junior",
+      "month": 6,
+      "location": "华沙",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9014,
+      "name": "Helsingborg Junior",
+      "month": 7,
+      "location": "赫尔辛堡",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9015,
+      "name": "Varna Junior",
+      "month": 7,
+      "location": "瓦尔纳",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9016,
+      "name": "Riverside Junior",
+      "month": 8,
+      "location": "里弗赛德",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9017,
+      "name": "Busan Junior",
+      "month": 9,
+      "location": "釜山",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9018,
+      "name": "Bratislava Junior",
+      "month": 9,
+      "location": "布拉迪斯拉发",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9019,
+      "name": "Chiang Mai Junior",
+      "month": 10,
+      "location": "清迈",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9020,
+      "name": "Antalya Junior",
+      "month": 10,
+      "location": "安塔利亚",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9021,
+      "name": "Medellin Junior",
+      "month": 11,
+      "location": "麦德林",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9022,
+      "name": "Asuncion Junior",
+      "month": 11,
+      "location": "亚松森",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9023,
+      "name": "Curitiba Junior",
+      "month": 12,
+      "location": "库里蒂巴",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    },
+    {
+      "id": 9024,
+      "name": "Montevideo Junior",
+      "month": 12,
+      "location": "蒙得维的亚",
+      "level_code": "J30",
+      "req_stats": 48,
+      "points": [0, 1, 3, 8, 15, 30]
+    }
+  ]
+}

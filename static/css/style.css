@@ -1,0 +1,478 @@
+/* ==========================================
+   1. 核心漫画视觉变量 (Comic Variables)
+   ========================================== */
+:root {
+    --comic-black: #000;
+    --comic-white: #fff;
+    --comic-border-width: 3px;
+    --comic-border: var(--comic-border-width) solid var(--comic-black);
+    --comic-shadow: 5px 5px 0px var(--comic-black);
+
+    /* 精致马卡龙配色 */
+    --color-pink: #ff9fb2;
+    --color-yellow: #ffd56b;
+    --color-blue: #85e3ff;
+    --color-green: #b8e994;
+    --color-purple: #c5a3ff;
+}
+
+/* ==========================================
+   2. 全局通用样式 & 交互修复
+   ========================================== */
+/* --- 1. 视口锁定：这是解决“挤在上半部分”的关键 --- */
+html, body {
+    height: 100vh;        /* 兜底：旧浏览器 */
+    height: 100dvh;       /* 现代手机：动态扣除地址栏高度，防止底部被截 */
+    margin: 0;
+    padding: 0;
+    overflow: hidden;    /* 禁止整个网页像普通页面那样上下乱滚 */
+}
+
+body {
+    display: flex;
+    flex-direction: column; /* 让内容垂直排列：头 -> 身 -> 脚 */
+    background-color: #f5f5f5;
+}
+
+/* --- SPA 容器：撑满视口 --- */
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #f5f5f5;
+}
+
+/* --- 2. 顶部状态栏：固定高度 --- */
+.header-stats {
+    flex-shrink: 0;       /* 禁止被压缩 */
+    background: #fff;
+    border-bottom: 3px solid #000;
+    padding: 10px 15px;
+    z-index: 10;
+}
+
+/* --- 3. 中间剧情区：这是“弹簧”部分 --- */
+.story-content {
+    flex-grow: 1;         /* 核心：自动伸缩，吃掉剩下的所有空间 */
+    overflow-y: auto;    /* 只有这一块可以上下滚动查看日志 */
+    padding: 15px;
+    -webkit-overflow-scrolling: touch; /* 手机端滚动丝滑感 */
+}
+.log-item {
+    background: #fff;
+    border: 3px solid #000;
+    box-shadow: 4px 4px 0px #000;
+    border-radius: 12px;
+
+    /* --- 核心修复：拉大间隙 --- */
+    margin-bottom: 12px !important; /* 从原来的 12px 增加到 20px，视觉上更清爽 */
+    padding: 10px 12px;             /* 内部文字也要有足够的呼吸感 */
+
+    flex-shrink: 0;                 /* 防止盒子被压扁 */
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* --- 4. 底部菜单：永远钉在最下面 --- */
+.footer-menu {
+    flex-shrink: 0;       /* 禁止被压缩 */
+    background: #fff;
+    border-top: 3px solid #000;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 均匀分三列 */
+    gap: 10px;
+    padding-bottom: env(safe-area-inset-bottom); /* 适配全面屏底部“黑条”区 */
+}
+
+/* --- 5. 修复之前出现的文字溢出问题 --- */
+.btn-menu .subtitle {
+    display: none !important; /* 手机端一定要隐藏副标题 */
+}
+/* 统一漫画卡片风格：所有页面的 card 都能共用 */
+.comic-card, .tournament-card, .match-box, .rank-card, .log-item {
+    background: #fff;
+    border: var(--comic-border) !important;
+    box-shadow: var(--comic-shadow) !important;
+    border-radius: 16px !important;
+    transition: transform 0.1s;
+}
+
+/* 统一按钮按下效果：解决手机端“点不到”的直觉问题 */
+.btn-menu:active, .btn-reg:active, .app-item:active, .back-to-phone:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0px 0px 0px #000 !important;
+}
+.btn-menu .subtitle {
+    display: none !important; /* 手机端必须隐藏，否则会撑破布局 */
+}
+.btn-menu .title {
+    font-size: 11px;
+    font-weight: 900;
+}
+.btn-menu, .log-item {
+    border: 3px solid #000 !important;
+    box-shadow: 4px 4px 0px #000 !important; /* 实心阴影 */
+    border-radius: 16px !important;
+    background: #fff;
+}
+
+/* --- 计划安排界面的专属样式 --- */
+#actionPool {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 10px; padding: 4px 0;
+}
+.drag-item {
+    position: relative;
+    padding: 7px 12px;
+    border-radius: 10px;
+    cursor: grab;
+    font-weight: 900;
+    font-size: 13px;
+    white-space: nowrap;
+    display: flex; align-items: center; justify-content: center; gap: 2px;
+    background-color: #ffffff !important;
+    border: var(--comic-border) !important;
+    z-index: 2;
+    transform: translate(-4px, 4px);
+    transition: background-color 0.1s ease, border 0.1s ease;
+
+    touch-action: none !important;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* 槽位适配 */
+.target-slot {
+    flex-grow: 1; height: 42px; margin-bottom: 0;
+    display: grid; place-items: center; position: relative;
+    border-radius: 10px;
+    border: 3px dashed var(--comic-black) !important;
+    background: #f8f8f8;
+    overflow: hidden;
+}
+
+/* 放入后压扁逻辑：取消位移，变回平面 */
+.target-slot .drag-item {
+    grid-area: 1 / 1;
+    width: 100%; height: 100%; margin: 0;
+    transform: translate(0, 0) !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: #fff !important;
+}
+
+/* ==========================================
+   3. 你原本的球员动画逻辑 (Original Animations)
+   ========================================== */
+/* 模拟呼吸的浮动效果 */
+@keyframes idle-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+#player-sprite {
+    animation: idle-bounce 2s infinite ease-in-out;
+    image-rendering: pixelated; /* 保持像素小人的锐利感 */
+}
+
+/* 模拟击球动作的瞬间缩放 */
+.hit-animation {
+    animation: hit-shake 0.2s ease-in-out;
+}
+
+@keyframes hit-shake {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2) rotate(5deg); }
+    100% { transform: scale(1); }
+}
+
+/* ==========================================
+   4. 手机端特定布局补丁 (H5 Layout)
+   ========================================== */
+/* 顶部状态栏：对应 main.html 的 header-stats */
+.header-stats {
+    background: #fff;
+    padding: 10px 15px;
+    border-bottom: var(--comic-border);
+}
+
+/* 底部菜单：对应 main.html 的 footer-menu */
+.footer-menu {
+    background: #fff;
+    border-top: var(--comic-border);
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+/* ==========================================================================
+   5. Ranking 页面专属风格 (完全保留你最爱的原版风格)
+   ========================================================================== */
+
+/* 顶部 Tab 导航 */
+.tab-nav {
+    display: flex;
+    border-bottom: 3px solid var(--comic-black);
+    background: #fff;
+    flex-shrink: 0; /* 确保不被压缩 */
+}
+.tab-item {
+    flex: 1; text-align: center; padding: 15px;
+    font-weight: bold; cursor: pointer;
+}
+.tab-item.active {
+    background: var(--comic-black); color: #fff;
+}
+
+/* 列表项：保留你原版的 2px 边框和轻阴影 */
+.rank-card {
+    display: flex; align-items: center; background: #fff;
+    border: 2px solid var(--comic-black); border-radius: 12px;
+    padding: 15px; margin-bottom: 15px;
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.05);
+}
+.rank-num {
+    width: 50px; font-weight: 900; font-style: italic;
+    color: var(--comic-purple); font-size: 1.2rem;
+}
+.player-info { flex: 1; font-weight: bold; }
+.pts-val { font-weight: 900; }
+
+/* 底部固定“我”的栏：保持你要求的 4px 粗边和吸附逻辑 */
+.sticky-wrapper {
+    flex-shrink: 0;
+    z-index: 100;
+}
+.me-sticky-bar {
+    background: #fff; border: 4px solid var(--comic-black);
+    border-bottom: none; border-radius: 20px 20px 0 0;
+    padding: 15px 25px; display: flex; align-items: center;
+    box-shadow: 0 -10px 20px rgba(0,0,0,0.1); cursor: pointer;
+}
+
+/* 详情弹窗与返回键 */
+.detail-view {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--bg-color); z-index: 200; overflow-y: auto;
+}
+.summary-box {
+    border: 3px solid var(--comic-black); box-shadow: 8px 8px 0px var(--comic-black);
+    border-radius: 15px; padding: 30px; text-align: center; background: #fff; margin-bottom: 30px;
+}
+.point-item {
+    border: 2px solid var(--comic-black); border-radius: 12px; padding: 15px;
+    margin-bottom: 15px; display: flex; justify-content: space-between; background: #fff;
+}
+.point-item.effective {
+    border-left: 10px solid var(--comic-green) !important;
+}
+
+.back-to-phone {
+    text-decoration: none; color: #000; font-weight: 900;
+    border: 2px solid #000; padding: 5px 15px; border-radius: 8px;
+    background: #fff; box-shadow: 3px 3px 0px #000; transition: 0.1s;
+}
+/* ==========================================
+   6. 赛事报名专属风格 (Registration Page)
+   ========================================== */
+
+/* 头部适配：同步日历页风格 */
+.reg-header {
+    background: #fff;
+    padding: 15px 20px;
+    border-bottom: var(--comic-border);
+    flex-shrink: 0;
+}
+
+/* 报名卡片：统一白底，不再满色渲染，保护眼睛 */
+.match-box {
+    background: #fff !important;
+    border: 3px solid #000 !important;
+    box-shadow: var(--comic-shadow);
+    transition: all 0.2s;
+}
+
+/* 仅通过边框色区分 */
+.match-box.active-match { border-color: var(--comic-green) !important; }
+.match-box.registered-match { border-color: var(--color-blue) !important; }
+.match-box.locked-match { border-color: #ddd !important; opacity: 0.7; }
+
+/* 按钮保留实色作为视觉重点 */
+.btn-reg.active { background: var(--comic-green) !important; color: #000; }
+.btn-reg.registered { background: var(--color-blue) !important; color: #000; }
+.btn-reg.locked { background: #eee !important; color: #aaa; border-color: #ccc !important; }
+
+/* 报名按钮：同步 btn-menu 的点击反馈 */
+.btn-reg {
+    border: var(--comic-border) !important;
+    border-radius: 12px !important;
+    padding: 12px;
+    font-weight: 900;
+    box-shadow: 4px 4px 0px #000;
+    transition: 0.1s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-reg:active:not(:disabled) {
+    transform: translate(3px, 3px);
+    box-shadow: 0px 0px 0px #000 !important;
+}
+
+/* 按钮状态配色 */
+.btn-reg.active { background-color: var(--comic-green) !important; color: #000; }
+.btn-reg.locked { background-color: #ddd !important; color: #888; cursor: not-allowed; }
+.btn-reg.registered { background-color: var(--color-blue) !important; color: #000; }
+
+/* 积分标签 */
+.points-badge {
+    border: 2px solid #000;
+    background: var(--color-pink);
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-weight: 900;
+    font-size: 10px;
+}
+/* ============================================================
+   7. 简讯模块通用布局 (Layout Skeleton)
+   ============================================================ */
+/* 锁定视口，防止手机端挤压 */
+.chat-page-frame {
+    flex: 1;
+    height: 100% !important;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fdfaf6; /* 你最爱的复古米白底色 */
+}
+
+/* 独立滚动区：吃掉所有剩余空间，把 footer 顶到底部 */
+.chat-scroll-area {
+    flex-grow: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* 固定头部和底部 */
+.chat-fixed-header, .chat-fixed-footer {
+    flex-shrink: 0;
+    background: #fff;
+    border-bottom: 3px solid #000;
+    z-index: 10;
+}
+.chat-fixed-footer {
+    border-top: 3px solid #000;
+    border-bottom: none;
+}
+
+/* ============================================================
+   8. 列表页组件 (Message List Home)
+   ============================================================ */
+/* 每一行联系人 */
+.chat-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: #fff;
+    border-bottom: 3px solid #000;
+    gap: 15px;
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+/* 预览文字：超长自动显示省略号，绝不撑破框 */
+.chat-preview {
+    font-size: 13px;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+/* 漫画风未读红点 */
+.unread-badge {
+    background: #ff4d4d;
+    color: #fff;
+    border: 2px solid #000;
+    border-radius: 50%;
+    min-width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 900;
+}
+
+/* ============================================================
+   9. 详情页组件 (Chat Detail)
+   ============================================================ */
+/* 头像方框 */
+.avatar-box {
+    width: 45px; height: 45px;
+    border: 3px solid #000;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #fff;
+}
+
+/* 聊天气泡基础：粗边、硬影、漫画感 */
+.msg-bubble {
+    max-width: 80%;
+    padding: 12px 15px;
+    border: 3px solid #000 !important;
+    border-radius: 18px;
+    font-weight: bold;
+    box-shadow: 4px 4px 0px #000;
+    position: relative;
+}
+
+/* 左侧：白底 */
+.msg-friend {
+    align-self: flex-start;
+    background: #fff;
+    border-bottom-left-radius: 2px;
+}
+
+/* 右侧：默认蓝底 */
+.msg-me {
+    align-self: flex-end;
+    background: var(--color-blue) !important;
+    border-bottom-right-radius: 2px;
+}
+
+/* ============================================================
+   10. 角色皮肤区 (Character Themes)
+   ============================================================ */
+/* 通过 body 的类名动态换色 */
+.chat-mom { --chat-theme-color: #ff9fb2; }    /* 老妈粉 */
+.chat-friend { --chat-theme-color: #ffd56b; } /* 死党黄 */
+.chat-coach { --chat-theme-color: #85e3ff; }  /* 教练蓝 */
+
+.chat-mom .msg-me, .chat-friend .msg-me, .chat-coach .msg-me {
+    background: var(--chat-theme-color) !important;
+}
+.scroll-content, .story-content {
+    flex-grow: 1;         /* 核心：吃掉剩下的所有空间，把 footer 顶到底部 */
+    overflow-y: auto;    /* 只有这一块可以上下滚动 */
+    padding: 15px;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* --- 创建角色卡片：漫画风格 --- */
+.create-card {
+    background: #fff;
+    border: 3px solid #000 !important;
+    box-shadow: 5px 5px 0px #000 !important;
+    border-radius: 16px !important;
+    padding: 24px;
+}

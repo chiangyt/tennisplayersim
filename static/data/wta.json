@@ -1,0 +1,440 @@
+{
+  "GS": [
+    {
+      "id": 7001,
+      "name": "Australian Open",
+      "month": 1,
+      "location": "墨尔本",
+      "level_code": "GS",
+      "req_stats": 230,
+      "req_ranking": 100,
+      "points": [70, 130, 240, 430, 780, 1300, 2000]
+    },
+    {
+      "id": 7002,
+      "name": "Roland Garros",
+      "month": 5,
+      "location": "巴黎",
+      "level_code": "GS",
+      "req_stats": 230,
+      "req_ranking": 100,
+      "points": [70, 130, 240, 430, 780, 1300, 2000]
+    },
+    {
+      "id": 7003,
+      "name": "Wimbledon",
+      "month": 7,
+      "location": "伦敦",
+      "level_code": "GS",
+      "req_stats": 230,
+      "req_ranking": 100,
+      "points": [70, 130, 240, 430, 780, 1300, 2000]
+    },
+    {
+      "id": 7004,
+      "name": "US Open",
+      "month": 9,
+      "location": "纽约",
+      "level_code": "GS",
+      "req_stats": 230,
+      "req_ranking": 100,
+      "points": [70, 130, 240, 430, 780, 1300, 2000]
+    }
+  ],
+  "WTA1000": [
+    {
+      "id": 7101,
+      "name": "Qatar TotalEnergies Open",
+      "month": 2,
+      "location": "多哈",
+      "level_code": "WTA1000",
+      "req_stats": 200,
+      "req_ranking": 70,
+      "points": [60, 120, 215, 390, 650, 1000]
+    },
+    {
+      "id": 7102,
+      "name": "Dubai Duty Free Tennis Championships",
+      "month": 2,
+      "location": "迪拜",
+      "level_code": "WTA1000",
+      "req_stats": 200,
+      "req_ranking": 70,
+      "points": [60, 120, 215, 390, 650, 1000]
+    },
+    {
+      "id": 7103,
+      "name": "BNP Paribas Open",
+      "month": 3,
+      "location": "印第安维尔斯",
+      "level_code": "WTA1000",
+      "req_stats": 200,
+      "req_ranking": 70,
+      "points": [60, 120, 215, 390, 650, 1000]
+    },
+    {
+      "id": 7104,
+      "name": "Miami Open",
+      "month": 3,
+      "location": "迈阿密",
+      "level_code": "WTA1000",
+      "req_stats": 200,
+      "req_ranking": 70,
+      "points": [60, 120, 215, 390, 650, 1000]
+    },
+    {
+      "id": 7105,
+      "name": "Mutua Madrid Open",
+      "month": 4,
+      "location": "马德里",
+      "level_code": "WTA1000",
+      "req_stats": 200,
+      "req_ranking": 70,
+      "points": [60, 120, 215, 390, 650, 1000]
+    },
+    {
+      "id": 7106,
+      "name": "Internazionali BNL d'Italia",
+      "month": 5,
+      "location": "罗马",
+      "level_code": "WTA1000",
+      "req_stats": 200,
+      "req_ranking": 70,
+      "points": [60, 120, 215, 390, 650, 1000]
+    },
+    {
+      "id": 7107,
+      "name": "National Bank Open",
+      "month": 8,
+      "location": "蒙特利尔",
+      "level_code": "WTA1000",
+      "req_stats": 200,
+      "req_ranking": 70,
+      "points": [60, 120, 215, 390, 650, 1000]
+    },
+    {
+      "id": 7108,
+      "name": "Western & Southern Open",
+      "month": 8,
+      "location": "辛辛那提",
+      "level_code": "WTA1000",
+      "req_stats": 200,
+      "req_ranking": 70,
+      "points": [60, 120, 215, 390, 650, 1000]
+    },
+    {
+      "id": 7109,
+      "name": "China Open",
+      "month": 9,
+      "location": "北京",
+      "level_code": "WTA1000",
+      "req_stats": 200,
+      "req_ranking": 70,
+      "points": [60, 120, 215, 390, 650, 1000]
+    },
+    {
+      "id": 7110,
+      "name": "Wuhan Open",
+      "month": 10,
+      "location": "武汉",
+      "level_code": "WTA1000",
+      "req_stats": 200,
+      "req_ranking": 70,
+      "points": [60, 120, 215, 390, 650, 1000]
+    }
+  ],
+  "WTA500": [
+    {
+      "id": 7201,
+      "name": "Brisbane International",
+      "month": 1,
+      "location": "布里斯班",
+      "level_code": "WTA500",
+      "req_stats": 165,
+      "req_ranking": 80,
+      "points": [1, 60, 108, 195, 325, 500]
+    },
+    {
+      "id": 7202,
+      "name": "Adelaide International",
+      "month": 1,
+      "location": "阿德莱德",
+      "level_code": "WTA500",
+      "req_stats": 165,
+      "req_ranking": 80,
+      "points": [1, 60, 108, 195, 325, 500]
+    },
+    {
+      "id": 7203,
+      "name": "Stuttgart Open",
+      "month": 4,
+      "location": "斯图加特",
+      "level_code": "WTA500",
+      "req_stats": 165,
+      "req_ranking": 80,
+      "points": [1, 60, 108, 195, 325, 500]
+    },
+    {
+      "id": 7204,
+      "name": "Libema Open 's-Hertogenbosch",
+      "month": 6,
+      "location": "斯海尔托亨博斯",
+      "level_code": "WTA500",
+      "req_stats": 165,
+      "req_ranking": 80,
+      "points": [1, 60, 108, 195, 325, 500]
+    },
+    {
+      "id": 7205,
+      "name": "bett1Open Berlin",
+      "month": 6,
+      "location": "柏林",
+      "level_code": "WTA500",
+      "req_stats": 165,
+      "req_ranking": 80,
+      "points": [1, 60, 108, 195, 325, 500]
+    },
+    {
+      "id": 7206,
+      "name": "Bad Homburg Open",
+      "month": 6,
+      "location": "巴德洪堡",
+      "level_code": "WTA500",
+      "req_stats": 165,
+      "req_ranking": 80,
+      "points": [1, 60, 108, 195, 325, 500]
+    },
+    {
+      "id": 7207,
+      "name": "Mubadala Citi DC Open",
+      "month": 8,
+      "location": "华盛顿",
+      "level_code": "WTA500",
+      "req_stats": 165,
+      "req_ranking": 80,
+      "points": [1, 60, 108, 195, 325, 500]
+    },
+    {
+      "id": 7208,
+      "name": "Guadalajara Open Akron",
+      "month": 9,
+      "location": "瓜达拉哈拉",
+      "level_code": "WTA500",
+      "req_stats": 165,
+      "req_ranking": 80,
+      "points": [1, 60, 108, 195, 325, 500]
+    },
+    {
+      "id": 7209,
+      "name": "Korea Open",
+      "month": 9,
+      "location": "首尔",
+      "level_code": "WTA500",
+      "req_stats": 165,
+      "req_ranking": 80,
+      "points": [1, 60, 108, 195, 325, 500]
+    },
+    {
+      "id": 7210,
+      "name": "Singapore Open",
+      "month": 9,
+      "location": "新加坡",
+      "level_code": "WTA500",
+      "req_stats": 165,
+      "req_ranking": 80,
+      "points": [1, 60, 108, 195, 325, 500]
+    },
+    {
+      "id": 7211,
+      "name": "Toray Pan Pacific Open",
+      "month": 10,
+      "location": "大阪",
+      "level_code": "WTA500",
+      "req_stats": 165,
+      "req_ranking": 80,
+      "points": [1, 60, 108, 195, 325, 500]
+    },
+    {
+      "id": 7212,
+      "name": "Ningbo Open",
+      "month": 10,
+      "location": "宁波",
+      "level_code": "WTA500",
+      "req_stats": 165,
+      "req_ranking": 80,
+      "points": [1, 60, 108, 195, 325, 500]
+    },
+    {
+      "id": 7213,
+      "name": "Hong Kong Open",
+      "month": 11,
+      "location": "香港",
+      "level_code": "WTA500",
+      "req_stats": 165,
+      "req_ranking": 80,
+      "points": [1, 60, 108, 195, 325, 500]
+    },
+    {
+      "id": 7214,
+      "name": "Shenzhen Year-End Cup",
+      "month": 12,
+      "location": "深圳",
+      "level_code": "WTA500",
+      "req_stats": 165,
+      "req_ranking": 80,
+      "points": [1, 60, 108, 195, 325, 500]
+    }
+  ],
+  "WTA250": [
+    {
+      "id": 7301,
+      "name": "Hobart International",
+      "month": 1,
+      "location": "霍巴特",
+      "level_code": "WTA250",
+      "req_stats": 135,
+      "req_ranking": 150,
+      "points": [1, 30, 54, 98, 163, 250]
+    },
+    {
+      "id": 7302,
+      "name": "PTT Thailand Open",
+      "month": 2,
+      "location": "华欣",
+      "level_code": "WTA250",
+      "req_stats": 135,
+      "req_ranking": 150,
+      "points": [1, 30, 54, 98, 163, 250]
+    },
+    {
+      "id": 7303,
+      "name": "Abierto Mexicano Guadalajara",
+      "month": 3,
+      "location": "瓜达拉哈拉",
+      "level_code": "WTA250",
+      "req_stats": 135,
+      "req_ranking": 150,
+      "points": [1, 30, 54, 98, 163, 250]
+    },
+    {
+      "id": 7304,
+      "name": "Claro Open Colombia",
+      "month": 4,
+      "location": "波哥大",
+      "level_code": "WTA250",
+      "req_stats": 135,
+      "req_ranking": 150,
+      "points": [1, 30, 54, 98, 163, 250]
+    },
+    {
+      "id": 7305,
+      "name": "Morocco Open Rabat",
+      "month": 5,
+      "location": "拉巴特",
+      "level_code": "WTA250",
+      "req_stats": 135,
+      "req_ranking": 150,
+      "points": [1, 30, 54, 98, 163, 250]
+    },
+    {
+      "id": 7306,
+      "name": "Rothesay Open Nottingham",
+      "month": 6,
+      "location": "诺丁汉",
+      "level_code": "WTA250",
+      "req_stats": 135,
+      "req_ranking": 150,
+      "points": [1, 30, 54, 98, 163, 250]
+    },
+    {
+      "id": 7307,
+      "name": "Rothesay International Eastbourne",
+      "month": 6,
+      "location": "伊斯特本",
+      "level_code": "WTA250",
+      "req_stats": 135,
+      "req_ranking": 150,
+      "points": [1, 30, 54, 98, 163, 250]
+    },
+    {
+      "id": 7308,
+      "name": "Lausanne Open",
+      "month": 7,
+      "location": "洛桑",
+      "level_code": "WTA250",
+      "req_stats": 135,
+      "req_ranking": 150,
+      "points": [1, 30, 54, 98, 163, 250]
+    },
+    {
+      "id": 7309,
+      "name": "Palermo International",
+      "month": 7,
+      "location": "巴勒莫",
+      "level_code": "WTA250",
+      "req_stats": 135,
+      "req_ranking": 150,
+      "points": [1, 30, 54, 98, 163, 250]
+    },
+    {
+      "id": 7310,
+      "name": "Prague Open",
+      "month": 8,
+      "location": "布拉格",
+      "level_code": "WTA250",
+      "req_stats": 135,
+      "req_ranking": 150,
+      "points": [1, 30, 54, 98, 163, 250]
+    },
+    {
+      "id": 7311,
+      "name": "Zhengzhou Open",
+      "month": 9,
+      "location": "郑州",
+      "level_code": "WTA250",
+      "req_stats": 135,
+      "req_ranking": 150,
+      "points": [1, 30, 54, 98, 163, 250]
+    },
+    {
+      "id": 7312,
+      "name": "Guangzhou International",
+      "month": 10,
+      "location": "广州",
+      "level_code": "WTA250",
+      "req_stats": 135,
+      "req_ranking": 150,
+      "points": [1, 30, 54, 98, 163, 250]
+    },
+    {
+      "id": 7313,
+      "name": "Jiujiang Open",
+      "month": 11,
+      "location": "九江",
+      "level_code": "WTA250",
+      "req_stats": 135,
+      "req_ranking": 150,
+      "points": [1, 30, 54, 98, 163, 250]
+    },
+    {
+      "id": 7314,
+      "name": "Chennai Open",
+      "month": 11,
+      "location": "金奈",
+      "level_code": "WTA250",
+      "req_stats": 135,
+      "req_ranking": 150,
+      "points": [1, 30, 54, 98, 163, 250]
+    },
+    {
+      "id": 7315,
+      "name": "Ko Samui Open",
+      "month": 12,
+      "location": "苏梅岛",
+      "level_code": "WTA250",
+      "req_stats": 135,
+      "req_ranking": 150,
+      "points": [1, 30, 54, 98, 163, 250]
+    }
+  ]
+}

@@ -1,0 +1,251 @@
+{
+  "A_Level": [
+    {
+      "id": 1001,
+      "name": "第12届中国中学生网球锦标赛",
+      "month": 12,
+      "location": "全国巡回",
+      "level_code": "A2000",
+      "req_stats": 60,
+      "points": [300, 500, 800, 1200, 1500, 2000]
+    },
+    {
+      "id": 1002,
+      "name": "CTJ全国青少年大师赛",
+      "month": 11,
+      "location": "上海",
+      "level_code": "A2500",
+      "req_stats": 65,
+      "points": [500, 800, 1100, 1500, 2000, 2500]
+    },
+    {
+      "id": 1003,
+      "name": "全国青少年排名赛总决赛",
+      "month": 10,
+      "location": "北京",
+      "level_code": "A1500",
+      "req_stats": 55,
+      "points": [200, 350, 600, 800, 1100, 1500]
+    }
+  ],
+  "B_Level": [
+    {
+      "id": 2001,
+      "name": "「冠军摇篮杯」青少年分站赛-泉州站",
+      "month": 6,
+      "location": "泉州",
+      "level_code": "B800",
+      "req_stats": 45,
+      "points": [80, 160, 240, 400, 560, 800]
+    },
+    {
+      "id": 2002,
+      "name": "弘金地青少年网球巡回赛",
+      "month": 5,
+      "location": "深圳",
+      "level_code": "B600",
+      "req_stats": 42,
+      "points": [60, 120, 150, 300, 420, 600]
+    },
+    {
+      "id": 2003,
+      "name": "华金资管杯青少年积分赛",
+      "month": 4,
+      "location": "珠海",
+      "level_code": "B500",
+      "req_stats": 40,
+      "points": [50, 100, 125, 250, 350, 500]
+    },
+    {
+      "id": 2004,
+      "name": "「冠军摇篮杯」分站赛-奉贤站",
+      "month": 9,
+      "location": "上海",
+      "level_code": "B800",
+      "req_stats": 50,
+      "points": [80, 160, 240, 400, 560, 800]
+    },
+    {
+      "id": 2005,
+      "name": "新春青少年网球邀请赛",
+      "month": 1,
+      "location": "广州",
+      "level_code": "B600",
+      "req_stats": 45,
+      "points": [60, 120, 150, 300, 420, 600]
+    },
+    {
+      "id": 2006,
+      "name": "春季青少年积分赛-武汉站",
+      "month": 2,
+      "location": "武汉",
+      "level_code": "B500",
+      "req_stats": 41,
+      "points": [50, 100, 125, 250, 350, 500]
+    },
+    {
+      "id": 2007,
+      "name": "全国青少年春季巡回赛-成都站",
+      "month": 3,
+      "location": "成都",
+      "level_code": "B600",
+      "req_stats": 45,
+      "points": [60, 120, 150, 300, 420, 600]
+    },
+    {
+      "id": 2008,
+      "name": "暑期青少年网球挑战赛",
+      "month": 7,
+      "location": "西安",
+      "level_code": "B500",
+      "req_stats": 41,
+      "points": [50, 100, 125, 250, 350, 500]
+    },
+    {
+      "id": 2009,
+      "name": "全国青少年暑期联赛-南京站",
+      "month": 8,
+      "location": "南京",
+      "level_code": "B600",
+      "req_stats": 45,
+      "points": [60, 120, 150, 300, 420, 600]
+    },
+    {
+      "id": 2010,
+      "name": "全国青少年积分赛-北京站",
+      "month": 10,
+      "location": "北京",
+      "level_code": "B800",
+      "req_stats": 50,
+      "points": [80, 160, 240, 400, 560, 800]
+    },
+    {
+      "id": 2011,
+      "name": "全国青少年排名赛-广州站",
+      "month": 11,
+      "location": "广州",
+      "level_code": "B600",
+      "req_stats": 45,
+      "points": [60, 120, 150, 300, 420, 600]
+    },
+    {
+      "id": 2012,
+      "name": "年终青少年精英挑战赛",
+      "month": 12,
+      "location": "深圳",
+      "level_code": "B800",
+      "req_stats": 50,
+      "points": [80, 160, 240, 400, 560, 800]
+    }
+  ],
+  "C_Level": [
+    {
+      "id": 3001,
+      "name": "重庆市青少年积分赛",
+      "month": 6,
+      "location": "重庆",
+      "level_code": "C400",
+      "req_stats": 38,
+      "points": [40, 80, 120, 200, 280, 400]
+    },
+    {
+      "id": 3002,
+      "name": "梅州市「通利华杯」积分赛",
+      "month": 5,
+      "location": "梅州",
+      "level_code": "C200",
+      "req_stats": 32,
+      "points": [20, 40, 60, 100, 140, 200]
+    },
+    {
+      "id": 3003,
+      "name": "社区青少年网球普及赛",
+      "month": 2,
+      "location": "市体育馆",
+      "level_code": "C100",
+      "req_stats": 28,
+      "points": [10, 20, 25, 50, 70, 100]
+    },
+    {
+      "id": 3004,
+      "name": "全国室内青少年积分赛-成都站",
+      "month": 1,
+      "location": "成都",
+      "level_code": "C200",
+      "req_stats": 32,
+      "points": [20, 40, 60, 100, 140, 200]
+    },
+    {
+      "id": 3005,
+      "name": "嘉兴市青少年网球积分赛",
+      "month": 3,
+      "location": "嘉兴",
+      "level_code": "C200",
+      "req_stats": 32,
+      "points": [20, 40, 60, 100, 140, 200]
+    },
+    {
+      "id": 3006,
+      "name": "厦门市青少年网球积分赛",
+      "month": 4,
+      "location": "厦门",
+      "level_code": "C200",
+      "req_stats": 32,
+      "points": [20, 40, 60, 100, 140, 200]
+    },
+    {
+      "id": 3007,
+      "name": "成都夏季青少年网球积分赛",
+      "month": 7,
+      "location": "成都",
+      "level_code": "C200",
+      "req_stats": 32,
+      "points": [20, 40, 60, 100, 140, 200]
+    },
+    {
+      "id": 3008,
+      "name": "长沙市青少年网球积分赛",
+      "month": 8,
+      "location": "长沙",
+      "level_code": "C100",
+      "req_stats": 28,
+      "points": [10, 20, 25, 50, 70, 100]
+    },
+    {
+      "id": 3009,
+      "name": "昆明秋季青少年网球积分赛",
+      "month": 9,
+      "location": "昆明",
+      "level_code": "C400",
+      "req_stats": 38,
+      "points": [40, 80, 120, 200, 280, 400]
+    },
+    {
+      "id": 3010,
+      "name": "南京市青少年网球积分赛",
+      "month": 10,
+      "location": "南京",
+      "level_code": "C400",
+      "req_stats": 38,
+      "points": [40, 80, 120, 200, 280, 400]
+    },
+    {
+      "id": 3011,
+      "name": "西安市青少年网球积分赛",
+      "month": 11,
+      "location": "西安",
+      "level_code": "C400",
+      "req_stats": 38,
+      "points": [40, 80, 120, 200, 280, 400]
+    },
+    {
+      "id": 3012,
+      "name": "年终青少年网球普及积分赛",
+      "month": 12,
+      "location": "杭州",
+      "level_code": "C200",
+      "req_stats": 30,
+      "points": [20, 40, 60, 100, 140, 200]
+    }
+  ]
+}

@@ -1,0 +1,490 @@
+{
+  "W100": [
+    {
+      "id": 8101,
+      "name": "Hobart International W100",
+      "month": 1,
+      "location": "霍巴特",
+      "level_code": "W100",
+      "req_stats": 100,
+      "req_ranking": 50,
+      "points": [1, 8, 21, 38, 65, 100]
+    },
+    {
+      "id": 8102,
+      "name": "Bogotá ITF W100",
+      "month": 2,
+      "location": "波哥大",
+      "level_code": "W100",
+      "req_stats": 100,
+      "req_ranking": 50,
+      "points": [1, 8, 21, 38, 65, 100]
+    },
+    {
+      "id": 8103,
+      "name": "Dothan ITF W100",
+      "month": 3,
+      "location": "多森",
+      "level_code": "W100",
+      "req_stats": 100,
+      "req_ranking": 50,
+      "points": [1, 8, 21, 38, 65, 100]
+    },
+    {
+      "id": 8104,
+      "name": "Marrakech ITF W100",
+      "month": 4,
+      "location": "马拉喀什",
+      "level_code": "W100",
+      "req_stats": 100,
+      "req_ranking": 50,
+      "points": [1, 8, 21, 38, 65, 100]
+    },
+    {
+      "id": 8105,
+      "name": "Contrexéville ITF W100",
+      "month": 5,
+      "location": "孔特雷克塞维尔",
+      "level_code": "W100",
+      "req_stats": 100,
+      "req_ranking": 50,
+      "points": [1, 8, 21, 38, 65, 100]
+    },
+    {
+      "id": 8106,
+      "name": "Edgbaston Priory ITF W100",
+      "month": 6,
+      "location": "伯明翰",
+      "level_code": "W100",
+      "req_stats": 100,
+      "req_ranking": 50,
+      "points": [1, 8, 21, 38, 65, 100]
+    },
+    {
+      "id": 8107,
+      "name": "Newport ITF W100",
+      "month": 7,
+      "location": "纽波特",
+      "level_code": "W100",
+      "req_stats": 100,
+      "req_ranking": 50,
+      "points": [1, 8, 21, 38, 65, 100]
+    },
+    {
+      "id": 8108,
+      "name": "Vancouver ITF W100",
+      "month": 8,
+      "location": "温哥华",
+      "level_code": "W100",
+      "req_stats": 100,
+      "req_ranking": 50,
+      "points": [1, 8, 21, 38, 65, 100]
+    },
+    {
+      "id": 8109,
+      "name": "Hiroshima ITF W100",
+      "month": 9,
+      "location": "广岛",
+      "level_code": "W100",
+      "req_stats": 100,
+      "req_ranking": 50,
+      "points": [1, 8, 21, 38, 65, 100]
+    },
+    {
+      "id": 8110,
+      "name": "Nanning ITF W100",
+      "month": 10,
+      "location": "南宁",
+      "level_code": "W100",
+      "req_stats": 100,
+      "req_ranking": 50,
+      "points": [1, 8, 21, 38, 65, 100]
+    },
+    {
+      "id": 8111,
+      "name": "Buenos Aires ITF W100",
+      "month": 11,
+      "location": "布宜诺斯艾利斯",
+      "level_code": "W100",
+      "req_stats": 100,
+      "req_ranking": 50,
+      "points": [1, 8, 21, 38, 65, 100]
+    },
+    {
+      "id": 8112,
+      "name": "Guayaquil ITF W100",
+      "month": 12,
+      "location": "瓜亚基尔",
+      "level_code": "W100",
+      "req_stats": 100,
+      "req_ranking": 50,
+      "points": [1, 8, 21, 38, 65, 100]
+    }
+  ],
+  "W60": [
+    {
+      "id": 8201,
+      "name": "Canberra ITF W60",
+      "month": 1,
+      "location": "堪培拉",
+      "level_code": "W60",
+      "req_stats": 78,
+      "req_ranking": 15,
+      "points": [1, 5, 13, 23, 40, 60]
+    },
+    {
+      "id": 8202,
+      "name": "Guadalajara ITF W60",
+      "month": 2,
+      "location": "瓜达拉哈拉",
+      "level_code": "W60",
+      "req_stats": 78,
+      "req_ranking": 15,
+      "points": [1, 5, 13, 23, 40, 60]
+    },
+    {
+      "id": 8203,
+      "name": "Pelham ITF W60",
+      "month": 3,
+      "location": "佩勒姆",
+      "level_code": "W60",
+      "req_stats": 78,
+      "req_ranking": 15,
+      "points": [1, 5, 13, 23, 40, 60]
+    },
+    {
+      "id": 8204,
+      "name": "Andrézieux ITF W60",
+      "month": 4,
+      "location": "安德雷兹约",
+      "level_code": "W60",
+      "req_stats": 78,
+      "req_ranking": 15,
+      "points": [1, 5, 13, 23, 40, 60]
+    },
+    {
+      "id": 8205,
+      "name": "Nürnberg ITF W60",
+      "month": 5,
+      "location": "纽伦堡",
+      "level_code": "W60",
+      "req_stats": 78,
+      "req_ranking": 15,
+      "points": [1, 5, 13, 23, 40, 60]
+    },
+    {
+      "id": 8206,
+      "name": "Ilkley ITF W60",
+      "month": 6,
+      "location": "伊尔克利",
+      "level_code": "W60",
+      "req_stats": 78,
+      "req_ranking": 15,
+      "points": [1, 5, 13, 23, 40, 60]
+    },
+    {
+      "id": 8207,
+      "name": "Bastad ITF W60",
+      "month": 7,
+      "location": "巴斯塔德",
+      "level_code": "W60",
+      "req_stats": 78,
+      "req_ranking": 15,
+      "points": [1, 5, 13, 23, 40, 60]
+    },
+    {
+      "id": 8208,
+      "name": "Columbus ITF W60",
+      "month": 8,
+      "location": "哥伦布",
+      "level_code": "W60",
+      "req_stats": 78,
+      "req_ranking": 15,
+      "points": [1, 5, 13, 23, 40, 60]
+    },
+    {
+      "id": 8209,
+      "name": "Nanchang ITF W60",
+      "month": 9,
+      "location": "南昌",
+      "level_code": "W60",
+      "req_stats": 78,
+      "req_ranking": 15,
+      "points": [1, 5, 13, 23, 40, 60]
+    },
+    {
+      "id": 8210,
+      "name": "Zhongshan ITF W60",
+      "month": 10,
+      "location": "中山",
+      "level_code": "W60",
+      "req_stats": 78,
+      "req_ranking": 15,
+      "points": [1, 5, 13, 23, 40, 60]
+    },
+    {
+      "id": 8211,
+      "name": "Florianópolis ITF W60",
+      "month": 11,
+      "location": "弗洛里亚诺波利斯",
+      "level_code": "W60",
+      "req_stats": 78,
+      "req_ranking": 15,
+      "points": [1, 5, 13, 23, 40, 60]
+    },
+    {
+      "id": 8212,
+      "name": "Cali ITF W60",
+      "month": 12,
+      "location": "卡利",
+      "level_code": "W60",
+      "req_stats": 78,
+      "req_ranking": 15,
+      "points": [1, 5, 13, 23, 40, 60]
+    }
+  ],
+  "W25": [
+    {
+      "id": 8301,
+      "name": "Playford International W25",
+      "month": 1,
+      "location": "阿德莱德",
+      "level_code": "W25",
+      "req_stats": 58,
+      "req_ranking": 0,
+      "points": [0, 2, 6, 10, 17, 25]
+    },
+    {
+      "id": 8302,
+      "name": "Hammamet ITF W25",
+      "month": 2,
+      "location": "哈马马特",
+      "level_code": "W25",
+      "req_stats": 58,
+      "req_ranking": 0,
+      "points": [0, 2, 6, 10, 17, 25]
+    },
+    {
+      "id": 8303,
+      "name": "Cancún ITF W25",
+      "month": 3,
+      "location": "坎昆",
+      "level_code": "W25",
+      "req_stats": 58,
+      "req_ranking": 0,
+      "points": [0, 2, 6, 10, 17, 25]
+    },
+    {
+      "id": 8304,
+      "name": "Istanbul ITF W25",
+      "month": 4,
+      "location": "伊斯坦布尔",
+      "level_code": "W25",
+      "req_stats": 58,
+      "req_ranking": 0,
+      "points": [0, 2, 6, 10, 17, 25]
+    },
+    {
+      "id": 8305,
+      "name": "Rabat ITF W25",
+      "month": 5,
+      "location": "拉巴特",
+      "level_code": "W25",
+      "req_stats": 58,
+      "req_ranking": 0,
+      "points": [0, 2, 6, 10, 17, 25]
+    },
+    {
+      "id": 8306,
+      "name": "Surbiton ITF W25",
+      "month": 6,
+      "location": "萨比顿",
+      "level_code": "W25",
+      "req_stats": 58,
+      "req_ranking": 0,
+      "points": [0, 2, 6, 10, 17, 25]
+    },
+    {
+      "id": 8307,
+      "name": "Jurmala ITF W25",
+      "month": 7,
+      "location": "尤尔马拉",
+      "level_code": "W25",
+      "req_stats": 58,
+      "req_ranking": 0,
+      "points": [0, 2, 6, 10, 17, 25]
+    },
+    {
+      "id": 8308,
+      "name": "São Paulo ITF W25",
+      "month": 8,
+      "location": "圣保罗",
+      "level_code": "W25",
+      "req_stats": 58,
+      "req_ranking": 0,
+      "points": [0, 2, 6, 10, 17, 25]
+    },
+    {
+      "id": 8309,
+      "name": "Bangkok ITF W25",
+      "month": 9,
+      "location": "曼谷",
+      "level_code": "W25",
+      "req_stats": 58,
+      "req_ranking": 0,
+      "points": [0, 2, 6, 10, 17, 25]
+    },
+    {
+      "id": 8310,
+      "name": "Tashkent ITF W25",
+      "month": 10,
+      "location": "塔什干",
+      "level_code": "W25",
+      "req_stats": 58,
+      "req_ranking": 0,
+      "points": [0, 2, 6, 10, 17, 25]
+    },
+    {
+      "id": 8311,
+      "name": "Asunción ITF W25",
+      "month": 11,
+      "location": "亚松森",
+      "level_code": "W25",
+      "req_stats": 58,
+      "req_ranking": 0,
+      "points": [0, 2, 6, 10, 17, 25]
+    },
+    {
+      "id": 8312,
+      "name": "Lima ITF W25",
+      "month": 12,
+      "location": "利马",
+      "level_code": "W25",
+      "req_stats": 58,
+      "req_ranking": 0,
+      "points": [0, 2, 6, 10, 17, 25]
+    }
+  ],
+  "W15": [
+    {
+      "id": 8401,
+      "name": "Launceston ITF W15",
+      "month": 1,
+      "location": "朗塞斯顿",
+      "level_code": "W15",
+      "req_stats": 45,
+      "req_ranking": 0,
+      "points": [0, 1, 3, 6, 10, 15]
+    },
+    {
+      "id": 8402,
+      "name": "Sharm El-Sheikh ITF W15",
+      "month": 2,
+      "location": "沙姆沙伊赫",
+      "level_code": "W15",
+      "req_stats": 45,
+      "req_ranking": 0,
+      "points": [0, 1, 3, 6, 10, 15]
+    },
+    {
+      "id": 8403,
+      "name": "Barranquilla ITF W15",
+      "month": 3,
+      "location": "巴兰基亚",
+      "level_code": "W15",
+      "req_stats": 45,
+      "req_ranking": 0,
+      "points": [0, 1, 3, 6, 10, 15]
+    },
+    {
+      "id": 8404,
+      "name": "Cairo ITF W15",
+      "month": 4,
+      "location": "开罗",
+      "level_code": "W15",
+      "req_stats": 45,
+      "req_ranking": 0,
+      "points": [0, 1, 3, 6, 10, 15]
+    },
+    {
+      "id": 8405,
+      "name": "Antalya ITF W15",
+      "month": 5,
+      "location": "安塔利亚",
+      "level_code": "W15",
+      "req_stats": 45,
+      "req_ranking": 0,
+      "points": [0, 1, 3, 6, 10, 15]
+    },
+    {
+      "id": 8406,
+      "name": "Liverpool ITF W15",
+      "month": 6,
+      "location": "利物浦",
+      "level_code": "W15",
+      "req_stats": 45,
+      "req_ranking": 0,
+      "points": [0, 1, 3, 6, 10, 15]
+    },
+    {
+      "id": 8407,
+      "name": "Buzios ITF W15",
+      "month": 7,
+      "location": "布济乌斯",
+      "level_code": "W15",
+      "req_stats": 45,
+      "req_ranking": 0,
+      "points": [0, 1, 3, 6, 10, 15]
+    },
+    {
+      "id": 8408,
+      "name": "San Luis Potosí ITF W15",
+      "month": 8,
+      "location": "圣路易斯波托西",
+      "level_code": "W15",
+      "req_stats": 45,
+      "req_ranking": 0,
+      "points": [0, 1, 3, 6, 10, 15]
+    },
+    {
+      "id": 8409,
+      "name": "Chiang Rai ITF W15",
+      "month": 9,
+      "location": "清莱",
+      "level_code": "W15",
+      "req_stats": 45,
+      "req_ranking": 0,
+      "points": [0, 1, 3, 6, 10, 15]
+    },
+    {
+      "id": 8410,
+      "name": "Almaty ITF W15",
+      "month": 10,
+      "location": "阿拉木图",
+      "level_code": "W15",
+      "req_stats": 45,
+      "req_ranking": 0,
+      "points": [0, 1, 3, 6, 10, 15]
+    },
+    {
+      "id": 8411,
+      "name": "Montevideo ITF W15",
+      "month": 11,
+      "location": "蒙得维的亚",
+      "level_code": "W15",
+      "req_stats": 45,
+      "req_ranking": 0,
+      "points": [0, 1, 3, 6, 10, 15]
+    },
+    {
+      "id": 8412,
+      "name": "Curitiba ITF W15",
+      "month": 12,
+      "location": "库里蒂巴",
+      "level_code": "W15",
+      "req_stats": 45,
+      "req_ranking": 0,
+      "points": [0, 1, 3, 6, 10, 15]
+    }
+  ]
+}
