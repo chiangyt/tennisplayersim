@@ -103,14 +103,25 @@ export class RankingManager {
         }
 
         // WTA 排名 — 30 人，从 NAME_POOL 取名
+        // 基准积分：模拟真实 WTA 分布（头部陡降，中段缓降）
+        const WTA_BASE = [
+            11000, 7500, 6000, 5500, 5000, 4500, 4000,  // 1~7
+            3500, 3200, 3000,                             // 8~10
+            2800, 2600, 2400, 2250, 2100,                 // 11~15
+            1980, 1920, 1860, 1810, 1760,                 // 16~20
+            1710, 1660, 1610, 1560, 1510,                 // 21~25
+            1470, 1440, 1420, 1400, 1380,                 // 26~30
+        ];
         const wtaRankings = [];
-        const wtaBase = 9500;
         for (let i = 0; i < NAME_POOL.length; i++) {
-            const pts = wtaBase - (i * 250) + (Math.floor(Math.random() * 201) - 100);
+            const base = WTA_BASE[i] ?? 800;
+            // 头部浮动大（±3%），20名以后浮动收窄（±1%，约十几分）
+            const ratio = i < 20 ? 0.03 : 0.01;
+            const noise = Math.floor(Math.random() * (base * ratio * 2)) - Math.floor(base * ratio);
             wtaRankings.push({
                 rank: i + 1,
                 name: NAME_POOL[i].full,
-                points: Math.max(2000, pts)
+                points: Math.max(500, base + noise)
             });
         }
 
@@ -140,7 +151,7 @@ export class RankingManager {
         // 模拟 WTA 30 人的积分变动
         for (const star of worldData.wta) {
             star.points += Math.floor(Math.random() * 301) - 150; // randint(-150, 150)
-            star.points = Math.max(1500, star.points);
+            star.points = Math.max(500, star.points);
         }
 
         // 重新排序
