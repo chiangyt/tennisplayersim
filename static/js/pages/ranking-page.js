@@ -11,6 +11,8 @@ export function render(player) {
             background: var(--bg-color);
             font-family: 'PingFang SC', sans-serif;
             margin: 0; padding: 0;
+            height: 100%;
+            overflow-y: auto;
         }
         .ranking-page-body .container {
             max-width: 600px;

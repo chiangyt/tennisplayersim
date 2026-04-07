@@ -195,14 +195,9 @@ function _renderITF(player, itfData) {
                             </div>
                             <p class="small text-muted mb-2"><i class="bi bi-geo-alt"></i> ${t.location}</p>
                             <div class="d-flex align-items-center gap-2">
-                                ${t.entry_points !== undefined
-                                    ? `<span class="badge rounded-pill border border-dark ${(player.ranking_points || 0) >= t.entry_points ? 'bg-success text-white' : 'bg-danger text-white'}">
-                                        积分门槛: ${t.entry_points}
-                                    </span>`
-                                    : `<span class="badge rounded-pill border border-dark ${player.general_stats >= t.req_stats ? 'bg-success text-white' : 'bg-danger text-white'}">
-                                        能力要求: ${t.req_stats}
-                                    </span>`
-                                }
+                                <span class="badge rounded-pill border border-dark bg-secondary text-white">
+                                    建议能力: ${t.req_stats ?? '—'}
+                                </span>
                                 <small class="text-muted" style="font-size: 10px; font-weight: 900;">积分: +${t.points[t.points.length - 1]}</small>
                             </div>
                         </div>
@@ -244,14 +239,9 @@ function _renderWTA(player, wtaData) {
                             </div>
                             <p class="small text-muted mb-2"><i class="bi bi-geo-alt"></i> ${t.location}</p>
                             <div class="d-flex align-items-center gap-2">
-                                ${t.entry_points !== undefined
-                                    ? `<span class="badge rounded-pill border border-dark ${(player.ranking_points || 0) >= t.entry_points ? 'bg-success text-white' : 'bg-danger text-white'}">
-                                        积分门槛: ${t.entry_points}
-                                    </span>`
-                                    : `<span class="badge rounded-pill border border-dark ${player.general_stats >= t.req_stats ? 'bg-success text-white' : 'bg-danger text-white'}">
-                                        能力要求: ${t.req_stats}
-                                    </span>`
-                                }
+                                <span class="badge rounded-pill border border-dark bg-secondary text-white">
+                                    建议能力: ${t.req_stats ?? '—'}
+                                </span>
                                 <small class="text-muted" style="font-size: 10px; font-weight: 900;">积分: +${t.points[t.points.length - 1]}</small>
                             </div>
                         </div>

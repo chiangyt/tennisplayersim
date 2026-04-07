@@ -7,12 +7,15 @@ export function render(player, currentMatches, targetMonth) {
             const isAlreadySigned = bookedEvent && bookedEvent.id === match.id;
             const isTaken = bookedEvent && !isAlreadySigned;
 
+            const isItfOrWta = match.system_tag === 'ITF' || match.system_tag === 'WTA';
+
             let isLocked = false;
             if (match.entry_points !== undefined) {
                 isLocked = (player.ranking_points || 0) < match.entry_points;
-            } else {
-                isLocked = player.general_stats < match.req_stats;
+            } else if (!isItfOrWta) {
+                isLocked = (player.general_stats || 0) < (match.req_stats || 0);
             }
+            // ITF/WTA 已在 getEventsForPlayer 按 req_ranking 过滤，到这里一定可报名
 
             const cardClass = isAlreadySigned ? 'registered-match' : ((isLocked || isTaken) ? 'locked-match' : 'active-match');
             const btnClass = isAlreadySigned ? 'registered' : ((isLocked || isTaken) ? 'locked' : 'active');
@@ -21,6 +24,8 @@ export function render(player, currentMatches, targetMonth) {
             let thresholdLabel = '';
             if (match.entry_points !== undefined) {
                 thresholdLabel = `积分门槛: ${match.entry_points}`;
+            } else if (isItfOrWta) {
+                thresholdLabel = `建议能力: ${match.req_stats ?? '—'}`;
             } else {
                 thresholdLabel = `能力门槛: ${match.req_stats}`;
             }

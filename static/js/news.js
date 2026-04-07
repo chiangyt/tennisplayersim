@@ -12,7 +12,7 @@ export const NAME_POOL = [
     { full: 'Caroline Wozny', last: 'Wozny' },
     { full: 'Simona Halev', last: 'Halev' },
     { full: 'Ashley Burton', last: 'Burton' },
-    { full: 'Li Nan', last: 'Li' },
+    { full: 'Nan Li', last: 'Li' },
     { full: 'Martina Navarro', last: 'Navarro' },
     { full: 'Steffi Kraft', last: 'Kraft' },
     { full: 'Monica Selva', last: 'Selva' },

@@ -51,5 +51,21 @@
       "last_updated": ""
     },
     "point_history": []
+  },
+  "ITF": {
+    "summary": {
+      "total_effective_points": 0,
+      "ranking_system": "Best-of-6",
+      "last_updated": ""
+    },
+    "point_history": []
+  },
+  "WTA": {
+    "summary": {
+      "total_effective_points": 0,
+      "ranking_system": "Best-of-6",
+      "last_updated": ""
+    },
+    "point_history": []
   }
 }

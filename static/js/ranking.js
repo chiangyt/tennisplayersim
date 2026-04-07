@@ -105,22 +105,23 @@ export class RankingManager {
         // WTA 排名 — 30 人，从 NAME_POOL 取名
         // 基准积分：模拟真实 WTA 分布（头部陡降，中段缓降）
         const WTA_BASE = [
-            11000, 7500, 6000, 5500, 5000, 4500, 4000,  // 1~7
-            3500, 3200, 3000,                             // 8~10
-            2800, 2600, 2400, 2250, 2100,                 // 11~15
-            1980, 1920, 1860, 1810, 1760,                 // 16~20
-            1710, 1660, 1610, 1560, 1510,                 // 21~25
-            1470, 1440, 1420, 1400, 1380,                 // 26~30
+            10000, 8000, 7500, 6500, 6000, 5500, 4500,  // 1~7
+            4000, 3400, 3300,                             // 8~10
+            3000, 2800, 2600, 2500, 2400,                 // 11~15
+            2280, 2200, 2160, 2010, 1960,                 // 16~20
+            1810, 1760, 1680, 1630, 1560,                 // 21~25
+            1500, 1480, 1450, 1430, 1400,                 // 26~30
         ];
+        const shuffledNames = [...NAME_POOL].sort(() => Math.random() - 0.5);
         const wtaRankings = [];
-        for (let i = 0; i < NAME_POOL.length; i++) {
+        for (let i = 0; i < shuffledNames.length; i++) {
             const base = WTA_BASE[i] ?? 800;
             // 头部浮动大（±3%），20名以后浮动收窄（±1%，约十几分）
             const ratio = i < 20 ? 0.03 : 0.01;
             const noise = Math.floor(Math.random() * (base * ratio * 2)) - Math.floor(base * ratio);
             wtaRankings.push({
                 rank: i + 1,
-                name: NAME_POOL[i].full,
+                name: shuffledNames[i].full,
                 points: Math.max(500, base + noise)
             });
         }
@@ -148,10 +149,31 @@ export class RankingManager {
             npc.points = Math.max(0, npc.points + change);
         }
 
-        // 模拟 WTA 30 人的积分变动
-        for (const star of worldData.wta) {
-            star.points += Math.floor(Math.random() * 301) - 150; // randint(-150, 150)
-            star.points = Math.max(500, star.points);
+        // 模拟 WTA 30 人的积分变动（名额池分配，保证事件互斥）
+        // 本月名额池：1个冠军、2个好成绩、5个小涨、4个掉分、其余不变
+        const eventPool = [
+            1500 + Math.floor(Math.random() * 500),                    // 冠军 ×1
+            300 + Math.floor(Math.random() * 500),                     // 好成绩 ×2
+            300 + Math.floor(Math.random() * 500),
+            30 + Math.floor(Math.random() * 150),                      // 小涨 ×5
+            30 + Math.floor(Math.random() * 150),
+            30 + Math.floor(Math.random() * 150),
+            30 + Math.floor(Math.random() * 150),
+            30 + Math.floor(Math.random() * 150),
+            -(300 + Math.floor(Math.random() * 1700)),                 // 掉分 ×4
+            -(300 + Math.floor(Math.random() * 1700)),
+            -(300 + Math.floor(Math.random() * 1700)),
+            -(300 + Math.floor(Math.random() * 1700)),
+        ];
+        // 其余球员本月有比赛参与，小幅浮动 ±100
+        while (eventPool.length < worldData.wta.length) {
+            eventPool.push(Math.floor(Math.random() * 101) - 100);
+        }
+
+        // 随机打乱名额池，分配给球员
+        eventPool.sort(() => Math.random() - 0.5);
+        for (let i = 0; i < worldData.wta.length; i++) {
+            worldData.wta[i].points = Math.max(500, worldData.wta[i].points + eventPool[i]);
         }
 
         // 重新排序
