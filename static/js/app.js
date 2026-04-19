@@ -259,6 +259,7 @@ function setupGameEvents() {
         GameState.updateSocial(socialData);
 
         location.hash = `#/chat/${charId}`;
+        setTimeout(() => route(), 0);
     });
 
     // 存档
