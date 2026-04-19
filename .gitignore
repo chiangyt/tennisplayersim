@@ -25,7 +25,7 @@ Thumbs.db
 # Logs
 *.log
 
-tasks/.md
+tasks/
 
 pngtrim.py
 
