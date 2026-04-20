@@ -546,7 +546,7 @@
           {
             "text": "教练，我想重点看二发得分率。",
             "effect": {
-              "intelligence": 5
+              "intelligence": 2
             },
             "next_story": {
               "content": "方向很好，明天训练后做20分钟视频复盘。",
@@ -569,7 +569,7 @@
           {
             "text": "我先自己复盘一版，再给你看。",
             "effect": {
-              "intelligence": 5
+              "intelligence": 2
             }
           }
         ]
