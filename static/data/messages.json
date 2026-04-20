@@ -84,19 +84,22 @@
       },
       {
         "id": "mom_002",
-        "content": "这周吃饭规律吗？别总凑合。",
+        "content": "宝贝这周吃饭规律吗？别总凑合。",
         "options": [
           {
-            "text": "我按时吃饭了，还加了水果。",
+            "text": "那当然按时吃饭了，没有人会拒绝吃饭。",
             "effect": {
-              "mood": 3,
-              "stamina": 2
+              "mood": 5,
+              "stamina": 5
+            },
+            "next_story": {
+              "content": "听你这么说我就放心了。"
             }
           },
           {
             "text": "训练后太晚了，偶尔会简单吃点。",
             "effect": {
-              "mood": -1
+              "mood": 5
             },
             "next_story": {
               "content": "至少备点酸奶和全麦面包，别空着肚子睡。"
@@ -113,7 +116,7 @@
           {
             "text": "妈，我这周末有训练赛，一切顺利。",
             "effect": {
-              "mood": 4
+              "mood": 5
             },
             "next_story": {
               "content": "收到，有你这句我就放心了。比赛加油！",
@@ -121,47 +124,50 @@
                 {
                   "text": "我会稳住心态去打。",
                   "effect": {
-                    "perseverance": 2
+                    "perseverance": 1
                   }
                 },
                 {
                   "text": "要是紧张了我再跟你说。",
                   "effect": {
-                    "mood": 2
+                    "mood": 5
                   }
                 }
               ]
             }
           },
           {
-            "text": "妈，我最近有点累。",
+            "text": "妈咪，我最近有点累。",
             "effect": {
-              "mood": -1
+              "mood": 5
             },
             "next_story": {
-              "content": "累就先恢复，状态比硬撑重要。"
+              "content": "宝贝辛苦了，不要太拼。周末回来妈咪给你做顿好吃的！"
             }
+
           }
         ]
       },
       {
         "id": "mom_p002",
-        "content": "我准备和妈妈聊聊睡眠。",
+        "title": "我准备和妈妈聊聊睡眠。",
         "options": [
           {
-            "text": "我最近睡得比之前好了很多。",
+            "text": "我这几天睡得比之前好了很多。",
             "effect": {
-              "mood": 3,
-              "perseverance": 1
+              "stamina": 5
             },
             "next_story": {
               "content": "太好了，继续保持这个节奏。"
             }
           },
           {
-            "text": "最近入睡慢，可能训练太兴奋。",
+            "text": "最近入睡慢，闭上眼睛就是训练的事。",
+            "effect": {
+              "mood": 5
+            },
             "next_story": {
-              "content": "睡前少看手机，拉伸十分钟会好很多。"
+              "content": "不要太焦虑，我家宝贝是最棒的！"
             }
           }
         ]
@@ -272,14 +278,13 @@
                 {
                   "text": "要！你做的清单最实用。",
                   "effect": {
-                    "mood": 3,
-                    "perseverance": 1
+                    "stamina": 5
                   }
                 },
                 {
                   "text": "我先自己试试规划。",
                   "effect": {
-                    "perseverance": 2
+                    "mood": 5
                   }
                 }
               ]
@@ -288,7 +293,7 @@
           {
             "text": "看心情吧，比赛会很累。",
             "effect": {
-              "mood": -2
+              "mood": 5
             },
             "next_story": {
               "content": "那我给你准备点能量零食，别太绷着。"
@@ -303,13 +308,13 @@
           {
             "text": "必须听，发我链接！",
             "effect": {
-              "mood": 4
+              "mood": 5
             }
           },
           {
             "text": "先收藏，比赛前我会循环播放。",
             "effect": {
-              "perseverance": 1
+              "mood": 5
             }
           }
         ]
@@ -415,8 +420,7 @@
           {
             "text": "我会继续努力！",
             "effect": {
-              "exp": 10,
-              "perseverance": 2
+              "stamina": 5
             },
             "next_story": {
               "content": "很好。那你自己定个更细的周目标。",
@@ -424,14 +428,13 @@
                 {
                   "text": "本周一发进球率提升到65%。",
                   "effect": {
-                    "perseverance": 3
+                    "mood": 5
                   }
                 },
                 {
                   "text": "先把失误率降到每盘3次以内。",
                   "effect": {
-                    "exp": 5,
-                    "perseverance": 2
+                    "stamina": 5
                   }
                 }
               ]
@@ -440,7 +443,7 @@
           {
             "text": "前50太慢了，我想进前30。",
             "effect": {
-              "perseverance": 1
+              "mood": 5
             },
             "next_story": {
               "content": "目标可以高，但要有配套计划。今晚把计划发我。"
@@ -455,7 +458,7 @@
           {
             "text": "收到，我今晚按计划恢复。",
             "effect": {
-              "stamina": 3,
+              "stamina": 5,
               "perseverance": 1
             }
           },
@@ -467,7 +470,7 @@
                 {
                   "text": "明白，我会严格执行。",
                   "effect": {
-                    "perseverance": 2
+                    "perseverance": 1
                   }
                 },
                 {
@@ -490,7 +493,7 @@
           {
             "text": "教练，我想周末补一节发球专项。",
             "effect": {
-              "perseverance": 3
+              "perseverance": 1
             },
             "next_story": {
               "content": "可以，先把本周训练日志发我，我来安排。",
@@ -498,14 +501,13 @@
                 {
                   "text": "今晚就发，按你要求写完整。",
                   "effect": {
-                    "exp": 5,
-                    "perseverance": 1
+                    "stamina": -5
                   }
                 },
                 {
                   "text": "我先整理数据，明早发你。",
                   "effect": {
-                    "perseverance": 1
+                    "stamina": -5
                   }
                 }
               ]
@@ -514,19 +516,36 @@
           {
             "text": "我想先把日常训练稳定住再补练。",
             "effect": {
-              "perseverance": 1
+              "stamina": 10
+            },
+            "next_story": {
+              "content": "稳住基础也好，保持状态，随时准备好补练。",
+              "options": [
+                {
+                  "text": "谢谢教练，我会继续努力的！",
+                  "effect": {
+                    "mood": 5
+                  }
+                },
+                {
+                  "text": "我会在训练日志里备注想补练的内容。",
+                  "effect": {
+                    "mood": 5
+                  }
+                }
+              ]
             }
           }
         ]
       },
       {
         "id": "coach_p002",
-        "content": "我想和教练复盘上一场比赛的二发得分率。",
+        "title": "我想和教练复盘上一场比赛的二发得分率。",
         "options": [
           {
             "text": "教练，我想重点看二发得分率。",
             "effect": {
-              "exp": 6
+              "intelligence": 5
             },
             "next_story": {
               "content": "方向很好，明天训练后做20分钟视频复盘。",
@@ -534,13 +553,13 @@
                 {
                   "text": "好，我会提前记下问题。",
                   "effect": {
-                    "perseverance": 2
+                    "mood": 5
                   }
                 },
                 {
                   "text": "能加上接发站位一起看吗？",
                   "effect": {
-                    "exp": 4
+                    "mood": 5
                   }
                 }
               ]
@@ -549,7 +568,7 @@
           {
             "text": "我先自己复盘一版，再给你看。",
             "effect": {
-              "perseverance": 2
+              "intelligence": 5
             }
           }
         ]
