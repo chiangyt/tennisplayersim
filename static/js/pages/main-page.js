@@ -65,16 +65,20 @@ function _renderScheduleModal(player, isRegistered) {
 
     if (player.age < 14) {
         actionItems += `
-            <div class="drag-item" data-id="train_tennis" style="background:#e3f2fd; color:#1976d2;">🎾 网球训练（体力-25）</div>
-            <div class="drag-item" data-id="train_wisdom" style="background:#fff3e0; color:#ef6c00;">📚 录像复盘（体力-20）</div>`;
+            <div class="drag-item" data-id="train_tennis" style="background:#e3f2fd; color:#1976d2;">🎾 网球训练<br><small style="font-size:10px;">体力-25 / 综合素质+1.5</small></div>
+            <div class="drag-item" data-id="train_wisdom" style="background:#fff3e0; color:#ef6c00;">📚 录像复盘<br><small style="font-size:10px;">体力-20 / 智慧+1.2</small></div>`;
     } else {
+        const gf = _initGainFactors(player.playstyle);
+        const pg = (1.2 * gf.power).toFixed(1);
+        const tg = (1.2 * gf.technique).toFixed(1);
+        const ag = (1.2 * gf.agility).toFixed(1);
         actionItems += `
-            <div class="drag-item" data-id="train_power" style="background:#ffebee; color:#c62828;">💪 力量专项（体力-25）</div>
-            <div class="drag-item" data-id="train_technique" style="background:#e8f5e9; color:#2e7d32;">🎯 技术专项（体力-25）</div>
-            <div class="drag-item" data-id="train_agility" style="background:#f3e5f5; color:#7b1fa2;">⚡ 敏捷专项（体力-25）</div>`;
+            <div class="drag-item" data-id="train_power" style="background:#ffebee; color:#c62828;">💪 力量专项<br><small style="font-size:10px;">体力-25 / 力量+${pg}</small></div>
+            <div class="drag-item" data-id="train_technique" style="background:#e8f5e9; color:#2e7d32;">🎯 技术专项<br><small style="font-size:10px;">体力-25 / 技术+${tg}</small></div>
+            <div class="drag-item" data-id="train_agility" style="background:#f3e5f5; color:#7b1fa2;">⚡ 敏捷专项<br><small style="font-size:10px;">体力-25 / 敏捷+${ag}</small></div>`;
     }
 
-    actionItems += `<div class="drag-item" data-id="rest" style="background:#eeeeee; color:#616161;">💤 休息（体力+30）</div>`;
+    actionItems += `<div class="drag-item" data-id="rest" style="background:#eeeeee; color:#616161;">💤 休息<br><small style="font-size:10px;">体力+30</small></div>`;
 
     let weekSlots = '';
     for (let i = 1; i <= 4; i++) {
