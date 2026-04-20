@@ -181,7 +181,7 @@ export class TennisGirl {
             req_stats: eventData.req_stats
         };
 
-        this.log.push(`📅 报名成功！已预定 ${targetMonth}月 ${eventData.name}。`);
+        this.log.push(`📅 报名成功！已预定 ${targetMonth}月 ${eventData.name}。记得在行程中安排 ⚡参加比赛（体力-50），请确保届时体力充足。`);
         return true;
     }
 
