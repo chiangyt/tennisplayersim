@@ -285,7 +285,9 @@ export class SocialManager {
                 allCandidates.push({ kind: 'pool', idx: i });
             }
             for (let i = 0; i < proactive.length; i++) {
-                allCandidates.push({ kind: 'proactive', idx: i });
+                if (!proactive[i].event_only) {
+                    allCandidates.push({ kind: 'proactive', idx: i });
+                }
             }
             if (allCandidates.length === 0) continue;
 
