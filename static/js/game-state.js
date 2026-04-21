@@ -129,4 +129,12 @@ export class GameState {
             this.current = data;
         }
     }
+
+    static get tutorialSeen() {
+        return localStorage.getItem('tennis_tutorial_seen') === '1';
+    }
+
+    static markTutorialSeen() {
+        localStorage.setItem('tennis_tutorial_seen', '1');
+    }
 }

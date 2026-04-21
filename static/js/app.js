@@ -16,6 +16,7 @@ import * as messagesPage from './pages/messages.js';
 import * as chatDetailPage from './pages/chat-detail.js';
 import * as newsPage from './pages/news-page.js';
 import * as savePage from './pages/save-page.js';
+import { TutorialManager } from './tutorial.js';
 
 // ========== 全局单例 ==========
 const rm = new RankingManager();
@@ -90,6 +91,7 @@ function route() {
                 app.innerHTML = mainPage.render(player);
                 mainPage.init(player);
                 initMainLogic();
+                TutorialManager.maybeStart();
             });
             break;
 
@@ -103,6 +105,8 @@ function route() {
                     .reduce((sum, c) => sum + (c.unread_count || 0), 0);
                 app.innerHTML = phonePage.render(player, totalUnread);
             });
+            if (window.__tutorialActive) window.dispatchEvent(new Event('tut:phone-entered'));
+            TutorialManager.maybeStart();
             break;
 
         case 'calendar':
@@ -217,6 +221,7 @@ function setupGameEvents() {
         const worldData = rm.generateDynamicRankings();
 
         GameState.init(player.toJSON(), rankingData, socialData, worldData);
+        window.__isNewGame = true;
         location.hash = '#/main';
     });
 
@@ -309,6 +314,20 @@ function setupGameEvents() {
 
 // ========== sendPlan 全局函数（供 main_logic.js 调用）==========
 window.sendPlan = function () {
+    if (window.__tutorialActive) {
+        // 教程模式：关闭弹窗但不实际执行计划、不推进月份
+        const scheduleModal = document.getElementById('scheduleModal');
+        if (scheduleModal) {
+            scheduleModal.classList.remove('show');
+            scheduleModal.style.display = 'none';
+        }
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+        window.dispatchEvent(new Event('tut:plan-executed'));
+        return;
+    }
     const actions = [];
     for (let i = 1; i <= 4; i++) {
         const slot = document.getElementById(`slot-${i}`);
@@ -472,6 +491,7 @@ function validatePlan() {
 
     if (count === 4) {
         if (stamina >= cost) {
+            if (window.__tutorialActive) window.dispatchEvent(new Event('tut:slots-filled'));
             if (btn) btn.disabled = false;
             if (warn) warn.style.display = 'none';
             const currentPlan = [];
@@ -541,3 +561,9 @@ window.repeatLast = function () {
 
 // ========== 启动应用 ==========
 boot();
+
+// 开发用：控制台运行 resetTutorial() 可重置引导标志
+window.resetTutorial = () => {
+    localStorage.removeItem('tennis_tutorial_seen');
+    console.log('引导已重置，新建游戏即可再次触发');
+};
