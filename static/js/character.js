@@ -201,6 +201,26 @@ export class TennisGirl {
             this.year += 1;
             this.age += 1;
             this.log.push(`🎂 祝${this.name}生日快乐！你今年 ${this.age} 岁了，离职业梦想又近了一步。`);
+
+            // Height growth: random range per age, tapers off after 16
+            const growthRanges = {
+                13: [3.0, 6.0],
+                14: [2.0, 5.0],
+                15: [1.0, 4.0],
+                16: [0.5, 2.5],
+                17: [0.0, 1.5],
+                18: [0.0, 0.5],
+            };
+            const range = growthRanges[this.age];
+            if (range) {
+                const growth = Math.round((range[0] + Math.random() * (range[1] - range[0])) * 10) / 10;
+                if (growth > 0) {
+                    const prevHeight = this.height;
+                    this.height = Math.round((this.height + growth) * 10) / 10;
+                    this.log.push(`📏 ${this.name}又长高了！身高从 ${prevHeight.toFixed(1)} cm 增长到 ${this.height.toFixed(1)} cm。`);
+                }
+            }
+
             if (this.age === 14) {
                 const baseVal = this.general_stats * 0.2;
                 this.power = baseVal;
