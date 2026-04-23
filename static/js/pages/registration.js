@@ -13,12 +13,13 @@ function _renderMatchCard(player, match, targetMonth) {
     const isItfOrWta = match.system_tag === 'ITF' || match.system_tag === 'WTA';
 
     let isLocked = false;
-    if (match.entry_points !== undefined) {
+    if (match.is_rank_locked) {
+        isLocked = true;
+    } else if (match.entry_points !== undefined) {
         isLocked = (player.ranking_points || 0) < match.entry_points;
     } else if (!isItfOrWta) {
         isLocked = (player.general_stats || 0) < (match.req_stats || 0);
     }
-    // ITF / WTA 已在 getEventsForPlayer 按排名/积分过滤，进到这里均可报名
 
     const cardClass = isAlreadySigned ? 'registered-match' : ((isLocked || isTaken) ? 'locked-match' : 'active-match');
     const btnClass = isAlreadySigned ? 'registered' : ((isLocked || isTaken) ? 'locked' : 'active');
