@@ -34,8 +34,8 @@ export const NAME_POOL = [
 const JOURNALIST_POOL = [
     { name: '林悦', org: '网球观察家' },
     { name: 'Carlos Mendes', org: '里斯本体育报' },
-    { name: '张伟', org: '全球体坛资讯' },
-    { name: '赵可欣', org: '竞赛前线' },
+    { name: '赵可欣', org: '全球体坛资讯' },
+    { name: '张薇', org: '竞赛前线' },
     { name: 'Elena Petrov', org: '国际体育先驱报' },
     { name: 'Pierre Simon', org: '巴黎网球周刊' },
     { name: '孙志坚', org: '环球体育周报' },
@@ -127,16 +127,39 @@ export function fillNames(article, articleIndex) {
  * @param {number[]} readIds - array of _source_id already read
  * @returns {Array} unread news for the given month, with names filled
  */
-export function getNewsForMonth(newsData, month, readIds = []) {
+export function getNewsForMonth(newsData, year, month, readIds = []) {
+    const yearStr = String(year);
     const monthStr = String(month).padStart(2, '0');
     const readSet = new Set(readIds);
-    const pool = newsData
-        .map((item, idx) => ({ ...item, _source_id: idx }))
-        .filter(item => {
-            const itemMonth = String(item.date || '').split('-')[0];
-            return itemMonth === monthStr && !readSet.has(item._source_id);
-        });
-    // 每月只推送一条，池子里按原始顺序取第一条未读的
-    const pick = pool.length > 0 ? [fillNames(pool[0], pool[0]._source_id)] : [];
-    return pick;
+
+    const indexed = newsData.map((item, idx) => ({ ...item, _source_id: idx }));
+
+    // Breaking news: must match exact year+month, shown regardless of per-month limit
+    const breakingItems = indexed.filter(item => {
+        if (!item.breaking) return false;
+        const parts = String(item.date || '').split('-');
+        return parts.length === 3 && parts[0] === yearStr && parts[1] === monthStr && !readSet.has(item._source_id);
+    }).map(item => fillNames(item, item._source_id));
+
+    // Regular news: match month only (any year), not breaking, one per month
+    const regularPool = indexed.filter(item => {
+        if (item.breaking) return false;
+        const parts = String(item.date || '').split('-');
+        return parts[0] === monthStr && !readSet.has(item._source_id);
+    });
+    const regularPick = regularPool.length > 0 ? [fillNames(regularPool[0], regularPool[0]._source_id)] : [];
+
+    return [...breakingItems, ...regularPick];
+}
+
+export function hasBreakingNews(newsData, year, month, readIds = []) {
+    const yearStr = String(year);
+    const monthStr = String(month).padStart(2, '0');
+    const readSet = new Set(readIds);
+    return newsData.some((item, idx) => {
+        if (!item.breaking) return false;
+        const parts = String(item.date || '').split('-');
+        if (parts.length !== 3) return false;
+        return parts[0] === yearStr && parts[1] === monthStr && !readSet.has(idx);
+    });
 }
