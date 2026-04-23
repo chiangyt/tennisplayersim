@@ -186,7 +186,7 @@ export class SocialManager {
 
         if (!story) return;
 
-        if (char.pending_options && char.pending_options.length > 0) {
+        if (char.pending_options && char.pending_options.length > 0 && !story.event_only) {
             if (!char.msg_queue) char.msg_queue = [];
             char.msg_queue.push(story);
         } else {

@@ -175,19 +175,33 @@
       {
         "id": "mom_p_champion",
         "event_only": true,
-        "title": "我拿到冠军了！给妈妈发个好消息。",
+        "title": "第一次拿到冠军！给妈妈发个好消息。",
         "options": [
           {
             "text": "妈咪我这站比赛拿冠军啦！",
             "send_image": true,
             "image_url": "static/images/win1.png",
             "next_story": {
-              "content": "宝贝太棒了！比赛辛苦，要好好休息放松。",
+              "content": "宝贝太棒了！我就知道宝贝一定能拿冠军的！比赛辛苦了，要好好休息放松。",
               "options": [
                 {
-                  "text": "安啦妈咪，我会好好调整的！",
+                  "text": "安啦妈咪，我会好好调整的！有没有奖励？",
                   "effect": {
                     "stamina": 10
+                  },
+                  "next_story": {
+                    "content": "奖励你一个飞吻！",
+                    "options": [
+                      {
+                        "text": "切，幼稚，我都多大了！",
+                        "effect": {
+                          "mood": 10
+                        },
+                        "next_story": {
+                          "content": "开个玩笑啦，回来给你做你最爱的糖醋排骨！"
+                        }
+                      }
+                    ]
                   }
                 },
                 {
@@ -231,13 +245,17 @@
                   "text": "妈咪有没有奖励呀！",
                   "next_story": {
                     "content": "奖励你一个亲亲！",
-                    "text": "幼稚，我已经长大了！",
-                    "effect": {
+                    "options": [
+                      {
+                        "text": "幼稚，我已经长大了！",
+                        "effect": {
                           "mood": 5,
                           "stamina": 5
                         }
                       }
+                    ]
                   }
+                }
               ]
             }
           }
