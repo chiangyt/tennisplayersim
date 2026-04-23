@@ -365,7 +365,7 @@
           {
             "text": "我报了新比赛，突然有点紧张。",
             "effect": {
-              "mood": -1
+              "mood": 5
             },
             "next_story": {
               "content": "你能打到现在已经很厉害了，稳住节奏就行。",
@@ -373,22 +373,39 @@
                 {
                   "text": "你这话让我踏实多了。",
                   "effect": {
-                    "mood": 3
+                    "mood": 5
                   }
                 },
                 {
                   "text": "我会把紧张转成专注。",
                   "effect": {
-                    "perseverance": 2
+                    "perseverance": 1
                   }
                 }
               ]
             }
           },
           {
-            "text": "我状态不错，想冲一把。",
+            "text": "我状态不错，想多打比赛。",
             "effect": {
-              "perseverance": 2
+              "mood": 5
+            },
+            "next_story": {
+              "content": "冲，夺冠了请我吃饭！",
+              "options": [
+                {
+                  "text": "哎，为什么我夺冠请你吃饭？！。",
+                  "effect": {
+                    "mood": 5
+                  }
+                },
+                {
+                  "text": "当然，就去你之前一直说的那家火锅。",
+                  "effect": {
+                    "mood": 5
+                  }
+                }
+              ]
             }
           }
         ]
