@@ -567,9 +567,26 @@
             }
           },
           {
-            "text": "我先自己复盘一版，再给你看。",
+            "text": "教练，我觉得我二发太差了。",
             "effect": {
               "intelligence": 2
+            },
+            "next_story":{
+              "content": "你的落点还可以，就是力量差了点，不过你还小不急着上力量。",
+              "options":[
+                {
+                  "text": "看来我要努力长大。",
+                  "effect":{
+                    "perseverance": 0.5
+                  }
+                },
+                {
+                  "text": "好，那就先不急。",
+                  "effect":{
+                    "stamina": 10
+                  }
+                }
+              ]
             }
           }
         ]

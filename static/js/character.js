@@ -141,7 +141,7 @@ export class TennisGirl {
                     return `${this.name}心情不好，复盘效率不高。`;
                 } else {
                     this.wisdom = Math.min(100, this.wisdom + 1.2);
-                    return `${this.name}复盘了世界第一的比赛录像，智慧提升了。`;
+                    return `${this.name}观看了比赛录像，智慧提升了。`;
                 }
             }
         } else {
