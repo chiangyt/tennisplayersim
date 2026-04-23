@@ -61,9 +61,9 @@ export class TennisGirl {
                 let reachedRoundName, pEarned, matchLogs, gGain;
 
                 if (matchInfo && matchInfo.level_code === 'GS') {
-                    [reachedRoundName, pEarned, matchLogs, gGain] = simulateGsMatch(this, matchInfo, allTournaments, rankingData);
+                    [reachedRoundName, pEarned, matchLogs, gGain] = simulateGsMatch(this, matchInfo, rankingData);
                 } else {
-                    [reachedRoundName, pEarned, matchLogs, gGain] = simulateMatch(this, matchInfo, allTournaments, rankingData);
+                    [reachedRoundName, pEarned, matchLogs, gGain] = simulateMatch(this, matchInfo, rankingData);
                 }
 
                 this.just_won_championship = reachedRoundName === "冠军";
