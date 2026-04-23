@@ -30,7 +30,7 @@ export class TennisGirl {
         this.gain_factors = this._initGainFactors(playstyle);
         this.log = ["12岁的夏天，你的职业球员之路正式开启了。"];
         this.scheduled_tournaments = {};
-        this.ctj_first_champion_sent = false;
+        this.first_champion_sent = false;
     }
 
     _initGainFactors(style) {
@@ -69,12 +69,11 @@ export class TennisGirl {
                 this.just_won_championship = reachedRoundName === "冠军";
                 if (reachedRoundName === "冠军") {
                     this.mood += 10;
-                    const lc = matchInfo ? (matchInfo.level_code || '') : '';
-                    if (!this.ctj_first_champion_sent && ['A', 'B', 'C'].includes(lc.charAt(0))) {
+                    if (!this.first_champion_sent) {
                         if (typeof socialTrigger === 'function') {
                             socialTrigger("mom", "mom_p_champion");
                         }
-                        this.ctj_first_champion_sent = true;
+                        this.first_champion_sent = true;
                     }
                 } else {
                     this.mood -= 10;
