@@ -1,7 +1,7 @@
 // app.js — SPA 路由器、数据加载、事件分发
 import { GameState } from './game-state.js';
 import { TennisGirl } from './character.js';
-import { RankingManager } from './ranking.js';
+import { RankingManager, computeProfessionalRank } from './ranking.js';
 import { SocialManager } from './social.js';
 import { loadTournaments, getEventsForPlayer, findEventById, getMonthlyMatches } from './tournament.js';
 import { getNewsForMonth, hasBreakingNews, fillNames } from './news.js';
@@ -124,7 +124,11 @@ function route() {
                 let targetMonth = player.month + 1;
                 if (targetMonth > 12) targetMonth = 1;
                 const playerRanking = rm.getAllRankings(state.ranking);
-                const regMatches = getEventsForPlayer(STATIC_DATA, player.age, targetMonth, playerRanking);
+                const wtaNpcs = (state.world && state.world.wta) || [];
+                const proTotalPts = (playerRanking.ITF || 0) + (playerRanking.WTA || 0);
+                const proRank = computeProfessionalRank(proTotalPts, wtaNpcs);
+                const wtaRankForGate = proRank !== null ? proRank : 9999;
+                const regMatches = getEventsForPlayer(STATIC_DATA, player.age, targetMonth, playerRanking, { WTA: wtaRankForGate });
                 app.innerHTML = registrationPage.render(player, regMatches, targetMonth);
                 registrationPage.init();
             });
@@ -134,7 +138,7 @@ function route() {
             renderPage(() => {
                 const player = state.player;
                 app.innerHTML = rankingPage.render(player);
-                rankingPage.init(state.ranking, state.world, player.year, player.month);
+                rankingPage.init(state.ranking, state.world, player.year, player.month, player);
             });
             break;
 
