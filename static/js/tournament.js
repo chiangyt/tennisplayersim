@@ -24,32 +24,37 @@ export function loadTournaments(staticData) {
  * @param {object} [playerRanking] - { CTJ: number, ITF_Junior: number, ITF: number, WTA: number }
  * @returns {object[]}
  */
-export function getEventsForPlayer(allData, age, month, playerRanking) {
+export function getEventsForPlayer(allData, age, month, playerRanking, rankingPositions = {}) {
     let allowedSystems;
-    if (age < 14) {
+    if (age < 13) {
         allowedSystems = ["CTJ"];
+    } else if (age === 13) {
+        allowedSystems = ["CTJ", "ITF_Junior"];
     } else {
         allowedSystems = ["ITF_Junior", "ITF", "WTA"];
     }
 
-    if (!playerRanking) {
-        playerRanking = {};
-    }
+    if (!playerRanking) playerRanking = {};
 
     const matches = [];
     for (const systemKey of allowedSystems) {
         const targetSystem = allData[systemKey] || {};
-        // ITF 女子职业赛用 ITF 积分，WTA 赛用 WTA 积分作为准入依据
-        const sysPoints = playerRanking[systemKey] || 0;
 
         for (const levelEvents of Object.values(targetSystem)) {
             if (Array.isArray(levelEvents)) {
                 for (const event of levelEvents) {
                     if (typeof event === 'object' && event !== null && event.month === month) {
-                        // 按各体系积分校验准入门槛
                         const req = event.req_ranking || 0;
-                        if ((systemKey === 'ITF' || systemKey === 'WTA') && sysPoints < req) {
-                            continue; // 积分不足，不展示该赛事
+                        if (req > 0) {
+                            if (systemKey === 'WTA') {
+                                // WTA 用排名位次：玩家位次必须 <= req_ranking
+                                const playerWtaRank = rankingPositions.WTA || 9999;
+                                if (playerWtaRank > req) continue;
+                            } else if (systemKey === 'ITF') {
+                                // ITF 职业赛用累计积分：玩家积分必须 >= req_ranking
+                                const sysPoints = playerRanking[systemKey] || 0;
+                                if (sysPoints < req) continue;
+                            }
                         }
                         event.system_tag = systemKey;
                         if (systemKey === 'ITF_Junior') {

@@ -1,4 +1,26 @@
+import { computeProfessionalRank } from '../ranking.js';
+
 export function render(player) {
+    const age = player ? player.age : 12;
+    const showCtj = age <= 13;
+    const showItfJr = age >= 13;
+    const initialTab = showCtj ? 'ctj' : 'itfjr';
+
+    const tabItems = [];
+    if (showCtj)  tabItems.push({ id: 'ctj',    label: '我的组别 (CTJ-U14)' });
+    if (showItfJr) tabItems.push({ id: 'itfjr', label: 'ITF Junior 排名' });
+    tabItems.push({ id: 'world', label: '世界排名 (WTA)' });
+
+    const tabNavHtml = tabItems.map((t, i) =>
+        `<div class="tab-item ${i === 0 ? 'active' : ''}" id="tab-${t.id}" onclick="switchView('${t.id}')">${t.label}</div>`
+    ).join('');
+
+    const viewsHtml = [
+        showCtj  ? `<div id="view-ctj"><div id="leaderboard-ctj"></div></div>` : '',
+        showItfJr ? `<div id="view-itfjr" style="display:none;"><div id="leaderboard-itfjr"></div></div>` : '',
+        `<div id="view-world" style="display:none;"><div id="leaderboard-world"></div></div>`,
+    ].join('');
+
     return `
     <style>
         :root {
@@ -26,7 +48,7 @@ export function render(player) {
             background: #fff;
             position: sticky; top: 0; z-index: 10;
         }
-        .tab-item { flex: 1; text-align: center; padding: 15px; font-weight: bold; cursor: pointer; }
+        .tab-item { flex: 1; text-align: center; padding: 15px; font-weight: bold; cursor: pointer; font-size: 0.85rem; }
         .tab-item.active { background: var(--comic-black); color: #fff; }
         .rank-card {
             display: flex; align-items: center; background: #fff;
@@ -91,20 +113,12 @@ export function render(player) {
     <div class="header-actions">
         <a href="#/phone" class="back-to-phone">⬅ 退出排名</a>
     </div>
-    <div class="tab-nav">
-        <div class="tab-item active" id="tab-my" onclick="switchView('my')">我的组别 (CTJ-U14)</div>
-        <div class="tab-item" id="tab-world" onclick="switchView('world')">世界排名 (WTA)</div>
-    </div>
+    <div class="tab-nav">${tabNavHtml}</div>
     <div class="container">
-        <div id="view-my">
-            <div id="leaderboard-my"></div>
-        </div>
-        <div id="view-world" style="display:none;">
-            <div id="leaderboard-world"></div>
-        </div>
+        ${viewsHtml}
     </div>
     <div class="sticky-wrapper">
-        <div id="sticky-me" class="me-sticky-bar" onclick="showPointsDetail()">
+        <div id="sticky-me" class="me-sticky-bar">
             <div class="rank-num" id="my-live-rank">#--</div>
             <div class="player-info">
                 ${player ? player.name : '选手'}
@@ -128,79 +142,226 @@ export function render(player) {
     </div>`;
 }
 
-export function init(playerPointsData, worldRankingData, playerYear, playerMonth) {
+export function init(playerPointsData, worldRankingData, playerYear, playerMonth, player) {
     const PLAYER_YEAR = playerYear;
     const PLAYER_MONTH = playerMonth;
+    const playerName = player ? player.name : '选手';
+    const playerAge = player ? player.age : 12;
 
-    function renderLists() {
-        const myContainer = document.getElementById('leaderboard-my');
-        if (worldRankingData && worldRankingData.competitors) {
-            const top20 = worldRankingData.competitors.slice(0, 20);
-            myContainer.innerHTML = top20.map(p => `
-                <div class="rank-card">
-                    <div class="rank-num">#${p.rank}</div>
-                    <div class="player-info">${p.name}</div>
-                    <div class="pts-val">${p.points}</div>
-                </div>`).join('');
-        }
+    // CTJ 积分
+    const ctjPts = (playerPointsData.CTJ && playerPointsData.CTJ.summary)
+        ? (playerPointsData.CTJ.summary.total_effective_points || 0) : 0;
 
-        const worldContainer = document.getElementById('leaderboard-world');
-        if (worldRankingData && worldRankingData.wta) {
-            worldContainer.innerHTML = worldRankingData.wta.slice(0, 20).map(p => `
-                <div class="rank-card">
-                    <div class="rank-num">#${p.rank}</div>
-                    <div class="player-info">${p.name}</div>
-                    <div class="pts-val">${p.points}</div>
-                </div>`).join('');
-        }
+    // ITF Junior 积分
+    const itfJrPts = (playerPointsData.ITF_Junior && playerPointsData.ITF_Junior.summary)
+        ? (playerPointsData.ITF_Junior.summary.total_effective_points || 0) : 0;
+
+    // 成人积分
+    const itfPts = (playerPointsData.ITF && playerPointsData.ITF.summary)
+        ? (playerPointsData.ITF.summary.total_effective_points || 0) : 0;
+    const wtaPts = (playerPointsData.WTA && playerPointsData.WTA.summary)
+        ? (playerPointsData.WTA.summary.total_effective_points || 0) : 0;
+    const proTotalPts = itfPts + wtaPts;
+
+    const ctjNpcs  = (worldRankingData && worldRankingData.competitors) || [];
+    const itfJrNpcs = (worldRankingData && worldRankingData.itf_junior)  || [];
+    const wtaNpcs  = (worldRankingData && worldRankingData.wta) || [];
+
+    const proRank = computeProfessionalRank(proTotalPts, wtaNpcs);
+
+    function _pointItemHtml(item) {
+        const ageInMonths = (PLAYER_YEAR * 12 + PLAYER_MONTH) - (item.year * 12 + item.month);
+        const monthsLeft = 12 - ageInMonths;
+        let expiryClass = 'effective';
+        if (monthsLeft <= 1) expiryClass = 'expiry-red';
+        else if (monthsLeft <= 4) expiryClass = 'expiry-yellow';
+        return `
+            <div class="point-item ${item.is_effective ? expiryClass : ''}">
+                <div>
+                    <div style="font-weight:bold;">${item.desc}</div>
+                    <div style="font-size:0.8rem;color:#888;">
+                        ${item.year}年${item.month}月获得
+                        <span class="badge ${monthsLeft <= 4 ? 'bg-light text-dark border border-dark' : ''}">
+                            ⏰ 剩 ${monthsLeft} 个月过期
+                        </span>
+                    </div>
+                </div>
+                <div style="font-weight:900;color:var(--comic-purple);font-size:1.3rem;">+${item.points}</div>
+            </div>`;
     }
 
-    function updateDynamicMeInfo() {
-        if (!playerPointsData || !playerPointsData.CTJ) return;
-        const pts = playerPointsData.CTJ.summary.total_effective_points;
-        const allCompetitors = (worldRankingData && worldRankingData.competitors) ? worldRankingData.competitors : [];
-        const higherThanMe = allCompetitors.filter(p => p.points > pts).length;
-        const currentRank = higherThanMe + 1;
-        document.getElementById('my-bar-pts').innerText = pts;
-        document.getElementById('my-live-rank').innerText = "#" + currentRank;
+    function renderCtjList() {
+        const el = document.getElementById('leaderboard-ctj');
+        if (!el) return;
+        el.innerHTML = ctjNpcs.slice(0, 20).map(p => `
+            <div class="rank-card">
+                <div class="rank-num">#${p.rank}</div>
+                <div class="player-info">${p.name}</div>
+                <div class="pts-val">${p.points}</div>
+            </div>`).join('');
     }
 
-    window.showPointsDetail = function() {
-        if (!playerPointsData || !playerPointsData.CTJ) {
-            console.error("玩家积分数据尚未加载");
+    function renderItfJrList() {
+        const el = document.getElementById('leaderboard-itfjr');
+        if (!el) return;
+        if (itfJrNpcs.length === 0) {
+            el.innerHTML = '<div style="text-align:center;color:#aaa;padding:20px;">暂无 ITF Junior 排名数据</div>';
             return;
         }
-        const ctj = playerPointsData.CTJ;
-        document.getElementById('detail-total-pts').innerText = ctj.summary.total_effective_points;
-        document.getElementById('detail-rule').innerText = "计算规则: " + ctj.summary.ranking_system;
+        const sorted = [...itfJrNpcs].sort((a, b) => b.points - a.points);
+        const playerRank = sorted.filter(n => n.points > itfJrPts).length + 1;
 
-        const list = document.getElementById('detail-history-list');
-        const history = ctj.point_history || [];
-        list.innerHTML = history.slice().reverse().map(item => {
-            const ageInMonths = (PLAYER_YEAR * 12 + PLAYER_MONTH) - (item.year * 12 + item.month);
-            const monthsLeft = 12 - ageInMonths;
-            let expiryClass = "effective";
-            if (monthsLeft <= 1) {
-                expiryClass = "expiry-red";
-            } else if (monthsLeft <= 4) {
-                expiryClass = "expiry-yellow";
-            }
+        let merged;
+        if (itfJrPts > 0 && playerRank <= sorted.length) {
+            merged = [...sorted];
+            merged.splice(playerRank - 1, 0, { rank: playerRank, name: playerName, points: itfJrPts, isPlayer: true });
+            merged = merged.slice(0, 22);
+        } else {
+            merged = sorted.slice(0, 20);
+        }
+
+        let html = merged.map(p => {
+            const youBadge = p.isPlayer
+                ? `<span style="background:#ffde00;border:2px solid #000;padding:1px 5px;border-radius:5px;font-size:0.7rem;margin-left:6px;">YOU</span>`
+                : '';
+            const cardStyle = p.isPlayer ? 'border:3px solid #ffde00;background:#fffbe6;' : '';
             return `
-                <div class="point-item ${item.is_effective ? expiryClass : ''}">
-                    <div>
-                        <div style="font-weight:bold;">${item.desc}</div>
-                        <div style="font-size:0.8rem; color:#888;">
-                            ${item.year}年${item.month}月获得
-                            <span class="badge ${monthsLeft <= 4 ? 'bg-light text-dark border border-dark' : ''}">
-                                ⏰ 剩 ${monthsLeft} 个月过期
-                            </span>
-                        </div>
-                    </div>
-                    <div style="font-weight:900; color:var(--comic-purple); font-size:1.3rem;">+${item.points}</div>
+                <div class="rank-card" style="${cardStyle}">
+                    <div class="rank-num">#${p.rank}</div>
+                    <div class="player-info">${p.name}${youBadge}</div>
+                    <div class="pts-val">${p.points}</div>
                 </div>`;
         }).join('');
 
-        document.getElementById('detail-view').style.display = 'block';
+        if (itfJrPts > 0 && playerRank > sorted.length) {
+            html += `
+                <div style="text-align:center;color:#aaa;padding:8px 0;font-size:13px;">· · ·</div>
+                <div class="rank-card" style="border:3px solid #ffde00;background:#fffbe6;">
+                    <div class="rank-num">#${playerRank}</div>
+                    <div class="player-info">${playerName}
+                        <span style="background:#ffde00;border:2px solid #000;padding:1px 5px;border-radius:5px;font-size:0.7rem;margin-left:6px;">YOU</span>
+                    </div>
+                    <div class="pts-val">${itfJrPts}</div>
+                </div>`;
+        }
+
+        if (itfJrPts === 0) {
+            html += `<div style="text-align:center;color:#aaa;padding:16px;font-size:13px;">暂无 ITF Junior 积分，参赛后将出现在此排名中</div>`;
+        }
+
+        el.innerHTML = html;
+    }
+
+    function renderWorldList() {
+        const worldContainer = document.getElementById('leaderboard-world');
+        if (!worldContainer) return;
+
+        const npcTop = [...wtaNpcs].sort((a, b) => b.points - a.points);
+        const playerCard = (proRank !== null) ? {
+            rank: proRank, name: playerName, points: proTotalPts, isPlayer: true
+        } : null;
+
+        let merged;
+        if (playerCard && proRank <= npcTop.length) {
+            merged = [...npcTop];
+            merged.splice(proRank - 1, 0, playerCard);
+            merged = merged.slice(0, 22);
+        } else {
+            merged = npcTop.slice(0, 20);
+        }
+
+        let html = merged.map(p => {
+            const youBadge = p.isPlayer
+                ? `<span style="background:#ffde00;border:2px solid #000;padding:1px 5px;border-radius:5px;font-size:0.7rem;margin-left:6px;">YOU</span>`
+                : '';
+            const cardStyle = p.isPlayer ? 'border:3px solid #ffde00;background:#fffbe6;' : '';
+            return `
+                <div class="rank-card" style="${cardStyle}">
+                    <div class="rank-num">#${p.rank}</div>
+                    <div class="player-info">${p.name}${youBadge}</div>
+                    <div class="pts-val">${p.points}</div>
+                </div>`;
+        }).join('');
+
+        if (playerCard && proRank > npcTop.length) {
+            html += `
+                <div style="text-align:center;color:#aaa;padding:8px 0;font-size:13px;">· · ·</div>
+                <div class="rank-card" style="border:3px solid #ffde00;background:#fffbe6;">
+                    <div class="rank-num">#${proRank}${proRank >= 1500 ? '+' : ''}</div>
+                    <div class="player-info">${playerName}
+                        <span style="background:#ffde00;border:2px solid #000;padding:1px 5px;border-radius:5px;font-size:0.7rem;margin-left:6px;">YOU</span>
+                    </div>
+                    <div class="pts-val">${proTotalPts}</div>
+                </div>`;
+        }
+
+        if (proRank === null) {
+            html += `<div style="text-align:center;color:#aaa;padding:16px;font-size:13px;">尚无成人积分，参加 ITF/WTA 赛事后将出现在此排名中</div>`;
+        }
+
+        worldContainer.innerHTML = html;
+    }
+
+    function updateStickyForTab(type) {
+        const stickyEl = document.getElementById('sticky-me');
+        if (!stickyEl) return;
+        if (type === 'ctj') {
+            const allComp = ctjNpcs;
+            const rank = allComp.filter(p => p.points > ctjPts).length + 1;
+            document.getElementById('my-bar-pts').innerText = ctjPts;
+            document.getElementById('my-live-rank').innerText = '#' + rank;
+            stickyEl.onclick = () => window.showPointsDetail('ctj');
+        } else if (type === 'itfjr') {
+            const rank = itfJrNpcs.filter(p => p.points > itfJrPts).length + 1;
+            document.getElementById('my-bar-pts').innerText = itfJrPts;
+            document.getElementById('my-live-rank').innerText = itfJrPts > 0 ? '#' + rank : '#—';
+            stickyEl.onclick = () => window.showPointsDetail('itfjr');
+        } else {
+            const rankStr = proRank !== null
+                ? '#' + proRank + (proRank >= 1500 ? '+' : '')
+                : '#—';
+            document.getElementById('my-bar-pts').innerText = proTotalPts;
+            document.getElementById('my-live-rank').innerText = rankStr;
+            stickyEl.onclick = () => window.showPointsDetail('pro');
+        }
+    }
+
+    window.showPointsDetail = function(mode) {
+        const detailView = document.getElementById('detail-view');
+        const list = document.getElementById('detail-history-list');
+        if (!detailView || !list) return;
+
+        if (mode === 'pro') {
+            const itfHistory = (playerPointsData.ITF && playerPointsData.ITF.point_history) || [];
+            const wtaHistory = (playerPointsData.WTA && playerPointsData.WTA.point_history) || [];
+            const combined = [...itfHistory, ...wtaHistory].sort((a, b) =>
+                (b.year * 12 + b.month) - (a.year * 12 + a.month));
+            document.getElementById('detail-sys').innerText = 'PRO RANKING';
+            document.getElementById('detail-total-pts').innerText = proTotalPts;
+            document.getElementById('detail-rule').innerText = `ITF ${itfPts}分 + WTA ${wtaPts}分`;
+            list.innerHTML = combined.length > 0
+                ? combined.map(_pointItemHtml).join('')
+                : '<div style="text-align:center;color:#aaa;padding:20px;">暂无成人赛事记录</div>';
+        } else if (mode === 'itfjr') {
+            const data = playerPointsData.ITF_Junior;
+            document.getElementById('detail-sys').innerText = 'ITF JUNIOR';
+            document.getElementById('detail-total-pts').innerText = itfJrPts;
+            document.getElementById('detail-rule').innerText = data
+                ? '计算规则: ' + (data.summary.ranking_system || 'Best-of-6')
+                : 'Best-of-6';
+            list.innerHTML = (data && data.point_history && data.point_history.length > 0)
+                ? [...data.point_history].reverse().map(_pointItemHtml).join('')
+                : '<div style="text-align:center;color:#aaa;padding:20px;">暂无 ITF Junior 赛事记录</div>';
+        } else {
+            const ctj = playerPointsData.CTJ;
+            if (!ctj) return;
+            document.getElementById('detail-sys').innerText = 'CTJ SYSTEM';
+            document.getElementById('detail-total-pts').innerText = ctj.summary.total_effective_points;
+            document.getElementById('detail-rule').innerText = '计算规则: ' + ctj.summary.ranking_system;
+            list.innerHTML = (ctj.point_history || []).slice().reverse().map(_pointItemHtml).join('');
+        }
+
+        detailView.style.display = 'block';
     };
 
     window.hidePointsDetail = function() {
@@ -208,13 +369,20 @@ export function init(playerPointsData, worldRankingData, playerYear, playerMonth
     };
 
     window.switchView = function(type) {
-        document.getElementById('view-my').style.display = type === 'my' ? 'block' : 'none';
-        document.getElementById('view-world').style.display = type === 'world' ? 'block' : 'none';
-        document.getElementById('sticky-me').style.display = type === 'my' ? 'flex' : 'none';
-        document.getElementById('tab-my').classList.toggle('active', type === 'my');
-        document.getElementById('tab-world').classList.toggle('active', type === 'world');
+        ['ctj', 'itfjr', 'world'].forEach(id => {
+            const v = document.getElementById(`view-${id}`);
+            const t = document.getElementById(`tab-${id}`);
+            if (v) v.style.display = type === id ? 'block' : 'none';
+            if (t) t.classList.toggle('active', type === id);
+        });
+        updateStickyForTab(type);
     };
 
-    renderLists();
-    updateDynamicMeInfo();
+    renderCtjList();
+    renderItfJrList();
+    renderWorldList();
+
+    // Activate initial tab based on age
+    const initialTab = playerAge <= 13 ? 'ctj' : 'itfjr';
+    updateStickyForTab(initialTab);
 }

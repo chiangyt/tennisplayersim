@@ -84,6 +84,20 @@ function _getSystemFromLevelCode(levelCode) {
 }
 
 /**
+ * 根据体系和年龄确定 Best-of-N 的 N 值
+ * CTJ: 8, ITF_Junior: 6
+ * ITF / WTA: 14~17岁算10站，18岁+算12站
+ */
+function _getLimitForSystem(systemKey, age) {
+    if (systemKey === 'CTJ') return 8;
+    if (systemKey === 'ITF_Junior') return 6;
+    if (systemKey === 'ITF' || systemKey === 'WTA') {
+        return age >= 18 ? 12 : 10;
+    }
+    return 6;
+}
+
+/**
  * 更新玩家积分数据（在 rankingData 对象上直接修改，无文件 I/O）
  * @param {object} player
  * @param {object} eventInfo
@@ -94,14 +108,8 @@ function _getSystemFromLevelCode(levelCode) {
  */
 function _autoUpdatePlayerPoints(player, eventInfo, reachedRound, points, rankingData) {
     const levelCode = eventInfo.level_code || '';
-    let systemKey;
-    if (player.age < 14) {
-        systemKey = "CTJ";
-    } else {
-        systemKey = _getSystemFromLevelCode(levelCode);
-    }
-    const limitMap = { CTJ: 8, ITF_Junior: 6, ITF: 6, WTA: 6 };
-    const limit = limitMap[systemKey] || 6;
+    const systemKey = _getSystemFromLevelCode(levelCode);
+    const limit = _getLimitForSystem(systemKey, player.age);
 
     // 确保体系键存在
     if (!rankingData[systemKey]) {
