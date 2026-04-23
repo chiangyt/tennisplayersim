@@ -1,7 +1,11 @@
-export function render(player) {
+export function render(player, breakingNews = false) {
     const gainFactors = _initGainFactors(player.playstyle);
     const isRegistered = !!(player.scheduled_tournaments && player.scheduled_tournaments[String(player.month)]);
     const currentEvent = player.scheduled_tournaments ? player.scheduled_tournaments[String(player.month)] : null;
+    const breakingBanner = breakingNews ? `
+    <div class="breaking-news-banner" onclick="location.hash='#/news'">
+        📰 好像有重大新闻，快去看看吧！
+    </div>` : '';
 
     return `
     <div class="header-stats">
@@ -20,6 +24,7 @@ export function render(player) {
             </div>
         </div>
     </div>
+    ${breakingBanner}
     <div class="story-content" id="logBox">
         ${(player.log || []).map((line, i, arr) => `
             <div class="log-item ${i === arr.length - 1 ? 'fw-bold' : 'text-muted'}">${line}</div>

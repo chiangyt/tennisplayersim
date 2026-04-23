@@ -477,6 +477,27 @@ body {
     padding: 24px;
 }
 
+/* ===== 重大新闻横幅 ===== */
+.breaking-news-banner {
+    background: #ff4757;
+    color: #fff;
+    font-weight: 900;
+    font-size: 14px;
+    text-align: center;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-bottom: 2px solid #000;
+    animation: breaking-pulse 1.2s ease-in-out infinite;
+    flex-shrink: 0;
+}
+.breaking-news-banner:active {
+    background: #c0392b;
+}
+@keyframes breaking-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.75; }
+}
+
 /* ===== 新手引导 Tutorial ===== */
 #tut-overlay {
     pointer-events: none;

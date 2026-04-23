@@ -4,7 +4,7 @@ import { TennisGirl } from './character.js';
 import { RankingManager } from './ranking.js';
 import { SocialManager } from './social.js';
 import { loadTournaments, getEventsForPlayer, findEventById, getMonthlyMatches } from './tournament.js';
-import { getNewsForMonth, fillNames } from './news.js';
+import { getNewsForMonth, hasBreakingNews, fillNames } from './news.js';
 
 import * as createPage from './pages/create.js';
 import * as mainPage from './pages/main-page.js';
@@ -88,7 +88,8 @@ function route() {
         case 'main':
             renderPage(() => {
                 const player = state.player;
-                app.innerHTML = mainPage.render(player);
+                const breaking = hasBreakingNews(NEWS_DATA, player.year, player.month, state.readNews || []);
+                app.innerHTML = mainPage.render(player, breaking);
                 mainPage.init(player);
                 initMainLogic();
                 TutorialManager.maybeStart();
@@ -165,7 +166,7 @@ function route() {
             renderPage(() => {
                 const player = state.player;
                 const readIds = state.readNews || [];
-                const news = getNewsForMonth(NEWS_DATA, player.month, readIds);
+                const news = getNewsForMonth(NEWS_DATA, player.year, player.month, readIds);
                 app.innerHTML = newsPage.renderList(news);
                 newsPage.initList();
             });
@@ -360,7 +361,7 @@ window.sendPlan = function () {
 
     // 月份即将推进，把当月新闻标记为已读
     const readIds = state.readNews || [];
-    const monthNews = getNewsForMonth(NEWS_DATA, player.month, readIds);
+    const monthNews = getNewsForMonth(NEWS_DATA, player.year, player.month, readIds);
     const newReadIds = monthNews.length > 0
         ? [...new Set([...readIds, ...monthNews.map(n => n._source_id)])]
         : readIds;
