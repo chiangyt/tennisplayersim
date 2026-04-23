@@ -56,8 +56,8 @@ export function render(player) {
             padding: 15px; margin-bottom: 15px;
             box-shadow: 4px 4px 0px rgba(0,0,0,0.05);
         }
-        .rank-num { width: 50px; font-weight: 900; font-style: italic; color: var(--comic-purple); font-size: 1.2rem; }
-        .player-info { flex: 1; font-weight: bold; }
+        .rank-num { min-width: 55px; padding-right: 10px; flex-shrink: 0; font-weight: 900; font-style: italic; color: var(--comic-purple); font-size: 1.2rem; white-space: nowrap; }
+        .player-info { flex: 1; font-weight: bold; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
         .pts-val { font-weight: 900; }
         .sticky-wrapper {
             position: fixed; bottom: 0; left: 0; right: 0;
