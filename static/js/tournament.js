@@ -45,18 +45,18 @@ export function getEventsForPlayer(allData, age, month, playerRanking, rankingPo
                 for (const event of levelEvents) {
                     if (typeof event === 'object' && event !== null && event.month === month) {
                         const req = event.req_ranking || 0;
+                        let rankLocked = false;
                         if (req > 0) {
                             if (systemKey === 'WTA') {
-                                // WTA 用排名位次：玩家位次必须 <= req_ranking
                                 const playerWtaRank = rankingPositions.WTA || 9999;
-                                if (playerWtaRank > req) continue;
+                                if (playerWtaRank > req) rankLocked = true;
                             } else if (systemKey === 'ITF') {
-                                // ITF 职业赛用累计积分：玩家积分必须 >= req_ranking
                                 const sysPoints = playerRanking[systemKey] || 0;
-                                if (sysPoints < req) continue;
+                                if (sysPoints < req) rankLocked = true;
                             }
                         }
                         event.system_tag = systemKey;
+                        event.is_rank_locked = rankLocked;
                         if (systemKey === 'ITF_Junior') {
                             event.entry_points = _ITF_JUNIOR_ENTRY_POINTS[event.level_code] || 0;
                         }
