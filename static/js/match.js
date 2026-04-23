@@ -90,7 +90,7 @@ function _getSystemFromLevelCode(levelCode) {
  */
 function _getLimitForSystem(systemKey, age) {
     if (systemKey === 'CTJ') return 8;
-    if (systemKey === 'ITF_Junior') return 6;
+    if (systemKey === 'ITF_Junior') return 8;
     if (systemKey === 'ITF' || systemKey === 'WTA') {
         return age >= 18 ? 12 : 10;
     }
@@ -173,7 +173,7 @@ function _autoUpdatePlayerPoints(player, eventInfo, reachedRound, points, rankin
  * @param {object} rankingData - 积分存档对象，直接修改
  * @returns {[string, number, string[], number]} [reachedRoundName, currentPoints, matchLogs, statGain]
  */
-export function simulateMatch(player, matchInfo, allTournaments, rankingData) {
+export function simulateMatch(player, matchInfo, rankingData) {
     const baseReq = matchInfo.req_stats;
     let oppWisMin, oppWisMax, oppPerMin, oppPerMax;
 
@@ -268,7 +268,7 @@ export function simulateMatch(player, matchInfo, allTournaments, rankingData) {
  * @param {object} rankingData - 积分存档对象，直接修改
  * @returns {[string, number, string[], number]}
  */
-export function simulateGsMatch(player, matchInfo, allTournaments, rankingData) {
+export function simulateGsMatch(player, matchInfo, rankingData) {
     const baseReq = matchInfo.req_stats;
 
     // 大满贯对手均为顶尖职业球员
