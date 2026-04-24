@@ -121,16 +121,15 @@ export function fillNames(article, articleIndex) {
 }
 
 /**
- * Filter news by month (ignoring year) and exclude already-read items.
+ * Filter news by month (ignoring year). Always returns the month's news —
+ * read-state only affects the banner on main page (see hasBreakingNews).
  * @param {Array} newsData  - raw news array from JSON
  * @param {number} month    - 1-12
- * @param {number[]} readIds - array of _source_id already read
- * @returns {Array} unread news for the given month, with names filled
+ * @returns {Array} news for the given month, with names filled
  */
-export function getNewsForMonth(newsData, year, month, readIds = []) {
+export function getNewsForMonth(newsData, year, month) {
     const yearStr = String(year);
     const monthStr = String(month).padStart(2, '0');
-    const readSet = new Set(readIds);
 
     const indexed = newsData.map((item, idx) => ({ ...item, _source_id: idx }));
 
@@ -138,7 +137,7 @@ export function getNewsForMonth(newsData, year, month, readIds = []) {
     const breakingItems = indexed.filter(item => {
         if (!item.breaking) return false;
         const parts = String(item.date || '').split('-');
-        return parts.length === 3 && parts[0] === yearStr && parts[1] === monthStr && !readSet.has(item._source_id);
+        return parts.length === 3 && parts[0] === yearStr && parts[1] === monthStr;
     }).map(item => fillNames(item, item._source_id));
 
     // Breaking takes priority: if any exists, skip regular news (ensures max 1 per month)
@@ -148,7 +147,7 @@ export function getNewsForMonth(newsData, year, month, readIds = []) {
     const regularPool = indexed.filter(item => {
         if (item.breaking) return false;
         const parts = String(item.date || '').split('-');
-        return parts[0] === monthStr && !readSet.has(item._source_id);
+        return parts[0] === monthStr;
     });
     return regularPool.length > 0 ? [fillNames(regularPool[0], regularPool[0]._source_id)] : [];
 }
