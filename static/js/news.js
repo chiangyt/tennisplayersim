@@ -134,12 +134,15 @@ export function getNewsForMonth(newsData, year, month, readIds = []) {
 
     const indexed = newsData.map((item, idx) => ({ ...item, _source_id: idx }));
 
-    // Breaking news: must match exact year+month, shown regardless of per-month limit
+    // Breaking news: must match exact year+month
     const breakingItems = indexed.filter(item => {
         if (!item.breaking) return false;
         const parts = String(item.date || '').split('-');
         return parts.length === 3 && parts[0] === yearStr && parts[1] === monthStr && !readSet.has(item._source_id);
     }).map(item => fillNames(item, item._source_id));
+
+    // Breaking takes priority: if any exists, skip regular news (ensures max 1 per month)
+    if (breakingItems.length > 0) return [breakingItems[0]];
 
     // Regular news: match month only (any year), not breaking, one per month
     const regularPool = indexed.filter(item => {
@@ -147,9 +150,7 @@ export function getNewsForMonth(newsData, year, month, readIds = []) {
         const parts = String(item.date || '').split('-');
         return parts[0] === monthStr && !readSet.has(item._source_id);
     });
-    const regularPick = regularPool.length > 0 ? [fillNames(regularPool[0], regularPool[0]._source_id)] : [];
-
-    return [...breakingItems, ...regularPick];
+    return regularPool.length > 0 ? [fillNames(regularPool[0], regularPool[0]._source_id)] : [];
 }
 
 export function hasBreakingNews(newsData, year, month, readIds = []) {

@@ -6,14 +6,8 @@
     "unread_count": 0,
     "last_time": "19:30",
     "history": [
-      {
-        "role": "other",
-        "content": "宝贝，在那边训练别太累了。"
-      },
-      {
-        "role": "me",
-        "content": "知道啦，不用担心我。"
-      }
+      {"role": "other", "content": "宝贝，在那边训练别太累了。"},
+      {"role": "me", "content": "知道啦，不用担心我。"}
     ],
     "pending_options": [],
     "msg_queue": [],
@@ -24,58 +18,38 @@
         "options": [
           {
             "text": "我已经穿上厚外套了。",
-            "effect": {
-              "mood": 5
-            },
+            "effect": {"mood": 5},
             "next_story": {
               "content": "那就好。训练后要不要喝点热汤？",
               "options": [
                 {
                   "text": "好啊，谢谢妈咪！",
-                  "effect": {
-                    "mood": 5
-                  },
-                  "next_story": {
-                    "content": "谢什么，宝贝早点回来。"
-                  }
+                  "effect": {"mood": 5},
+                  "next_story": {"content": "谢什么，宝贝早点回来。"}
                 },
                 {
                   "text": "今天有点累了，想回去直接躺尸。",
-                  "effect": {
-                    "stamina": 5
-                  },
-                  "next_story": {
-                    "content": "行，早点回来休息。"
-                  }
+                  "effect": {"stamina": 5},
+                  "next_story": {"content": "行，早点回来休息。"}
                 }
               ]
             }
           },
           {
             "text": "还没来得及，等会儿加。",
-            "effect": {
-              "mood": 0
-            },
+            "effect": {"mood": 0},
             "next_story": {
               "content": "要记得哦，小心别感冒了。",
               "options": [
                 {
                   "text": "好，我马上去。",
-                  "effect": {
-                    "stamina": 5
-                  },
-                  "next_story": {
-                    "content": "这才对，身体第一。"
-                  }
+                  "effect": {"stamina": 5},
+                  "next_story": {"content": "这才对，身体第一。"}
                 },
                 {
                   "text": "我体质好，问题不大。",
-                  "effect": {
-                    "mood": 0
-                  },
-                  "next_story": {
-                    "content": "那你注意点，感冒会影响训练的。"
-                  }
+                  "effect": {"mood": 0},
+                  "next_story": {"content": "那你注意点，感冒会影响训练的。"}
                 }
               ]
             }
@@ -88,22 +62,13 @@
         "options": [
           {
             "text": "那当然按时吃饭了，没有人会拒绝吃饭。",
-            "effect": {
-              "mood": 5,
-              "stamina": 5
-            },
-            "next_story": {
-              "content": "听你这么说我就放心了。"
-            }
+            "effect": {"mood": 5, "stamina": 5},
+            "next_story": {"content": "听你这么说我就放心了。"}
           },
           {
             "text": "训练后太晚了，偶尔会简单吃点。",
-            "effect": {
-              "mood": 5
-            },
-            "next_story": {
-              "content": "至少备点酸奶和全麦面包，别空着肚子睡。"
-            }
+            "effect": {"mood": 5},
+            "next_story": {"content": "至少备点酸奶和全麦面包，别空着肚子睡。"}
           }
         ]
       }
@@ -115,36 +80,25 @@
         "options": [
           {
             "text": "妈，我这周末有训练赛，一切顺利。",
-            "effect": {
-              "mood": 5
-            },
+            "effect": {"mood": 5},
             "next_story": {
               "content": "收到，有你这句我就放心了。比赛加油！",
               "options": [
                 {
                   "text": "我会稳住心态去打。",
-                  "effect": {
-                    "perseverance": 1
-                  }
+                  "effect": {"perseverance": 1}
                 },
                 {
                   "text": "要是紧张了我再跟你说。",
-                  "effect": {
-                    "mood": 5
-                  }
+                  "effect": {"mood": 5}
                 }
               ]
             }
           },
           {
             "text": "妈咪，我最近有点累。",
-            "effect": {
-              "mood": 5
-            },
-            "next_story": {
-              "content": "宝贝辛苦了，不要太拼。周末回来妈咪给你做顿好吃的！"
-            }
-
+            "effect": {"mood": 5},
+            "next_story": {"content": "宝贝辛苦了，不要太拼。周末回来妈咪给你做顿好吃的！"}
           }
         ]
       },
@@ -154,21 +108,41 @@
         "options": [
           {
             "text": "我这几天睡得比之前好了很多。",
-            "effect": {
-              "stamina": 5
-            },
-            "next_story": {
-              "content": "太好了，继续保持这个节奏。"
-            }
+            "effect": {"stamina": 5},
+            "next_story": {"content": "太好了，继续保持这个节奏。"}
           },
           {
             "text": "最近入睡慢，闭上眼睛就是训练的事。",
-            "effect": {
-              "mood": 5
-            },
-            "next_story": {
-              "content": "不要太焦虑，我家宝贝是最棒的！"
-            }
+            "effect": {"mood": 5},
+            "next_story": {"content": "不要太焦虑，我家宝贝是最棒的！"}
+          }
+        ]
+      },
+      {
+        "id": "mom_gift_cake",
+        "event_only": true,
+        "title": "送妈妈一个蛋糕。",
+        "options": [
+          {
+            "text": "妈咪，送你一个蛋糕，你最喜欢的口味！",
+            "effect": {"mood": 5},
+            "next_story": {"content": "谢谢宝贝，没想到你记得妈妈的喜好。",
+            "options":[
+              {
+                "text": "那当然，毕竟我最爱妈咪。",
+                "effect": {"mood": 5, "stamina": 5}
+              },
+              {
+                "text": "嘿嘿，妈咪可别小看我！",
+                "effect": {"mood": 5, "stamina": 5}
+              }
+            ]
+          }
+          },
+          {
+            "text": "希望妈咪喜欢，是你最爱的口味。",
+            "effect": {"mood": 5, "stamina": 5},
+            "next_story": {"content": "太好了！妈妈等你回来一起吃！"}
           }
         ]
       },
@@ -186,20 +160,14 @@
               "options": [
                 {
                   "text": "安啦妈咪，我会好好调整的！有没有奖励？",
-                  "effect": {
-                    "stamina": 10
-                  },
+                  "effect": {"stamina": 10},
                   "next_story": {
                     "content": "奖励你一个飞吻！",
                     "options": [
                       {
                         "text": "切，幼稚，我都多大了！",
-                        "effect": {
-                          "mood": 10
-                        },
-                        "next_story": {
-                          "content": "开个玩笑啦，回来给你做你最爱的糖醋排骨！"
-                        }
+                        "effect": {"mood": 10},
+                        "next_story": {"content": "开个玩笑啦，回来给你做你最爱的糖醋排骨！"}
                       }
                     ]
                   }
@@ -211,17 +179,11 @@
                     "options": [
                       {
                         "text": "太好了，谢谢妈咪！",
-                        "effect": {
-                          "mood": 5,
-                          "stamina": 5
-                        }
+                        "effect": {"mood": 5, "stamina": 5}
                       },
                       {
                         "text": "就知道妈咪最好了！",
-                        "effect": {
-                          "mood": 5,
-                          "stamina": 5
-                        }
+                        "effect": {"mood": 5, "stamina": 5}
                       }
                     ]
                   }
@@ -236,10 +198,7 @@
               "options": [
                 {
                   "text": "谢谢妈咪，我会保持状态！",
-                  "effect": {
-                      "mood": 5,
-                      "stamina": 5
-                }
+                  "effect": {"mood": 5, "stamina": 5}
                 },
                 {
                   "text": "妈咪有没有奖励呀！",
@@ -248,10 +207,7 @@
                     "options": [
                       {
                         "text": "幼稚，我已经长大了！",
-                        "effect": {
-                          "mood": 5,
-                          "stamina": 5
-                        }
+                        "effect": {"mood": 5, "stamina": 5}
                       }
                     ]
                   }
@@ -270,14 +226,8 @@
     "unread_count": 0,
     "last_time": "10:45",
     "history": [
-      {
-        "role": "other",
-        "content": "喂！周日晚上出来撸串不？"
-      },
-      {
-        "role": "me",
-        "content": "周日我有加练，要不改周一？"
-      }
+      {"role": "other", "content": "喂！周日晚上出来撸串不？"},
+      {"role": "me", "content": "周日我有加练，要不改周一？"}
     ],
     "pending_options": [],
     "msg_queue": [],
@@ -288,35 +238,25 @@
         "options": [
           {
             "text": "没问题，包在我身上！",
-            "effect": {
-              "mood": 5
-            },
+            "effect": {"mood": 5},
             "next_story": {
               "content": "就知道你靠谱！顺便给你做张打卡清单？",
               "options": [
                 {
                   "text": "要！你做的清单最实用。",
-                  "effect": {
-                    "stamina": 5
-                  }
+                  "effect": {"stamina": 5}
                 },
                 {
                   "text": "我先自己试试规划。",
-                  "effect": {
-                    "mood": 5
-                  }
+                  "effect": {"mood": 5}
                 }
               ]
             }
           },
           {
             "text": "看心情吧，比赛会很累。",
-            "effect": {
-              "mood": 5
-            },
-            "next_story": {
-              "content": "那我给你准备点能量零食，别太绷着。"
-            }
+            "effect": {"mood": 5},
+            "next_story": {"content": "那我给你准备点能量零食，别太绷着。"}
           }
         ]
       },
@@ -326,53 +266,57 @@
         "options": [
           {
             "text": "必须听，发我链接！",
-            "effect": {
-              "mood": 5
-            }
+            "effect": {"mood": 5}
           },
           {
             "text": "先收藏，比赛前我会循环播放。",
-            "effect": {
-              "mood": 5
-            }
+            "effect": {"mood": 5}
           }
         ]
       }
     ],
     "proactive_pool": [
       {
+        "id": "friend_gift_plushie",
+        "event_only": true,
+        "title": "闺蜜收到玩偶，马上发消息过来了！",
+        "options": [
+          {
+            "text": "突然想到你喜欢这类可爱的东西。",
+            "effect": {"mood": 5},
+            "next_story": {"content": "哇你太了解我了！这个以后放我桌上！"}
+          },
+          {
+            "text": "是特意挑的，希望你喜欢！",
+            "effect": {"mood": 5},
+            "next_story": {"content": "当然喜欢！你是最懂我的！"}
+          }
+        ]
+      },
+      {
         "id": "friend_p001",
         "title": "我想主动找闺蜜聊聊，放松一下。",
         "options": [
           {
             "text": "我这周训练强度有点大，想吐槽两句。",
-            "effect": {
-              "mood": 4
-            },
+            "effect": {"mood": 4},
             "next_story": {
               "content": "随时在线，先深呼吸，我请你奶茶。",
               "options": [
                 {
                   "text": "被你安慰到了，明天继续冲。",
-                  "effect": {
-                    "perseverance": 2
-                  }
+                  "effect": {"perseverance": 2}
                 },
                 {
                   "text": "我今晚先好好睡一觉。",
-                  "effect": {
-                    "mood": 2,
-                    "stamina": 2
-                  }
+                  "effect": {"mood": 2, "stamina": 2}
                 }
               ]
             }
           },
           {
             "text": "其实我还好，想听你讲讲近况。",
-            "next_story": {
-              "content": "行，我最近也有一堆趣事，等你来听。"
-            }
+            "next_story": {"content": "行，我最近也有一堆趣事，等你来听。"}
           }
         ]
       },
@@ -382,46 +326,34 @@
         "options": [
           {
             "text": "我报了新比赛，突然有点紧张。",
-            "effect": {
-              "mood": 5
-            },
+            "effect": {"mood": 5},
             "next_story": {
               "content": "你能打到现在已经很厉害了，稳住节奏就行。",
               "options": [
                 {
                   "text": "你这话让我踏实多了。",
-                  "effect": {
-                    "mood": 5
-                  }
+                  "effect": {"mood": 5}
                 },
                 {
                   "text": "我会把紧张转成专注。",
-                  "effect": {
-                    "perseverance": 1
-                  }
+                  "effect": {"perseverance": 1}
                 }
               ]
             }
           },
           {
             "text": "我状态不错，想多打比赛。",
-            "effect": {
-              "mood": 5
-            },
+            "effect": {"mood": 5},
             "next_story": {
               "content": "冲，夺冠了请我吃饭！",
               "options": [
                 {
                   "text": "哎，为什么我夺冠请你吃饭？！。",
-                  "effect": {
-                    "mood": 5
-                  }
+                  "effect": {"mood": 5}
                 },
                 {
                   "text": "当然，就去你之前一直说的那家火锅。",
-                  "effect": {
-                    "mood": 5
-                  }
+                  "effect": {"mood": 5}
                 }
               ]
             }
@@ -437,14 +369,8 @@
     "unread_count": 0,
     "last_time": "昨天",
     "history": [
-      {
-        "role": "other",
-        "content": "下周的体能测试，你有信心突破 60 吗？"
-      },
-      {
-        "role": "me",
-        "content": "没问题，我一直在加强训练。"
-      }
+      {"role": "other", "content": "下周的体能测试，你有信心突破 60 吗？"},
+      {"role": "me", "content": "没问题，我一直在加强训练。"}
     ],
     "pending_options": [],
     "msg_queue": [],
@@ -455,35 +381,25 @@
         "options": [
           {
             "text": "我会继续努力！",
-            "effect": {
-              "stamina": 5
-            },
+            "effect": {"stamina": 5},
             "next_story": {
               "content": "很好。那你自己定个更细的周目标。",
               "options": [
                 {
                   "text": "本周一发进球率提升到65%。",
-                  "effect": {
-                    "mood": 5
-                  }
+                  "effect": {"mood": 5}
                 },
                 {
                   "text": "先把失误率降到每盘3次以内。",
-                  "effect": {
-                    "stamina": 5
-                  }
+                  "effect": {"stamina": 5}
                 }
               ]
             }
           },
           {
             "text": "前50太慢了，我想进前30。",
-            "effect": {
-              "mood": 5
-            },
-            "next_story": {
-              "content": "目标可以高，但要有配套计划。今晚把计划发我。"
-            }
+            "effect": {"mood": 5},
+            "next_story": {"content": "目标可以高，但要有配套计划。今晚把计划发我。"}
           }
         ]
       },
@@ -493,10 +409,7 @@
         "options": [
           {
             "text": "收到，我今晚按计划恢复。",
-            "effect": {
-              "stamina": 5,
-              "perseverance": 1
-            }
+            "effect": {"stamina": 5, "perseverance": 1}
           },
           {
             "text": "能不能把强度分散到两天？",
@@ -505,15 +418,11 @@
               "options": [
                 {
                   "text": "明白，我会严格执行。",
-                  "effect": {
-                    "perseverance": 1
-                  }
+                  "effect": {"perseverance": 1}
                 },
                 {
                   "text": "那我先试一天，状态好再加。",
-                  "effect": {
-                    "mood": 1
-                  }
+                  "effect": {"mood": 1}
                 }
               ]
             }
@@ -523,51 +432,56 @@
     ],
     "proactive_pool": [
       {
+        "id": "coach_gift_manual",
+        "event_only": true,
+        "title": "教练收到网球教材，给你发来回复。",
+        "options": [
+          {
+            "text": "这本书对我启发很大，想分享给您。",
+            "effect": {"wisdom": 3, "perseverance": 1},
+            "next_story": {"content": "很好，你能主动研究战术是好事。我们下次训练讨论其中的接发技巧。"}
+          },
+          {
+            "text": "我觉得里面有些战术思路很有意思。",
+            "effect": {"wisdom": 2},
+            "next_story": {"content": "那你整理几个关键点，下次训练前发给我看看。"}
+          }
+        ]
+      },
+      {
         "id": "coach_p001",
         "title": "我想主动和教练申请一次补练。",
         "options": [
           {
             "text": "教练，我想周末补一节发球专项。",
-            "effect": {
-              "perseverance": 1
-            },
+            "effect": {"perseverance": 1},
             "next_story": {
               "content": "可以，先把本周训练日志发我，我来安排。",
               "options": [
                 {
                   "text": "今晚就发，按你要求写完整。",
-                  "effect": {
-                    "stamina": -5
-                  }
+                  "effect": {"stamina": -5}
                 },
                 {
                   "text": "我先整理数据，明早发你。",
-                  "effect": {
-                    "stamina": -5
-                  }
+                  "effect": {"stamina": -5}
                 }
               ]
             }
           },
           {
             "text": "我想先把日常训练稳定住再补练。",
-            "effect": {
-              "stamina": 10
-            },
+            "effect": {"stamina": 10},
             "next_story": {
               "content": "稳住基础也好，保持状态，随时准备好补练。",
               "options": [
                 {
                   "text": "谢谢教练，我会继续努力的！",
-                  "effect": {
-                    "mood": 5
-                  }
+                  "effect": {"mood": 5}
                 },
                 {
                   "text": "我会在训练日志里备注想补练的内容。",
-                  "effect": {
-                    "mood": 5
-                  }
+                  "effect": {"mood": 5}
                 }
               ]
             }
@@ -580,46 +494,34 @@
         "options": [
           {
             "text": "教练，我想重点看二发得分率。",
-            "effect": {
-              "intelligence": 2
-            },
+            "effect": {"intelligence": 2},
             "next_story": {
               "content": "方向很好，明天训练后做20分钟视频复盘。",
               "options": [
                 {
                   "text": "好，我会提前记下问题。",
-                  "effect": {
-                    "mood": 5
-                  }
+                  "effect": {"mood": 5}
                 },
                 {
                   "text": "能加上接发站位一起看吗？",
-                  "effect": {
-                    "mood": 5
-                  }
+                  "effect": {"mood": 5}
                 }
               ]
             }
           },
           {
             "text": "教练，我觉得我二发太差了。",
-            "effect": {
-              "intelligence": 2
-            },
-            "next_story":{
+            "effect": {"intelligence": 2},
+            "next_story": {
               "content": "你的落点还可以，就是力量差了点，不过你还小不急着上力量。",
-              "options":[
+              "options": [
                 {
                   "text": "看来我要努力长大。",
-                  "effect":{
-                    "perseverance": 0.5
-                  }
+                  "effect": {"perseverance": 0.5}
                 },
                 {
                   "text": "好，那就先不急。",
-                  "effect":{
-                    "stamina": 10
-                  }
+                  "effect": {"stamina": 10}
                 }
               ]
             }
@@ -627,5 +529,248 @@
         ]
       }
     ]
+  },
+  "rival_player": {
+    "unlocked": false,
+    "name": "球场球友",
+    "theme": "#ffb347",
+    "avatar_icon": "bi-trophy",
+    "unread_count": 0,
+    "last_time": "",
+    "history": [],
+    "pending_options": [],
+    "msg_queue": [],
+    "msg_pool": [
+      {
+        "id": "rival_001",
+        "content": "上次赛场上你的跑动很厉害，我一直没追上。",
+        "options": [
+          {
+            "text": "哈哈，我也觉得你的发球特别稳！",
+            "effect": {"mood": 5},
+            "next_story": {"content": "谢啦，有机会切磋切磋？"}
+          },
+          {
+            "text": "那次你的反手有进步，让我跑得很累。",
+            "effect": {"mood": 5, "perseverance": 1},
+            "next_story": {"content": "互相学习！下次比赛希望再遇到你。"}
+          }
+        ]
+      },
+      {
+        "id": "rival_002",
+        "content": "你这次报了哪几站？我们可能会遇上。",
+        "options": [
+          {
+            "text": "报了几站，到时候可能真的会碰见！",
+            "effect": {"mood": 5},
+            "next_story": {"content": "那就赛场上见，别让我轻松赢哦。"}
+          },
+          {
+            "text": "还没确定，要看积分情况。",
+            "effect": {"mood": 3},
+            "next_story": {"content": "明白，赛程安排不容易。有消息告诉我。"}
+          }
+        ]
+      },
+      {
+        "id": "rival_003",
+        "content": "我最近在练切球，感觉能防住你的底线炮弹。",
+        "options": [
+          {
+            "text": "哦？那我到时候就多变速，让你切不到。",
+            "effect": {"perseverance": 1},
+            "next_story": {"content": "就知道你不服，期待赛场上见真章！"}
+          },
+          {
+            "text": "好啊，我也在研究反制切球的打法。",
+            "effect": {"wisdom": 2},
+            "next_story": {"content": "我们俩真的都很拼，互相卷对方哈哈。"}
+          }
+        ]
+      }
+    ],
+    "proactive_pool": [
+      {
+        "id": "rival_unlock",
+        "event_only": true,
+        "title": "赛场上认识了一个厉害的对手，她主动联系你了。",
+        "options": [
+          {
+            "text": "今天打得很激烈，谢谢你让我看到了差距！",
+            "effect": {"perseverance": 2},
+            "next_story": {"content": "我也是！你的底线很强，下次我不会手软。以后保持联系！"}
+          },
+          {
+            "text": "你打得真的好，我回去要好好练了。",
+            "effect": {"mood": 5},
+            "next_story": {"content": "你也不差！我们可以互相监督，一起进步。"}
+          }
+        ]
+      }
+    ],
+    "msg_idle_months": 0
+  },
+  "school_friend": {
+    "unlocked": false,
+    "name": "学校朋友",
+    "theme": "#aed6f1",
+    "avatar_icon": "bi-book",
+    "unread_count": 0,
+    "last_time": "",
+    "history": [],
+    "pending_options": [],
+    "msg_queue": [],
+    "msg_pool": [
+      {
+        "id": "school_001",
+        "content": "昨天上体育课打网球，才发现这运动真的好难。",
+        "options": [
+          {
+            "text": "哈，我可以给你讲讲基础！",
+            "effect": {"mood": 5},
+            "next_story": {"content": "真的吗？你之前讲得我都能理解！下周教我？"}
+          },
+          {
+            "text": "确实不容易，我练了好久才入门。",
+            "effect": {"mood": 3},
+            "next_story": {"content": "我就说嘛，你们专业选手太厉害了。"}
+          }
+        ]
+      },
+      {
+        "id": "school_002",
+        "content": "你下周比赛？我能去看吗，好想现场加油！",
+        "options": [
+          {
+            "text": "当然欢迎，你来了我会更有动力！",
+            "effect": {"mood": 5, "perseverance": 1},
+            "next_story": {"content": "那我一定去！给你准备个横幅哈哈。"}
+          },
+          {
+            "text": "赛场可能比较远，你看情况吧。",
+            "effect": {"mood": 3},
+            "next_story": {"content": "那就下次吧，我在学校帮你祈祷！"}
+          }
+        ]
+      },
+      {
+        "id": "school_003",
+        "content": "你天天训练，会不会觉得太累了？",
+        "options": [
+          {
+            "text": "有时候累，但还是喜欢打球。",
+            "effect": {"mood": 5},
+            "next_story": {"content": "你真的很坚持，我好佩服你！"}
+          },
+          {
+            "text": "累了就想着目标，然后就又撑过去了。",
+            "effect": {"perseverance": 2},
+            "next_story": {"content": "好励志！你是我们班的榜样！"}
+          }
+        ]
+      }
+    ],
+    "proactive_pool": [
+      {
+        "id": "school_friend_unlock",
+        "event_only": true,
+        "title": "学校里有个同学一直悄悄关注你，今天终于鼓起勇气联系你了。",
+        "options": [
+          {
+            "text": "你好呀，之前是不是在学校见过？",
+            "effect": {"mood": 5},
+            "next_story": {"content": "对对！我就是那个总坐你后排的！我一直很佩服你打网球，终于敢加你了！"}
+          },
+          {
+            "text": "哈哈，我记得你！有什么事儿吗？",
+            "effect": {"mood": 5},
+            "next_story": {"content": "没什么事，就是想认识你，感觉你很厉害！以后可以一起约吃饭吗？"}
+          }
+        ]
+      }
+    ],
+    "msg_idle_months": 0
+  },
+  "sponsor_contact": {
+    "unlocked": false,
+    "name": "赞助商联络人",
+    "theme": "#a9dfbf",
+    "avatar_icon": "bi-briefcase",
+    "unread_count": 0,
+    "last_time": "",
+    "history": [],
+    "pending_options": [],
+    "msg_queue": [],
+    "msg_pool": [
+      {
+        "id": "sponsor_001",
+        "content": "这个月的比赛成绩不错，我们内部有些新的资源可以协调，感兴趣吗？",
+        "options": [
+          {
+            "text": "当然感兴趣，请告诉我更多！",
+            "effect": {"mood": 5},
+            "next_story": {"content": "好的，我这边整理一下，下周发你详细方案。"}
+          },
+          {
+            "text": "先了解一下，具体是哪方面的资源？",
+            "effect": {"wisdom": 2},
+            "next_story": {"content": "主要是装备支持和部分赛事报名费减免，后续还有更多。"}
+          }
+        ]
+      },
+      {
+        "id": "sponsor_002",
+        "content": "你最近的排名进步很稳，公司高层已经注意到你了。",
+        "options": [
+          {
+            "text": "谢谢您告诉我，我会继续努力！",
+            "effect": {"mood": 5, "perseverance": 1},
+            "next_story": {"content": "好好加油，机会都是留给有准备的人的。"}
+          },
+          {
+            "text": "压力有点大，希望不要影响比赛状态。",
+            "effect": {"mood": 3},
+            "next_story": {"content": "放轻松，我们关注的是长期发展，不是一两场比赛。"}
+          }
+        ]
+      },
+      {
+        "id": "sponsor_003",
+        "content": "下个月有一场品牌活动，想邀请你参加，时间不长。",
+        "options": [
+          {
+            "text": "可以，具体是什么活动？",
+            "effect": {"mood": 5},
+            "next_story": {"content": "是一个运动品牌的新品发布，你只需要到场展示一下球技，酬劳另算。"}
+          },
+          {
+            "text": "要先看看赛程安排，不影响比赛的话可以。",
+            "effect": {"wisdom": 2},
+            "next_story": {"content": "理解，运动成绩永远是第一位，我们会配合你的时间。"}
+          }
+        ]
+      }
+    ],
+    "proactive_pool": [
+      {
+        "id": "sponsor_unlock",
+        "event_only": true,
+        "title": "一家运动品牌的联络人找到了你，说在关注你很久了。",
+        "options": [
+          {
+            "text": "你好，请问是通过什么渠道知道我的？",
+            "effect": {"wisdom": 3},
+            "next_story": {"content": "我们一直在关注国内有潜力的年轻球员，你最近的成绩让我们很感兴趣。"}
+          },
+          {
+            "text": "感谢关注，请问有什么合作意向吗？",
+            "effect": {"mood": 5},
+            "next_story": {"content": "有的，我们有兴趣为你提供一些资源支持，先加个联系方式，方便后续沟通。"}
+          }
+        ]
+      }
+    ],
+    "msg_idle_months": 0
   }
 }

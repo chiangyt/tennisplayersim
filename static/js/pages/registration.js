@@ -124,6 +124,46 @@ export function render(player, currentMatches, targetMonth) {
         }
         .reg-tab-item:last-child { border-right: none; }
         .reg-tab-item.active { background: #000; color: #fff; }
+        .reg-help-btn {
+            width: 32px; height: 32px; border-radius: 50%;
+            border: 2px solid #000; background: #fff;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-weight: 900; cursor: pointer;
+            box-shadow: 2px 2px 0 #000; transition: transform 0.1s, box-shadow 0.1s;
+            padding: 0;
+        }
+        .reg-help-btn:active { transform: translate(2px,2px); box-shadow: 0 0 0 #000; }
+        .reg-help-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+            z-index: 9000; display: flex; align-items: flex-end;
+        }
+        .reg-help-sheet {
+            width: 100%; background: #fdfaf6;
+            border: 3px solid #000; border-bottom: none;
+            border-radius: 20px 20px 0 0;
+            padding: 0 16px 28px; max-height: 78vh; overflow-y: auto;
+            animation: reg-help-up 0.22s cubic-bezier(0.34,1.4,0.64,1);
+        }
+        @keyframes reg-help-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .reg-help-handle {
+            width: 40px; height: 5px; background: #ccc; border-radius: 3px;
+            margin: 12px auto 16px;
+        }
+        .reg-help-section {
+            border: 2px solid #000; border-radius: 12px; padding: 12px 14px;
+            margin-bottom: 12px; background: #fff; box-shadow: 3px 3px 0 #000;
+        }
+        .reg-help-section h6 { font-weight: 900; margin-bottom: 8px; font-size: 14px; }
+        .reg-help-section ul { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.7; }
+        .reg-help-section li strong { font-weight: 900; }
+        .reg-help-close {
+            display: block; width: 100%; margin-top: 8px;
+            padding: 10px; font-weight: 900; font-size: 15px;
+            background: #fff; border: 3px solid #000;
+            border-radius: 12px; box-shadow: 4px 4px 0 #000;
+            cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .reg-help-close:active { transform: translate(3px,3px); box-shadow: 0 0 0 #000; }
     </style>
     <div class="reg-header d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
@@ -132,12 +172,61 @@ export function render(player, currentMatches, targetMonth) {
             </a>
             <h5 class="mb-0 fw-bold">赛事报名</h5>
         </div>
+        <button class="reg-help-btn" onclick="window._regShowHelp()" aria-label="报名规则说明">
+            <i class="bi bi-question-lg"></i>
+        </button>
     </div>
     ${tabNavHtml ? `<div class="reg-tab-nav">${tabNavHtml}</div>` : ''}
     <div class="scroll-content container py-4">
         <h6 class="fw-bold mb-3 px-1">📅 正在预定：${targetMonth}月 赛事</h6>
         ${tabContentsHtml}
     </div>`;
+}
+
+function _buildHelpHTML() {
+    return `
+    <div class="reg-help-handle"></div>
+    <h5 class="fw-bold mb-3" style="letter-spacing:1px;">📖 报名规则说明</h5>
+
+    <div class="reg-help-section">
+        <h6>📅 时间规则</h6>
+        <ul>
+            <li>报名的是<strong>下个月</strong>的赛事，记得在行程里安排 ⚡参加比赛。</li>
+            <li>每个月<strong>只能报 1 站</strong>；已报名后本月其他赛事会显示「本月已报名」。</li>
+        </ul>
+    </div>
+
+    <div class="reg-help-section">
+        <h6>🎂 年龄准入</h6>
+        <ul>
+            <li><strong>CTJ 青少年</strong>：12–16 岁（17 岁起截断）</li>
+            <li><strong>ITF Junior</strong>：13–18 岁（19 岁起截断）</li>
+            <li><strong>ITF 职业</strong>：14 岁起开放</li>
+            <li><strong>WTA 职业</strong>：14 岁起开放</li>
+        </ul>
+    </div>
+
+    <div class="reg-help-section">
+        <h6>🔓 报名门槛</h6>
+        <ul>
+            <li><strong>CTJ</strong>：看<strong>综合能力</strong>是否达到<strong>能力门槛</strong>。</li>
+            <li><strong>ITF Junior</strong>：看<strong>ITF Junior 积分</strong>是否达到<strong>积分门槛</strong>（J500 需 700 分，J300 需 350 分，逐级递减）。</li>
+            <li><strong>ITF 职业</strong>：看<strong>ITF 女子积分</strong>是否达到<strong>积分准入</strong>线。</li>
+            <li><strong>WTA 职业</strong>：看<strong>WTA 世界排名</strong>是否进入门槛名次内（如 WTA1000 需前 50 等）。</li>
+            <li class="text-muted" style="font-size:12px;">注：ITF/WTA 卡片上的「建议能力」为 14 岁后<strong>力量 + 技术 + 敏捷</strong>三项之和，仅供参考，不作为硬门槛。</li>
+        </ul>
+    </div>
+
+    <div class="reg-help-section">
+        <h6>📊 积分与奖金</h6>
+        <ul>
+            <li>比赛进入每一轮都能获得排名积分和奖金（冠军最高）。</li>
+            <li>每个体系独立维护积分池，<strong>滚动 12 个月</strong>内的最好 N 站成绩计入。</li>
+            <li>具体每轮可得积分与奖金可在<strong>赛季日历</strong>点击赛事查看。</li>
+        </ul>
+    </div>
+
+    <button class="reg-help-close" onclick="window._regCloseHelp()">知道了</button>`;
 }
 
 export function init() {
@@ -148,6 +237,27 @@ export function init() {
             window.dispatchEvent(new CustomEvent('game:register', { detail: { tournamentId } }));
         });
     });
+
+    window._regShowHelp = function () {
+        const existing = document.getElementById('reg-help-overlay');
+        if (existing) existing.remove();
+        const overlay = document.createElement('div');
+        overlay.id = 'reg-help-overlay';
+        overlay.className = 'reg-help-overlay';
+        overlay.addEventListener('click', function (e) {
+            if (e.target === overlay) window._regCloseHelp();
+        });
+        const sheet = document.createElement('div');
+        sheet.className = 'reg-help-sheet';
+        sheet.innerHTML = _buildHelpHTML();
+        overlay.appendChild(sheet);
+        document.body.appendChild(overlay);
+    };
+
+    window._regCloseHelp = function () {
+        const overlay = document.getElementById('reg-help-overlay');
+        if (overlay) overlay.remove();
+    };
 
     window.switchRegTab = function (tab) {
         document.querySelectorAll('[id^="reg-view-"]').forEach(el => { el.style.display = 'none'; });

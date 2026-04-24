@@ -1,5 +1,33 @@
 import { simulateMatch, simulateGsMatch } from './match.js';
 
+const _PRIZE_TABLES = {
+    A2000:  [0, 200,   500,   1000,  2000,  3000],
+    A2500:  [0, 300,   700,   1500,  2500,  4000],
+    A1500:  [0, 150,   400,   800,   1500,  2200],
+    B1000:  [0, 100,   200,   500,   800,   1000],
+    J500:   [0, 500,   1200,  2500,  5000,  8000],
+    J300:   [0, 300,   700,   1500,  3000,  5000],
+    J100:   [0, 100,   300,   700,   1500,  2500],
+    W15:    [100, 800,   1600,  3000,  5500,  10000],
+    W35:    [500, 1500,  3000,  6000,  10000, 20000],
+    W75:    [5000, 7000,  15000,  28000, 40000, 70000],
+    W100:   [8000, 14000,  23000, 40000, 60000, 100000],
+    WTA250: [10000, 18000, 30000, 60000, 100000, 180000],
+    WTA500: [60000, 140000, 200000, 350000, 600000, 1000000],
+    WTA1000: [350000, 600000, 1300000, 250000, 4000000, 7000000],
+    GS:     [1000000, 2000000, 3000000, 5000000, 9000000, 15000000, 30000000],
+};
+const _STD_ROUNDS = ["R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
+const _GS_ROUNDS  = ["R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
+function _computePrizeMoney(levelCode, roundName) {
+    if (!levelCode) return 0;
+    const table = _PRIZE_TABLES[levelCode];
+    if (!table) return 0;
+    const rounds = levelCode === 'GS' ? _GS_ROUNDS : _STD_ROUNDS;
+    const idx = rounds.indexOf(roundName);
+    return idx >= 0 ? (table[idx] || 0) : 0;
+}
+
 export class TennisGirl {
     constructor(name, background, playstyle) {
         this.name = name;
@@ -13,7 +41,9 @@ export class TennisGirl {
         this.age = 12;
         this.stamina = 100;
         this.mood = 100;
-        this.money = 5000;
+        this.money = 500;
+        this.inventory = {};
+        this.purchased_gifts = [];
         this.height = 165.0;
 
         // 12-14岁核心属性
@@ -67,6 +97,14 @@ export class TennisGirl {
                 }
 
                 this.just_won_championship = reachedRoundName === "冠军";
+                this.just_reached_semifinal = ["半决赛", "决赛", "冠军"].includes(reachedRoundName);
+
+                const prize = _computePrizeMoney(matchInfo?.level_code, reachedRoundName);
+                if (prize > 0) {
+                    this.money += prize;
+                    this.log.push(`💰 奖金入账：¥${prize.toLocaleString()}`);
+                }
+
                 if (reachedRoundName === "冠军") {
                     this.mood += 10;
                     if (!this.first_champion_sent) {
@@ -241,8 +279,20 @@ export class TennisGirl {
         return this.currentMonthEvent !== null;
     }
 
+    useItem(itemDef) {
+        if (!this.inventory[itemDef.id] || this.inventory[itemDef.id] < 1) return false;
+        this.inventory[itemDef.id]--;
+        if (this.inventory[itemDef.id] === 0) delete this.inventory[itemDef.id];
+        const e = itemDef.effect || {};
+        if (e.stamina) this.stamina = Math.min(100, this.stamina + e.stamina);
+        if (e.mood)    this.mood    = Math.min(100, this.mood    + e.mood);
+        if (e.wisdom)  this.wisdom  = Math.min(100, this.wisdom  + e.wisdom);
+        this.log.push(`✨ 使用了 ${itemDef.name}。`);
+        return true;
+    }
+
     toJSON() {
-        const excludedKeys = new Set(['gain_factors']);
+        const excludedKeys = new Set(['gain_factors', 'just_won_championship', 'just_reached_semifinal']);
         const data = {};
         for (const [k, v] of Object.entries(this)) {
             if (!excludedKeys.has(k)) {

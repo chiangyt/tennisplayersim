@@ -72,7 +72,7 @@ function _getSystemFromLevelCode(levelCode) {
     if (!levelCode) return "ITF_Junior";
     const lc = levelCode.toUpperCase();
     if (lc.startsWith('W') && !lc.startsWith('WTA')) {
-        return "ITF";       // W15/W25/W60/W100 → ITF 女子职业体系
+        return "ITF";       // W15/W35/W75/W100 → ITF 女子职业体系
     }
     if (lc.startsWith('WTA') || lc === 'GS') {
         return "WTA";       // WTA250/WTA500/WTA1000/GS → WTA 体系

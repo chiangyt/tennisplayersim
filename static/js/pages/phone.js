@@ -66,7 +66,7 @@ export function render(player, totalUnread) {
         }
         .phone-content {
             flex-grow: 1;
-            padding: 20px;
+            padding: 20px 20px 28px;
         }
         .user-id {
             font-size: 1.1rem;
@@ -81,6 +81,7 @@ export function render(player, totalUnread) {
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
             row-gap: 30px;
+            justify-items: center;
         }
         .app-item {
             text-decoration: none !important;
@@ -117,14 +118,46 @@ export function render(player, totalUnread) {
         .icon-msg  { background-color: var(--color-msg) !important; }
         .icon-news { background-color: var(--color-news) !important; }
         .icon-rank { background-color: var(--color-rank) !important; }
-        .icon-home { background-color: var(--color-home) !important; }
-        .home-bar {
-            height: 5px;
-            width: 110px;
-            background: #000;
-            border-radius: 10px;
-            margin: 15px auto;
-            opacity: 0.2;
+        .icon-shop { background-color: #ffc8dd !important; }
+        .icon-inv  { background-color: #cdb4db !important; }
+        .phone-bottom {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 14px 0 24px;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(248,248,248,0.92) 100%);
+        }
+        .iphone-home-btn {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            border: 3px solid #000;
+            background: #fff;
+            box-shadow: 4px 2px 0 #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none !important;
+            position: relative;
+            transition: transform 0.1s, box-shadow 0.1s, filter 0.1s;
+        }
+        .iphone-home-btn::after {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border-radius: 50%;
+            border: 2px solid #000;
+            background: transparent;
+        }
+        .iphone-home-btn::before {
+            content: none;
+        }
+        .iphone-home-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 1px 0 #000;
+            filter: none;
         }
     </style>
     <div class="phone-page-body">
@@ -159,9 +192,13 @@ export function render(player, totalUnread) {
                     <div class="app-icon icon-rank">🏆</div>
                     <span class="app-name">排名</span>
                 </a>
-                <a href="#/main" class="app-item">
-                    <div class="app-icon icon-home">🏠</div>
-                    <span class="app-name">主页</span>
+                <a href="#/shop" class="app-item">
+                    <div class="app-icon icon-shop">🛍️</div>
+                    <span class="app-name">商城</span>
+                </a>
+                <a href="#/inventory" class="app-item">
+                    <div class="app-icon icon-inv">🎒</div>
+                    <span class="app-name">背包</span>
                 </a>
                 <a href="#/saves" class="app-item">
                     <div class="app-icon" style="background-color: #b8e994;">💾</div>
@@ -169,7 +206,9 @@ export function render(player, totalUnread) {
                 </a>
             </div>
         </div>
-        <div class="home-bar"></div>
+        <div class="phone-bottom">
+            <a href="#/main" class="iphone-home-btn" aria-label="返回主页" title="返回主页"></a>
+        </div>
     </div>
     </div>`;
 }

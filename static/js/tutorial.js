@@ -85,7 +85,7 @@ const STEPS = [
         id: 'done',
         target: null,
         title: '🎉 入门完成！',
-        body: '你已了解所有核心功能。\n点击主页图标返回，正式开始你的职业生涯！',
+        body: '你已了解所有核心功能。\n点击手机底部的 Home 键返回，正式开始你的职业生涯！',
         isLast: true,
     },
 ];
