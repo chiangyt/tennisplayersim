@@ -56,11 +56,11 @@ function _applyStatGain(player, gain) {
         player.technique = Math.min(100, player.technique + tG);
         player.agility = Math.min(100, player.agility + aG);
         player.general_stats = player.power + player.technique + player.agility;
-        player.perseverance = Math.min(100, player.perseverance + gain * 0.3);
+        player.perseverance = Math.min(100, player.perseverance + gain);
         return `力量+${pG.toFixed(2)} 技术+${tG.toFixed(2)} 敏捷+${aG.toFixed(2)} 毅力+${(gain).toFixed(2)}`;
     } else {
         player.general_stats = Math.min(100, player.general_stats + gain);
-        player.perseverance = Math.min(100, player.perseverance + gain * 0.2);
+        player.perseverance = Math.min(100, player.perseverance + gain);
         return `综合素质+${gain.toFixed(2)} 毅力+${(gain).toFixed(2)}`;
     }
 }
