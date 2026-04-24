@@ -16,6 +16,8 @@ import * as messagesPage from './pages/messages.js';
 import * as chatDetailPage from './pages/chat-detail.js';
 import * as newsPage from './pages/news-page.js';
 import * as savePage from './pages/save-page.js';
+import * as shopPage from './pages/shop.js';
+import * as inventoryPage from './pages/inventory.js';
 import { TutorialManager } from './tutorial.js';
 
 // ========== 全局单例 ==========
@@ -25,13 +27,14 @@ let STATIC_DATA = {}; // { CTJ, ITF_Junior, ITF, WTA }
 let NEWS_DATA = [];
 let BASE_RANKING = {};
 let BASE_MESSAGES = {};
+let SHOP_DATA = {};
 
 const app = document.getElementById('app');
 
 // ========== 启动 ==========
 async function boot() {
     try {
-        const [ctj, itfJunior, itf, wta, news, baseRanking, baseMessages] = await Promise.all([
+        const [ctj, itfJunior, itf, wta, news, baseRanking, baseMessages, shopData] = await Promise.all([
             fetchJSON('static/data/ctj.json'),
             fetchJSON('static/data/itf_junior.json'),
             fetchJSON('static/data/itf.json'),
@@ -39,11 +42,13 @@ async function boot() {
             fetchJSON('static/data/news.json'),
             fetchJSON('static/data/player_ranking.json'),
             fetchJSON('static/data/messages.json'),
+            fetchJSON('static/data/shop.json'),
         ]);
         STATIC_DATA = { CTJ: ctj, ITF_Junior: itfJunior, ITF: itf, WTA: wta };
         NEWS_DATA = news;
         BASE_RANKING = baseRanking;
         BASE_MESSAGES = baseMessages;
+        SHOP_DATA = shopData;
     } catch (e) {
         console.error('数据加载失败', e);
         app.innerHTML = '<div style="padding:40px;text-align:center;font-weight:bold;">数据加载失败，请刷新页面重试。</div>';
@@ -93,6 +98,8 @@ function route() {
                 mainPage.init(player);
                 initMainLogic();
                 TutorialManager.maybeStart();
+                const pendingCuts = state.pending_cutscenes || [];
+                if (pendingCuts.length > 0) showCutscene(pendingCuts[0], state);
             });
             break;
 
@@ -171,6 +178,13 @@ function route() {
                 const player = state.player;
                 const readIds = state.readNews || [];
                 const news = getNewsForMonth(NEWS_DATA, player.year, player.month, readIds);
+                // 用户进入列表即视为已读 breaking news，banner 立即消失
+                const breakingIds = news.filter(n => n.breaking).map(n => n._source_id);
+                if (breakingIds.length > 0) {
+                    const cur = GameState.current;
+                    cur.readNews = [...new Set([...(cur.readNews || []), ...breakingIds])];
+                    GameState.current = cur;
+                }
                 app.innerHTML = newsPage.renderList(news);
                 newsPage.initList();
             });
@@ -193,6 +207,21 @@ function route() {
                 const hasGame = !!state;
                 app.innerHTML = savePage.render(slots, hasGame);
                 savePage.init();
+            });
+            break;
+
+        case 'shop':
+            renderPage(() => {
+                app.innerHTML = shopPage.render(state.player, SHOP_DATA);
+                shopPage.init();
+            });
+            break;
+
+        case 'inventory':
+            renderPage(() => {
+                const chats = socialMgr.getAllChats(state.social);
+                app.innerHTML = inventoryPage.render(state.player, SHOP_DATA, Object.keys(chats));
+                inventoryPage.init();
             });
             break;
 
@@ -315,7 +344,166 @@ function setupGameEvents() {
             alert('存档文件格式错误，导入失败。');
         }
     });
+
+    // 购买商品
+    window.addEventListener('game:buy', (e) => {
+        const { itemId } = e.detail;
+        const state = GameState.current;
+        const player = TennisGirl.fromJSON(state.player);
+        const allItems = [...(SHOP_DATA.consumables || []), ...(SHOP_DATA.gifts || [])];
+        const item = allItems.find(i => i.id === itemId);
+        if (!item) return;
+        const isGift = (SHOP_DATA.gifts || []).some(g => g.id === itemId);
+        if (isGift) {
+            player.purchased_gifts = player.purchased_gifts || [];
+            if (player.purchased_gifts.includes(itemId)) return;
+        }
+        if (player.money < item.price) { alert('余额不足！'); return; }
+        player.money -= item.price;
+        player.inventory = player.inventory || {};
+        player.inventory[itemId] = (player.inventory[itemId] || 0) + 1;
+        if (isGift) {
+            player.purchased_gifts.push(itemId);
+        }
+        player.log.push(`🛒 购买了 ${item.name}（-¥${item.price.toLocaleString()}）`);
+        GameState.updatePlayer(player.toJSON());
+        route();
+    });
+
+    // 使用道具
+    window.addEventListener('game:use_item', (e) => {
+        const { itemId } = e.detail;
+        const state = GameState.current;
+        const player = TennisGirl.fromJSON(state.player);
+        const item = (SHOP_DATA.consumables || []).find(i => i.id === itemId);
+        if (!item) return;
+        if (!player.useItem(item)) { alert('背包里没有这件物品。'); return; }
+        GameState.updatePlayer(player.toJSON());
+        route();
+    });
+
+    // 送礼物给 NPC
+    window.addEventListener('game:send_gift', (e) => {
+        const { itemId } = e.detail;
+        const state = GameState.current;
+        const player = TennisGirl.fromJSON(state.player);
+        const socialData = state.social;
+        const item = (SHOP_DATA.gifts || []).find(i => i.id === itemId);
+        if (!item) return;
+        player.inventory = player.inventory || {};
+        if (!player.inventory[itemId] || player.inventory[itemId] < 1) { alert('背包里没有这件物品。'); return; }
+        const chats = socialMgr.getAllChats(socialData);
+        if (!chats[item.target_npc]) { alert('该角色尚未解锁，无法送礼。'); return; }
+        player.inventory[itemId]--;
+        if (player.inventory[itemId] === 0) delete player.inventory[itemId];
+        const ef = item.effect || {};
+        if (ef.mood)   player.mood   = Math.min(100, player.mood   + ef.mood);
+        if (ef.wisdom) player.wisdom = Math.min(100, player.wisdom + ef.wisdom);
+        player.log.push(`🎁 送出了 ${item.name} 给${chats[item.target_npc].name}！`);
+        socialMgr.triggerProactiveMessage(socialData, item.target_npc, item.gift_msg_id);
+        GameState.updatePlayerAndSocial(player.toJSON(), socialData);
+        location.hash = `#/chat/${item.target_npc}`;
+        setTimeout(() => route(), 0);
+    });
 }
+
+// ========== 解锁剧情弹窗 ==========
+function showCutscene(cutscene, state) {
+    const { charId, story } = cutscene;
+    const npc = state.social[charId];
+    if (!npc || !story) return;
+
+    const options = story.options || [];
+    const optBtns = options.map((opt, i) => `
+        <button class="cs-opt-btn" onclick="window._cutscenePickOption(${i})">
+            ${opt.text}
+        </button>`).join('');
+
+    const el = document.createElement('div');
+    el.id = 'cutscene-overlay';
+    el.style.cssText = 'position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.6);display:flex;align-items:flex-end;justify-content:center;padding:12px;';
+    el.innerHTML = `
+        <style>
+            @keyframes _csSlide { from { transform: translateY(60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+            .cs-opt-btn {
+                width: 100%; text-align: left; padding: 12px 16px;
+                border: 3px solid #000; border-radius: 12px;
+                background: #fff; font-size: 13px; font-weight: 900;
+                cursor: pointer; color: #333; display: block;
+                margin-bottom: 10px; line-height: 1.5;
+                box-shadow: 4px 4px 0px #000;
+                transition: transform 0.08s, box-shadow 0.08s;
+            }
+            .cs-opt-btn:active { transform: translate(3px, 3px); box-shadow: 0px 0px 0px #000; }
+        </style>
+        <div style="
+            background: #fff;
+            border: 3px solid #000;
+            border-radius: 16px;
+            box-shadow: 5px 5px 0px #000;
+            width: 100%; max-width: 430px;
+            padding: 20px 20px 24px;
+            animation: _csSlide 0.3s ease;
+            max-height: 80vh; overflow-y: auto;
+        ">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                <div style="
+                    width: 48px; height: 48px; border-radius: 50%;
+                    background: ${npc.theme||'#ddd'};
+                    border: 3px solid #000;
+                    box-shadow: 3px 3px 0px #000;
+                    display: flex; align-items: center; justify-content: center;
+                    flex-shrink: 0;
+                ">
+                    <i class="bi ${npc.avatar_icon||'bi-person'}" style="font-size:1.4rem;color:#fff;"></i>
+                </div>
+                <div>
+                    <div style="font-weight:900;font-size:15px;margin-bottom:4px;">${npc.name}</div>
+                    <span style="font-size:11px;background:#ffd56b;border:2px solid #000;border-radius:5px;padding:1px 7px;font-weight:700;">✨ 新联系人</span>
+                </div>
+            </div>
+            <div style="
+                background: #fdfaf6;
+                border: 3px solid #000;
+                border-radius: 12px;
+                box-shadow: 3px 3px 0px #000;
+                padding: 14px 16px;
+                margin-bottom: 16px;
+                font-size: 14px; font-weight: bold;
+                color: #333; line-height: 1.8;
+            ">${story.title}</div>
+            <div>${optBtns}</div>
+        </div>`;
+    document.body.appendChild(el);
+}
+
+window._cutscenePickOption = function(optionIndex) {
+    const state = GameState.current;
+    const cutscenes = state.pending_cutscenes || [];
+    if (!cutscenes.length) return;
+    const { charId, story } = cutscenes[0];
+    const option = (story.options || [])[optionIndex];
+    if (!option) return;
+
+    const socialData = state.social;
+    const char = socialData[charId];
+    if (char) {
+        if (!char.history) char.history = [];
+        char.history.push({ role: 'me', content: option.text });
+        if (option.next_story && option.next_story.content) {
+            char.history.push({ role: 'other', content: option.next_story.content });
+        }
+        char.last_time = '刚刚';
+    }
+
+    const remaining = cutscenes.slice(1);
+    state.social = socialData;
+    state.pending_cutscenes = remaining;
+    GameState.current = state;
+
+    document.getElementById('cutscene-overlay')?.remove();
+    if (remaining.length > 0) showCutscene(remaining[0], state);
+};
 
 // ========== sendPlan 全局函数（供 main_logic.js 调用）==========
 window.sendPlan = function () {
@@ -376,13 +564,27 @@ window.sendPlan = function () {
     player.ranking_points = rm.refreshRanking(rankingData, player.year, player.month, player.age);
     socialMgr.triggerMonthlyMessages(socialData);
 
+    // NPC 解锁检查（幂等），收集新解锁的剧情
+    const totalMonths = (player.year - 2024) * 12 + player.month;
+    const newCutscenes = [...(state.pending_cutscenes || [])];
+    const _c1 = (player.just_reached_semifinal || player.just_won_championship)
+        ? socialMgr.unlockNpc(socialData, 'rival_player', 'rival_unlock') : null;
+    if (_c1 && _c1.story) newCutscenes.push(_c1);
+    const _c2 = totalMonths >= 6
+        ? socialMgr.unlockNpc(socialData, 'school_friend', 'school_friend_unlock') : null;
+    if (_c2 && _c2.story) newCutscenes.push(_c2);
+    const _c3 = (rankingData.ITF || 0) > 0
+        ? socialMgr.unlockNpc(socialData, 'sponsor_contact', 'sponsor_unlock') : null;
+    if (_c3 && _c3.story) newCutscenes.push(_c3);
+
     // 保存所有状态
     GameState.current = {
         player: player.toJSON(),
         ranking: rankingData,
         social: socialData,
         world: worldData,
-        readNews: newReadIds
+        readNews: newReadIds,
+        pending_cutscenes: newCutscenes
     };
 
     location.hash = '#/main';

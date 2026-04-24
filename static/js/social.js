@@ -96,6 +96,7 @@ export class SocialManager {
                 .map(v => this._normalizeStory(v))
                 .filter(m => m !== null);
             char.msg_idle_months = SocialManager._safeInt(char.msg_idle_months || 0);
+            if ('unlocked' in char) char.unlocked = (char.unlocked !== false);
         }
 
         return data;
@@ -107,7 +108,38 @@ export class SocialManager {
      * @returns {object}
      */
     getAllChats(socialData) {
-        return this._normalizeData(socialData);
+        const data = this._normalizeData(socialData);
+        const result = {};
+        for (const [id, char] of Object.entries(data)) {
+            if (char.unlocked === false) continue;
+            result[id] = char;
+        }
+        return result;
+    }
+
+    /**
+     * 解锁一个 NPC 并触发解锁消息（幂等，已解锁时返回 false）
+     * @param {object} socialData
+     * @param {string} charId
+     * @param {string} triggerMsgId
+     * @returns {boolean}
+     */
+    unlockNpc(socialData, charId, triggerMsgId) {
+        const data = this._normalizeData(socialData);
+        const char = data[charId];
+        if (!char || char.unlocked !== false) return null;
+        char.unlocked = true;
+
+        // 从 proactive_pool 取出解锁故事，返回给调用方做剧情弹窗，不触发聊天消息
+        if (triggerMsgId && char.proactive_pool) {
+            for (let i = 0; i < char.proactive_pool.length; i++) {
+                if (char.proactive_pool[i].id === triggerMsgId) {
+                    const story = char.proactive_pool.splice(i, 1)[0];
+                    return { charId, story };
+                }
+            }
+        }
+        return { charId, story: null };
     }
 
     /**
@@ -272,6 +304,7 @@ export class SocialManager {
         const data = this._normalizeData(socialData);
         for (const char of Object.values(data)) {
             if (typeof char !== 'object' || char === null) continue;
+            if (char.unlocked === false) continue;
 
             // 当前有待回复对话，本月跳过
             if ((char.pending_options && char.pending_options.length > 0) || char.pending_title) {

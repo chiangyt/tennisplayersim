@@ -130,6 +130,15 @@ export class GameState {
         }
     }
 
+    static updatePlayerAndSocial(playerData, socialData) {
+        const data = this.current;
+        if (data) {
+            data.player = playerData;
+            data.social = socialData;
+            this.current = data;
+        }
+    }
+
     static get tutorialSeen() {
         return localStorage.getItem('tennis_tutorial_seen') === '1';
     }

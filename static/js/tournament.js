@@ -25,13 +25,16 @@ export function loadTournaments(staticData) {
  * @returns {object[]}
  */
 export function getEventsForPlayer(allData, age, month, playerRanking, rankingPositions = {}) {
-    let allowedSystems;
-    if (age < 13) {
-        allowedSystems = ["CTJ"];
-    } else if (age === 13) {
-        allowedSystems = ["CTJ", "ITF_Junior"];
-    } else {
-        allowedSystems = ["ITF_Junior", "ITF", "WTA"];
+    // 报名通道年龄规则：
+    // - CTJ: 16 岁那年还能报，17 岁起截断（age <= 16）
+    // - ITF Junior: 13 岁开放，18 岁那年还能报，19 岁起截断（13 <= age <= 18）
+    // - ITF / WTA: 14 岁开放（age >= 14）
+    const allowedSystems = [];
+    if (age <= 16) allowedSystems.push("CTJ");
+    if (age >= 13 && age <= 18) allowedSystems.push("ITF_Junior");
+    if (age >= 14) {
+        allowedSystems.push("ITF");
+        allowedSystems.push("WTA");
     }
 
     if (!playerRanking) playerRanking = {};
