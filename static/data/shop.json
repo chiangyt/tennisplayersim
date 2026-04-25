@@ -4,7 +4,7 @@
       "id": "energy_drink",
       "name": "能量饮料",
       "description": "体力 +25",
-      "price": 200,
+      "price": 300,
       "icon": "🥤",
       "effect": { "stamina": 25 }
     },
@@ -12,7 +12,7 @@
       "id": "nutrition_bar",
       "name": "营养棒",
       "description": "体力 +15",
-      "price": 150,
+      "price": 200,
       "icon": "🍫",
       "effect": { "stamina": 15 }
     },
@@ -20,7 +20,7 @@
       "id": "mood_candy",
       "name": "心情糖",
       "description": "心情 +20",
-      "price": 300,
+      "price": 500,
       "icon": "🍬",
       "effect": { "mood": 20 }
     }
@@ -29,32 +29,32 @@
     {
       "id": "cake",
       "name": "精致蛋糕",
-      "description": "送给妈妈，触发专属剧情",
-      "price": 500,
+      "description": "送给妈妈，触发专属剧情，会收到回礼",
+      "price": 1000,
       "icon": "🎂",
       "target_npc": "mom",
-      "effect": { "mood": 10 },
-      "gift_msg_id": "mom_gift_cake"
+      "gift_msg_id": "mom_gift_cake",
+      "return_item": "nutrition_bar"
     },
     {
       "id": "plushie",
       "name": "玩偶",
-      "description": "送给闺蜜，触发专属剧情",
-      "price": 600,
+      "description": "送给闺蜜，触发专属剧情，会收到回礼",
+      "price": 1500,
       "icon": "🧸",
       "target_npc": "friend",
-      "effect": { "mood": 8 },
-      "gift_msg_id": "friend_gift_plushie"
+      "gift_msg_id": "friend_gift_plushie",
+      "return_item": "mood_candy"
     },
     {
       "id": "tennis_manual",
-      "name": "网球教材",
-      "description": "送给教练，触发专属剧情",
-      "price": 800,
-      "icon": "📖",
+      "name": "网球拍",
+      "description": "送给教练，触发专属剧情，会收到回礼",
+      "price": 2000,
+      "icon": "🎾",
       "target_npc": "coach",
-      "effect": { "wisdom": 5 },
-      "gift_msg_id": "coach_gift_manual"
+      "gift_msg_id": "coach_gift_manual",
+      "return_item": "energy_drink"
     }
   ]
 }

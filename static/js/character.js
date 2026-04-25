@@ -1,10 +1,6 @@
-import { simulateMatch, simulateGsMatch } from './match.js';
+import { simulateMatch, simulateGsMatch, simulateWta1000Match } from './match.js';
 
 const _PRIZE_TABLES = {
-    A2000:  [0, 200,   500,   1000,  2000,  3000],
-    A2500:  [0, 300,   700,   1500,  2500,  4000],
-    A1500:  [0, 150,   400,   800,   1500,  2200],
-    B1000:  [0, 100,   200,   500,   800,   1000],
     J500:   [0, 500,   1200,  2500,  5000,  8000],
     J300:   [0, 300,   700,   1500,  3000,  5000],
     J100:   [0, 100,   300,   700,   1500,  2500],
@@ -14,16 +10,19 @@ const _PRIZE_TABLES = {
     W100:   [8000, 14000,  23000, 40000, 60000, 100000],
     WTA250: [10000, 18000, 30000, 60000, 100000, 180000],
     WTA500: [60000, 140000, 200000, 350000, 600000, 1000000],
-    WTA1000: [350000, 600000, 1300000, 250000, 4000000, 7000000],
-    GS:     [1000000, 2000000, 3000000, 5000000, 9000000, 15000000, 30000000],
+    WTA1000: [280000, 350000, 600000, 1300000, 250000, 4000000, 7000000],
+    GS:     [800000, 1000000, 2000000, 3000000, 5000000, 9000000, 15000000, 30000000],
 };
 const _STD_ROUNDS = ["R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
-const _GS_ROUNDS  = ["R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
+const _WTA1000_ROUNDS = ["R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
+const _GS_ROUNDS  = ["R128", "R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
 function _computePrizeMoney(levelCode, roundName) {
     if (!levelCode) return 0;
     const table = _PRIZE_TABLES[levelCode];
     if (!table) return 0;
-    const rounds = levelCode === 'GS' ? _GS_ROUNDS : _STD_ROUNDS;
+    const rounds = levelCode === 'GS' ? _GS_ROUNDS
+        : levelCode === 'WTA1000' ? _WTA1000_ROUNDS
+        : _STD_ROUNDS;
     const idx = rounds.indexOf(roundName);
     return idx >= 0 ? (table[idx] || 0) : 0;
 }
@@ -92,6 +91,8 @@ export class TennisGirl {
 
                 if (matchInfo && matchInfo.level_code === 'GS') {
                     [reachedRoundName, pEarned, matchLogs, gGain] = simulateGsMatch(this, matchInfo, rankingData);
+                } else if (matchInfo && matchInfo.level_code === 'WTA1000') {
+                    [reachedRoundName, pEarned, matchLogs, gGain] = simulateWta1000Match(this, matchInfo, rankingData);
                 } else {
                     [reachedRoundName, pEarned, matchLogs, gGain] = simulateMatch(this, matchInfo, rankingData);
                 }
@@ -233,10 +234,12 @@ export class TennisGirl {
     updateTimeAndAge() {
         this.month += 1;
         this.clearPastTournaments();
+        let hadBirthday = false;
         if (this.month > 12) {
             this.month = 1;
             this.year += 1;
             this.age += 1;
+            hadBirthday = true;
             this.log.push(`🎂 祝${this.name}生日快乐！你今年 ${this.age} 岁了，离职业梦想又近了一步。`);
 
             // Height growth: random range per age, tapers off after 16
@@ -266,9 +269,15 @@ export class TennisGirl {
                 this.general_stats = this.power + this.technique + this.agility;
                 this.log.push(`🎉 14岁生日！${this.name}已解锁专项属性，综合素质重置为三项之和。`);
             }
-            return true;
         }
-        return false;
+
+        const monthsElapsed = (this.year - 2024) * 12 + this.month - 1;
+        if (monthsElapsed > 0 && monthsElapsed % 3 === 0) {
+            const allowance = 1000;
+            this.money += allowance;
+            this.log.push(`💌 妈妈寄来了这个季度的生活费：¥${allowance.toLocaleString()}。`);
+        }
+        return hadBirthday;
     }
 
     get currentMonthEvent() {
@@ -280,15 +289,23 @@ export class TennisGirl {
     }
 
     useItem(itemDef) {
-        if (!this.inventory[itemDef.id] || this.inventory[itemDef.id] < 1) return false;
+        if (!this.inventory[itemDef.id] || this.inventory[itemDef.id] < 1) {
+            return { ok: false, reason: 'no_stock' };
+        }
+        const e = itemDef.effect || {};
+        const statLabels = { stamina: '体力', mood: '心情', wisdom: '智慧' };
+        for (const stat of ['stamina', 'mood', 'wisdom']) {
+            if (e[stat] && this[stat] >= 100) {
+                return { ok: false, reason: 'full', stat, label: statLabels[stat] };
+            }
+        }
         this.inventory[itemDef.id]--;
         if (this.inventory[itemDef.id] === 0) delete this.inventory[itemDef.id];
-        const e = itemDef.effect || {};
         if (e.stamina) this.stamina = Math.min(100, this.stamina + e.stamina);
         if (e.mood)    this.mood    = Math.min(100, this.mood    + e.mood);
         if (e.wisdom)  this.wisdom  = Math.min(100, this.wisdom  + e.wisdom);
         this.log.push(`✨ 使用了 ${itemDef.name}。`);
-        return true;
+        return { ok: true };
     }
 
     toJSON() {

@@ -377,7 +377,15 @@ function setupGameEvents() {
         const player = TennisGirl.fromJSON(state.player);
         const item = (SHOP_DATA.consumables || []).find(i => i.id === itemId);
         if (!item) return;
-        if (!player.useItem(item)) { alert('背包里没有这件物品。'); return; }
+        const result = player.useItem(item);
+        if (!result.ok) {
+            if (result.reason === 'full') {
+                alert(`${result.label}已满，无需使用 ${item.name}。`);
+            } else {
+                alert('背包里没有这件物品。');
+            }
+            return;
+        }
         GameState.updatePlayer(player.toJSON());
         route();
     });
@@ -396,10 +404,14 @@ function setupGameEvents() {
         if (!chats[item.target_npc]) { alert('该角色尚未解锁，无法送礼。'); return; }
         player.inventory[itemId]--;
         if (player.inventory[itemId] === 0) delete player.inventory[itemId];
-        const ef = item.effect || {};
-        if (ef.mood)   player.mood   = Math.min(100, player.mood   + ef.mood);
-        if (ef.wisdom) player.wisdom = Math.min(100, player.wisdom + ef.wisdom);
         player.log.push(`🎁 送出了 ${item.name} 给${chats[item.target_npc].name}！`);
+        if (item.return_item) {
+            const returnDef = (SHOP_DATA.consumables || []).find(c => c.id === item.return_item);
+            if (returnDef) {
+                player.inventory[returnDef.id] = (player.inventory[returnDef.id] || 0) + 1;
+                player.log.push(`💝 ${chats[item.target_npc].name}回送了 ${returnDef.name}，已放入背包。`);
+            }
+        }
         socialMgr.triggerProactiveMessage(socialData, item.target_npc, item.gift_msg_id);
         GameState.updatePlayerAndSocial(player.toJSON(), socialData);
         location.hash = `#/chat/${item.target_npc}`;
