@@ -213,7 +213,7 @@ function _buildHelpHTML() {
             <li><strong>ITF Junior</strong>：看<strong>ITF Junior 积分</strong>是否达到<strong>积分门槛</strong>（J500 需 700 分，J300 需 350 分，逐级递减）。</li>
             <li><strong>ITF 职业</strong>：看<strong>ITF 女子积分</strong>是否达到<strong>积分准入</strong>线。</li>
             <li><strong>WTA 职业</strong>：看<strong>WTA 世界排名</strong>是否进入门槛名次内（如 WTA1000 需前 50 等）。</li>
-            <li class="text-muted" style="font-size:12px;">注：ITF/WTA 卡片上的「建议能力」为 14 岁后<strong>力量 + 技术 + 敏捷</strong>三项之和，仅供参考，不作为硬门槛。</li>
+            <li class="text-muted" style="font-size:12px;">注：ITF/WTA 卡片上的「建议能力」为 14 岁后各属性加权和，仅供参考，不作为硬门槛。</li>
         </ul>
     </div>
 
