@@ -176,7 +176,7 @@ function _autoUpdatePlayerPoints(player, eventInfo, reachedRound, points, rankin
 export function simulateMatch(player, matchInfo, rankingData) {
     const baseReq = matchInfo.req_stats;
 
-    const playerPower = (player.general_stats * 0.5 + player.wisdom * 0.4 + player.perseverance * 0.1) * _randUniform(0.95, 1.05);
+    const playerPower = (player.general_stats * 0.6 + player.wisdom * 0.25 + player.perseverance * 0.15) * _randUniform(0.95, 1.05);
     const rounds = ["R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
     let currentRound = 0;
     let statGain = 0.0;
@@ -243,7 +243,79 @@ export function simulateMatch(player, matchInfo, rankingData) {
 }
 
 /**
- * 大满贯赛事专属模拟（64签，6轮制）
+ * WTA1000 赛事专属模拟（64签，6轮制）
+ * @param {object} player
+ * @param {object} matchInfo
+ * @param {object} rankingData - 积分存档对象，直接修改
+ * @returns {[string, number, string[], number]}
+ */
+export function simulateWta1000Match(player, matchInfo, rankingData) {
+    const baseReq = matchInfo.req_stats;
+
+    const playerPower = (player.general_stats * 0.6 + player.wisdom * 0.25 + player.perseverance * 0.15) * _randUniform(0.95, 1.05);
+    const rounds = ["R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
+    let currentRound = 0;
+    let statGain = 0.0;
+    const matchLogs = [];
+
+    const isAdvanced = player.age >= 14 && player.power !== null;
+    const playerType = isAdvanced ? _getPlayerType(player.playstyle) : null;
+
+    for (let i = 0; i < 6; i++) {
+        const difficultyFactor = 1 + i * 0.06;
+        let oppStat = baseReq * difficultyFactor;
+        let matchupDesc = '';
+
+        if (isAdvanced) {
+            const oppType = _randChoice(_OPP_TYPES);
+            const [factor, desc] = _matchupFactor(playerType, oppType);
+            oppStat = oppStat / factor;
+            matchupDesc = desc;
+        }
+
+        const oppPower = oppStat * _randUniform(0.95, 1.05);
+
+        const diff = playerPower - oppPower;
+        let win;
+        if (diff > 5) {
+            win = true;
+        } else if (Math.abs(diff) < 5) {
+            win = Math.random() < 0.5;
+        } else {
+            win = Math.random() < 0.15;
+        }
+
+        if (win) {
+            currentRound += 1;
+            const gain = _randUniform(0.1, 0.25);
+            statGain += gain;
+            const gainDesc = _applyStatGain(player, gain);
+            const matchupPart = matchupDesc ? ` ${matchupDesc}` : "";
+            matchLogs.push(`✅ 第 ${i + 1} 轮：顺利晋级至 ${rounds[currentRound]}！${matchupPart}（📈 ${gainDesc}）`);
+        } else {
+            const matchupPart = matchupDesc ? ` ${matchupDesc}` : "";
+            matchLogs.push(`❌ 第 ${i + 1} 轮：在 ${rounds[i]} 遭遇强敌遗憾落败。${matchupPart}`);
+            break;
+        }
+    }
+
+    if (currentRound === 6) {
+        const bonus = 0.5;
+        statGain += bonus;
+        const bonusDesc = _applyStatGain(player, bonus);
+        matchLogs.push(`🏆 恭喜！你赢得了本站赛事的冠军！（🎁 夺冠奖励：${bonusDesc}）`);
+    }
+
+    const currentPoints = matchInfo.points_table[currentRound];
+    const reachedRoundName = rounds[currentRound];
+
+    _autoUpdatePlayerPoints(player, matchInfo, reachedRoundName, currentPoints, rankingData);
+
+    return [reachedRoundName, currentPoints, matchLogs, statGain];
+}
+
+/**
+ * 大满贯赛事专属模拟（128签，7轮制）
  * @param {object} player
  * @param {object} matchInfo
  * @param {object} allTournaments
@@ -254,13 +326,13 @@ export function simulateGsMatch(player, matchInfo, rankingData) {
     const baseReq = matchInfo.req_stats;
 
     const playerPower = (
-        player.general_stats * 0.5 +
-        player.wisdom * 0.4 +
-        player.perseverance * 0.1
+        player.general_stats * 0.6 +
+        player.wisdom * 0.25 +
+        player.perseverance * 0.15
     ) * _randUniform(0.90, 1.10);
 
-    // 7个节点：currentRound=0 代表在 R64 出局，6 代表夺冠
-    const rounds = ["R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
+    // 8个节点：currentRound=0 代表在 R128 出局，7 代表夺冠
+    const rounds = ["R128", "R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
     let currentRound = 0;
     let statGain = 0.0;
     const matchLogs = [];
@@ -268,7 +340,7 @@ export function simulateGsMatch(player, matchInfo, rankingData) {
     const isAdvanced = player.age >= 14 && player.power !== null;
     const playerType = isAdvanced ? _getPlayerType(player.playstyle) : null;
 
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 7; i++) {
         const difficultyFactor = 1 + i * 0.08;
         let oppStat = baseReq * difficultyFactor;
         let matchupDesc = '';
@@ -309,7 +381,7 @@ export function simulateGsMatch(player, matchInfo, rankingData) {
         }
     }
 
-    if (currentRound === 6) {
+    if (currentRound === 7) {
         const bonus = 1.5;
         statGain += bonus;
         const bonusDesc = _applyStatGain(player, bonus);
