@@ -2,14 +2,16 @@ import { computeProfessionalRank } from '../ranking.js';
 
 export function render(player) {
     const age = player ? player.age : 12;
-    const showCtj = age <= 13;
+    const showCtj = age <= 14;
     const showItfJr = age >= 13;
-    const initialTab = showCtj ? 'ctj' : 'itfjr';
+    const initialTab = showCtj ? 'ctj' : (showItfJr ? 'itfjr' : 'world');
 
     const tabItems = [];
     if (showCtj)  tabItems.push({ id: 'ctj',    label: '我的组别 (CTJ-U14)' });
     if (showItfJr) tabItems.push({ id: 'itfjr', label: 'ITF Junior 排名' });
     tabItems.push({ id: 'world', label: '世界排名 (WTA)' });
+    // 把 initialTab 暴露给 init() 用作启动 tab
+    window.__initialRankingTab = initialTab;
 
     const tabNavHtml = tabItems.map((t, i) =>
         `<div class="tab-item ${i === 0 ? 'active' : ''}" id="tab-${t.id}" onclick="switchView('${t.id}')">${t.label}</div>`
@@ -156,12 +158,9 @@ export function init(playerPointsData, worldRankingData, playerYear, playerMonth
     const itfJrPts = (playerPointsData.ITF_Junior && playerPointsData.ITF_Junior.summary)
         ? (playerPointsData.ITF_Junior.summary.total_effective_points || 0) : 0;
 
-    // 成人积分
-    const itfPts = (playerPointsData.ITF && playerPointsData.ITF.summary)
-        ? (playerPointsData.ITF.summary.total_effective_points || 0) : 0;
-    const wtaPts = (playerPointsData.WTA && playerPointsData.WTA.summary)
+    // 成人职业积分（ITF 与 WTA 是同一池）
+    const proTotalPts = (playerPointsData.WTA && playerPointsData.WTA.summary)
         ? (playerPointsData.WTA.summary.total_effective_points || 0) : 0;
-    const proTotalPts = itfPts + wtaPts;
 
     const ctjNpcs  = (worldRankingData && worldRankingData.competitors) || [];
     const itfJrNpcs = (worldRankingData && worldRankingData.itf_junior)  || [];
@@ -332,13 +331,12 @@ export function init(playerPointsData, worldRankingData, playerYear, playerMonth
         if (!detailView || !list) return;
 
         if (mode === 'pro') {
-            const itfHistory = (playerPointsData.ITF && playerPointsData.ITF.point_history) || [];
             const wtaHistory = (playerPointsData.WTA && playerPointsData.WTA.point_history) || [];
-            const combined = [...itfHistory, ...wtaHistory].sort((a, b) =>
+            const combined = [...wtaHistory].sort((a, b) =>
                 (b.year * 12 + b.month) - (a.year * 12 + a.month));
             document.getElementById('detail-sys').innerText = 'PRO RANKING';
             document.getElementById('detail-total-pts').innerText = proTotalPts;
-            document.getElementById('detail-rule').innerText = `ITF ${itfPts}分 + WTA ${wtaPts}分`;
+            document.getElementById('detail-rule').innerText = `WTA 体系职业积分（ITF 女子赛事同池）`;
             list.innerHTML = combined.length > 0
                 ? combined.map(_pointItemHtml).join('')
                 : '<div style="text-align:center;color:#aaa;padding:20px;">暂无成人赛事记录</div>';
@@ -347,8 +345,8 @@ export function init(playerPointsData, worldRankingData, playerYear, playerMonth
             document.getElementById('detail-sys').innerText = 'ITF JUNIOR';
             document.getElementById('detail-total-pts').innerText = itfJrPts;
             document.getElementById('detail-rule').innerText = data
-                ? '计算规则: ' + (data.summary.ranking_system || 'Best-of-6')
-                : 'Best-of-6';
+                ? '计算规则: ' + (data.summary.ranking_system || 'Best-of-8')
+                : '8';
             list.innerHTML = (data && data.point_history && data.point_history.length > 0)
                 ? [...data.point_history].reverse().map(_pointItemHtml).join('')
                 : '<div style="text-align:center;color:#aaa;padding:20px;">暂无 ITF Junior 赛事记录</div>';
@@ -382,7 +380,8 @@ export function init(playerPointsData, worldRankingData, playerYear, playerMonth
     renderItfJrList();
     renderWorldList();
 
-    // Activate initial tab based on age
-    const initialTab = playerAge <= 13 ? 'ctj' : 'itfjr';
-    updateStickyForTab(initialTab);
+    // 启动时根据年龄定位到正确的初始 Tab，并切换视图显示状态
+    const initialTab = window.__initialRankingTab
+        || (playerAge <= 14 ? 'ctj' : (playerAge >= 13 ? 'itfjr' : 'world'));
+    window.switchView(initialTab);
 }

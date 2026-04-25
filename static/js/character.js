@@ -45,15 +45,14 @@ export class TennisGirl {
         this.purchased_gifts = [];
         this.height = 165.0;
 
-        // 12-14岁核心属性
-        this.general_stats = 30.0;
+        // Core attributes: general_stats is the weighted comprehensive ability.
+        this.power = 10.0;
+        this.technique = 10.0;
+        this.agility = 10.0;
         this.wisdom = 10.0;
         this.perseverance = 10.0;
-
-        // 专项属性：一开始不初始化，14岁再生成
-        this.power = null;
-        this.technique = null;
-        this.agility = null;
+        this.general_stats = this._computeGeneralStats();
+        this.stat_model_version = 3;
 
         // 根据打法设定增益因子
         this.gain_factors = this._initGainFactors(playstyle);
@@ -121,11 +120,25 @@ export class TennisGirl {
             } else if (act.includes("train_")) {
                 this.mood -= 5;
                 this.log.push(this.train(act.split("_")[1]));
+            } else if (act === "play_game") {
+                this.stamina -= 10;
+                this.mood += 20;
+                this.log.push(this.playGame());
             } else {
                 this.mood += 5;
                 this.log.push(this.rest());
             }
+            this._clampVitals();
         }
+    }
+
+    _clampMeter(value) {
+        return Math.max(0, Math.min(100, value));
+    }
+
+    _clampVitals() {
+        this.stamina = this._clampMeter(this.stamina);
+        this.mood = this._clampMeter(this.mood);
     }
 
     canAffordActions(actions) {
@@ -138,6 +151,8 @@ export class TennisGirl {
             } else if (a.includes("train_")) {
                 const sub = a.split("_")[1];
                 cost = sub === "wisdom" ? 20 : 25;
+            } else if (a === "play_game") {
+                cost = 10;
             } else if (a === "rest") {
                 simStamina = Math.min(100, simStamina + 30);
                 continue;
@@ -162,47 +177,41 @@ export class TennisGirl {
 
         this.stamina -= cost;
 
-        if (this.age < 14) {
-            if (subType === "tennis") {
-                if (this.mood < 30) {
-                    const gain = 1.0;
-                    this.general_stats = Math.min(100, this.general_stats + gain);
-                    return `${this.name}心情不好，训练效果大打折扣。`;
-                } else {
-                    const gain = 1.5;
-                    this.general_stats = Math.min(100, this.general_stats + gain);
-                    return `${this.name}进行了高强度的基础训练，综合素质提升了。`;
-                }
-            } else if (subType === "wisdom") {
-                if (this.mood < 30) {
-                    this.wisdom = Math.min(100, this.wisdom + 0.8);
-                    return `${this.name}心情不好，复盘效率不高。`;
-                } else {
-                    this.wisdom = Math.min(100, this.wisdom + 1);
-                    return `${this.name}观看了比赛录像，智慧提升了。`;
-                }
-            }
-        } else {
-            const gain = 1.2 * (this.gain_factors[subType] || 1.0);
-            if (subType === "power") {
-                this.power += gain;
-            } else if (subType === "technique") {
-                this.technique += gain;
-            } else if (subType === "agility") {
-                this.agility += gain;
-            } else if (subType === "wisdom") {
-                this.wisdom = Math.min(100, this.wisdom + 1.0);
-            }
-            this.general_stats = this.power + this.technique + this.agility;
-            const subCn = { power: "力量", technique: "技术", agility: "敏捷", wisdom: "智慧" };
-            return `针对${subCn[subType] || subType}进行了专项强化，进步飞快。`;
+        this._normalizeSpecialtyStats();
+
+        if (subType === "wisdom") {
+            const gain = this.mood < 30 ? 0.8 : 1.0;
+            this.wisdom = Math.min(100, this.wisdom + gain);
+            this._recalculateGeneralStats();
+            return this.mood < 30
+                ? `${this.name}心情不好，复盘效率不高。`
+                : `${this.name}观看了比赛录像，智慧提升了。`;
         }
+
+        const rawGain = this.mood < 30 ? 0.7 : 1.0;
+        const subCn = { power: "力量", technique: "技术", agility: "敏捷" };
+        const gain = rawGain * (this.gain_factors[subType] || 1.0);
+        if (subType === "power") {
+            this.power = Math.min(100, this.power + gain);
+        } else if (subType === "technique") {
+            this.technique = Math.min(100, this.technique + gain);
+        } else if (subType === "agility") {
+            this.agility = Math.min(100, this.agility + gain);
+        }
+        this._recalculateGeneralStats();
+        return this.mood < 30
+            ? `${this.name}心情不好，${subCn[subType] || subType}训练效果打了折扣。`
+            : `针对${subCn[subType] || subType}进行了专项强化，进步飞快。`;
     }
 
     rest() {
         const recovery = 30;
         this.stamina = Math.min(100, this.stamina + recovery);
         return `这周${this.name}回宿舍补了个大觉，感觉体力充沛了不少。`;
+    }
+
+    playGame() {
+        return `这周${this.name}打了会儿游戏，心情明显放松了一些。`;
     }
 
     applyForTournament(eventData) {
@@ -260,15 +269,6 @@ export class TennisGirl {
                     this.log.push(`📏 ${this.name}又长高了！身高从 ${prevHeight.toFixed(1)} cm 增长到 ${this.height.toFixed(1)} cm。`);
                 }
             }
-
-            if (this.age === 14) {
-                const baseVal = this.general_stats * 0.2;
-                this.power = baseVal;
-                this.technique = baseVal;
-                this.agility = baseVal;
-                this.general_stats = this.power + this.technique + this.agility;
-                this.log.push(`🎉 14岁生日！${this.name}已解锁专项属性，综合素质重置为三项之和。`);
-            }
         }
 
         const monthsElapsed = (this.year - 2024) * 12 + this.month - 1;
@@ -295,17 +295,45 @@ export class TennisGirl {
         const e = itemDef.effect || {};
         const statLabels = { stamina: '体力', mood: '心情', wisdom: '智慧' };
         for (const stat of ['stamina', 'mood', 'wisdom']) {
-            if (e[stat] && this[stat] >= 100) {
+            if ((e[stat] || 0) > 0 && this[stat] >= 100) {
                 return { ok: false, reason: 'full', stat, label: statLabels[stat] };
             }
         }
         this.inventory[itemDef.id]--;
         if (this.inventory[itemDef.id] === 0) delete this.inventory[itemDef.id];
-        if (e.stamina) this.stamina = Math.min(100, this.stamina + e.stamina);
-        if (e.mood)    this.mood    = Math.min(100, this.mood    + e.mood);
+        if (e.stamina) this.stamina = this._clampMeter(this.stamina + e.stamina);
+        if (e.mood)    this.mood    = this._clampMeter(this.mood    + e.mood);
         if (e.wisdom)  this.wisdom  = Math.min(100, this.wisdom  + e.wisdom);
+        this._clampVitals();
+        this._recalculateGeneralStats();
         this.log.push(`✨ 使用了 ${itemDef.name}。`);
         return { ok: true };
+    }
+
+    _specialtyTotal() {
+        return this.power + this.technique + this.agility;
+    }
+
+    _computeGeneralStats() {
+        return this._specialtyTotal() * 0.7 + this.wisdom * 0.2 + this.perseverance * 0.1;
+    }
+
+    _recalculateGeneralStats() {
+        this.general_stats = this._computeGeneralStats();
+    }
+
+    _normalizeSpecialtyStats() {
+        const hasSpecialties = Number.isFinite(this.power)
+            && Number.isFinite(this.technique)
+            && Number.isFinite(this.agility);
+        if (!hasSpecialties) {
+            const base = Number.isFinite(this.general_stats) ? this.general_stats / 3 : 10;
+            this.power = base;
+            this.technique = base;
+            this.agility = base;
+        }
+        this._recalculateGeneralStats();
+        this.stat_model_version = 3;
     }
 
     toJSON() {
@@ -328,6 +356,8 @@ export class TennisGirl {
         Object.assign(p, data);
         // Rebuild gain_factors from playstyle
         p.gain_factors = p._initGainFactors(p.playstyle);
+        p._normalizeSpecialtyStats();
+        p._clampVitals();
         return p;
     }
 }

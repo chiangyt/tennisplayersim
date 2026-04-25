@@ -12,7 +12,13 @@ const STEPS = [
         id: 'stats-bar',
         target: '.header-stats',
         title: '📊 状态栏',
-        body: '顶部显示当前年月、年龄和存款。\n⚡体力是安排行动的关键资源（满值100点），😊心情影响训练收益。',
+        body: '顶部显示当前年月、年龄和存款。\n⚡体力是安排行动的关键资源（满值100点），😊心情低于 30 时训练收益会打折。',
+    },
+    {
+        id: 'personal-info',
+        target: '.footer-menu .btn-menu:nth-child(2)',
+        title: '🎾 个人信息',
+        body: '点击「个人信息」可查看身高、打法和六维属性。\n\n<b>综合能力</b> 是赛场战力，公式：\n力量+技术+敏捷  ×0.7\n智慧  ×0.2\n毅力  ×0.1\n\n力量/技术/敏捷靠专项训练涨；智慧靠录像复盘；毅力主要靠比赛累积。',
     },
     {
         id: 'open-schedule',
@@ -67,7 +73,7 @@ const STEPS = [
         id: 'phone-msg',
         target: 'a[href="#/messages"]',
         title: '💬 简讯',
-        body: '与妈妈、教练和朋友聊天交流。\n选择不同的回复会影响心情与属性成长。',
+        body: '与妈妈、教练、闺蜜聊天，回复可获得少量心情/属性奖励。\n夺冠、上场半决赛、晋级 ITF 等节点会解锁新 NPC（劲敌/同学/赞助商）。',
     },
     {
         id: 'phone-news',
@@ -79,7 +85,13 @@ const STEPS = [
         id: 'phone-rank',
         target: 'a[href="#/ranking"]',
         title: '🏆 排名',
-        body: '查看你在全球100+名选手中的位置。\n积累赛事积分，冲击更高段位！',
+        body: '12–14 岁打 CTJ U14 组别（100 位竞争对手）；13 岁起可同时打 ITF Junior（60 人）；14 岁起进入 ITF/WTA 职业（共享 WTA 排名池，30 强榜）。\n积分采用 12 个月滚动 + Best-of-N 择优。',
+    },
+    {
+        id: 'phone-shop',
+        target: 'a[href="#/shop"]',
+        title: '🛒 商城 / 背包',
+        body: '比赛奖金可用于购买消耗品（回体力/心情）和礼物。\n礼物送给 NPC 会触发专属剧情，并收到对应回礼放进背包。',
     },
     {
         id: 'done',

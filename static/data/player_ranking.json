@@ -52,18 +52,10 @@
     },
     "point_history": []
   },
-  "ITF": {
-    "summary": {
-      "total_effective_points": 0,
-      "ranking_system": "Best-of-8",
-      "last_updated": ""
-    },
-    "point_history": []
-  },
   "WTA": {
     "summary": {
       "total_effective_points": 0,
-      "ranking_system": "Best-of-8",
+      "ranking_system": "Best-of-10",
       "last_updated": ""
     },
     "point_history": []

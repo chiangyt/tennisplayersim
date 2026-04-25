@@ -3,9 +3,27 @@
 export class GameState {
     static KEY = 'tennis_current_game';
 
+    // 老存档可能把 W15/W35/W75/W100 的积分写在 ITF 池，新逻辑统一进 WTA。
+    // 加载时把 ITF.point_history 并入 WTA，删除 ITF 键。
+    static _migrateRanking(ranking) {
+        if (!ranking || !ranking.ITF) return ranking;
+        const itf = ranking.ITF;
+        const itfHistory = (itf && itf.point_history) || [];
+        if (itfHistory.length > 0) {
+            if (!ranking.WTA) ranking.WTA = { summary: {}, point_history: [] };
+            if (!Array.isArray(ranking.WTA.point_history)) ranking.WTA.point_history = [];
+            ranking.WTA.point_history.push(...itfHistory);
+        }
+        delete ranking.ITF;
+        return ranking;
+    }
+
     static get current() {
         const raw = localStorage.getItem(this.KEY);
-        return raw ? JSON.parse(raw) : null;
+        if (!raw) return null;
+        const data = JSON.parse(raw);
+        if (data && data.ranking) this._migrateRanking(data.ranking);
+        return data;
     }
 
     static set current(data) {

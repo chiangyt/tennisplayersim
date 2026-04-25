@@ -6,35 +6,54 @@ const _SYS_LABELS = {
     WTA: 'WTA 职业',
 };
 
-function _renderMatchCard(player, match, targetMonth) {
+function _renderMatchCard(player, match, targetMonth, playerRanking, proRank) {
     const bookedEvent = player.scheduled_tournaments ? player.scheduled_tournaments[String(targetMonth)] : null;
     const isAlreadySigned = bookedEvent && bookedEvent.id === match.id;
     const isTaken = bookedEvent && !isAlreadySigned;
-    const isItfOrWta = match.system_tag === 'ITF' || match.system_tag === 'WTA';
+    const sys = match.system_tag;
+
+    const jrPts  = (playerRanking && playerRanking.ITF_Junior) || 0;
+    // ITF 与 WTA 共享同一职业积分池
+    const proPts = (playerRanking && playerRanking.WTA) || 0;
+    const playerWtaRank = (proRank !== null && proRank !== undefined) ? proRank : 9999;
+    const playerAbility = player.general_stats || 0;
 
     let isLocked = false;
-    if (match.is_rank_locked) {
-        isLocked = true;
-    } else if (match.entry_points !== undefined) {
-        isLocked = (player.ranking_points || 0) < match.entry_points;
-    } else if (!isItfOrWta) {
-        isLocked = (player.general_stats || 0) < (match.req_stats || 0);
+    let primaryLabel = '';
+    let suggestLabel = '';
+
+    if (sys === 'CTJ') {
+        isLocked = playerAbility < (match.req_stats || 0);
+        primaryLabel = `能力门槛 ${match.req_stats ?? '—'}`;
+    } else if (sys === 'ITF_Junior') {
+        const need = match.entry_points || 0;
+        isLocked = jrPts < need;
+        primaryLabel = need > 0
+            ? `ITF Jr 积分 ${need}`
+            : `ITF Jr 无积分门槛`;
+        suggestLabel = match.req_stats != null ? `建议综合能力 ${match.req_stats}` : '';
+    } else if (sys === 'ITF') {
+        const need = match.req_ranking || 0;
+        isLocked = !!match.is_rank_locked || proPts < need;
+        primaryLabel = need > 0
+            ? `职业积分 ${need}`
+            : `职业积分 无门槛`;
+        suggestLabel = match.req_stats != null ? `建议综合能力 ${match.req_stats}` : '';
+    } else if (sys === 'WTA') {
+        const need = match.req_ranking || 0;
+        isLocked = !!match.is_rank_locked || (need > 0 && playerWtaRank > need);
+        const rankShown = playerWtaRank >= 9999 ? '—' : `第 ${playerWtaRank}`;
+        primaryLabel = need > 0
+            ? `WTA 排名 前 ${need}`
+            : `WTA 无排名门槛`;
+        suggestLabel = match.req_stats != null ? `建议综合能力 ${match.req_stats}` : '';
+    } else {
+        primaryLabel = `能力门槛 ${match.req_stats ?? '—'}`;
     }
 
     const cardClass = isAlreadySigned ? 'registered-match' : ((isLocked || isTaken) ? 'locked-match' : 'active-match');
     const btnClass = isAlreadySigned ? 'registered' : ((isLocked || isTaken) ? 'locked' : 'active');
     const isDisabled = isLocked || isAlreadySigned || isTaken;
-
-    let thresholdLabel = '';
-    if (match.entry_points !== undefined) {
-        thresholdLabel = `积分门槛: ${match.entry_points}`;
-    } else if (match.system_tag === 'WTA') {
-        thresholdLabel = `排名要求: 世界前 ${match.req_ranking}`;
-    } else if (match.system_tag === 'ITF') {
-        thresholdLabel = `积分准入: ${match.req_ranking > 0 ? match.req_ranking + ' pts' : '无门槛'}`;
-    } else {
-        thresholdLabel = `能力门槛: ${match.req_stats ?? '—'}`;
-    }
 
     let actionLabel = '';
     if (isAlreadySigned) {
@@ -67,7 +86,10 @@ function _renderMatchCard(player, match, targetMonth) {
                 <button type="submit"
                         class="btn btn-reg w-100 d-flex justify-content-between align-items-center ${btnClass}"
                         ${isDisabled ? 'disabled' : ''}>
-                    <span>${thresholdLabel}</span>
+                    <span class="text-start" style="line-height:1.35;">
+                        <div>${primaryLabel}</div>
+                        ${suggestLabel ? `<div class="small text-muted" style="font-weight:600;">${suggestLabel}</div>` : ''}
+                    </span>
                     <span class="fw-bold">${actionLabel}</span>
                 </button>
             </form>
@@ -75,7 +97,7 @@ function _renderMatchCard(player, match, targetMonth) {
     </div>`;
 }
 
-export function render(player, currentMatches, targetMonth) {
+export function render(player, currentMatches, targetMonth, playerRanking, proRank) {
     const groups = {};
     for (const match of (currentMatches || [])) {
         const tag = match.system_tag || 'CTJ';
@@ -97,7 +119,7 @@ export function render(player, currentMatches, targetMonth) {
 
         tabContentsHtml = activeTabs.map(tab =>
             `<div id="reg-view-${tab}" style="display:none;">
-                ${groups[tab].map(m => _renderMatchCard(player, m, targetMonth)).join('')}
+                ${groups[tab].map(m => _renderMatchCard(player, m, targetMonth, playerRanking, proRank)).join('')}
             </div>`
         ).join('');
     }
@@ -199,7 +221,7 @@ function _buildHelpHTML() {
     <div class="reg-help-section">
         <h6>🎂 年龄准入</h6>
         <ul>
-            <li><strong>CTJ 青少年</strong>：12–16 岁（17 岁起截断）</li>
+            <li><strong>CTJ 青少年</strong>：12–14 岁（15 岁起截断）</li>
             <li><strong>ITF Junior</strong>：13–18 岁（19 岁起截断）</li>
             <li><strong>ITF 职业</strong>：14 岁起开放</li>
             <li><strong>WTA 职业</strong>：14 岁起开放</li>
@@ -209,11 +231,10 @@ function _buildHelpHTML() {
     <div class="reg-help-section">
         <h6>🔓 报名门槛</h6>
         <ul>
-            <li><strong>CTJ</strong>：看<strong>综合能力</strong>是否达到<strong>能力门槛</strong>。</li>
-            <li><strong>ITF Junior</strong>：看<strong>ITF Junior 积分</strong>是否达到<strong>积分门槛</strong>（J500 需 700 分，J300 需 350 分，逐级递减）。</li>
-            <li><strong>ITF 职业</strong>：看<strong>ITF 女子积分</strong>是否达到<strong>积分准入</strong>线。</li>
-            <li><strong>WTA 职业</strong>：看<strong>WTA 世界排名</strong>是否进入门槛名次内（如 WTA1000 需前 50 等）。</li>
-            <li class="text-muted" style="font-size:12px;">注：ITF/WTA 卡片上的「建议能力」为 14 岁后各属性加权和，仅供参考，不作为硬门槛。</li>
+            <li><strong>CTJ</strong>：看<strong>综合能力</strong>是否达到<strong>能力门槛</strong>，与积分无关。</li>
+            <li><strong>ITF Junior</strong>：独立维护一套 <strong>Junior 积分</strong>，J500 需 700，J300 需 350，逐级递减；CTJ 积分不可折算。</li>
+            <li><strong>ITF 职业 / WTA 职业</strong>：<strong>共享同一套职业积分池</strong>（W15/W35/W75/W100 与 WTA250/500/1000/GS 都计入 WTA 排名）。ITF 类卡片看<strong>积分门槛</strong>，WTA 类卡片看<strong>世界排名</strong>名次。</li>
+            <li class="text-muted" style="font-size:12px;">每张卡片下方的「建议综合能力」是该轮对手的赛事基线值，未达硬门槛但能力差太多很难赢首轮。</li>
         </ul>
     </div>
 

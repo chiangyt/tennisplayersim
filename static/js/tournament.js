@@ -26,11 +26,11 @@ export function loadTournaments(staticData) {
  */
 export function getEventsForPlayer(allData, age, month, playerRanking, rankingPositions = {}) {
     // 报名通道年龄规则：
-    // - CTJ: 16 岁那年还能报，17 岁起截断（age <= 16）
+    // - CTJ: 14 岁那年还能报，15 岁起截断（age <= 14）
     // - ITF Junior: 13 岁开放，18 岁那年还能报，19 岁起截断（13 <= age <= 18）
     // - ITF / WTA: 14 岁开放（age >= 14）
     const allowedSystems = [];
-    if (age <= 16) allowedSystems.push("CTJ");
+    if (age <= 14) allowedSystems.push("CTJ");
     if (age >= 13 && age <= 18) allowedSystems.push("ITF_Junior");
     if (age >= 14) {
         allowedSystems.push("ITF");
@@ -54,7 +54,8 @@ export function getEventsForPlayer(allData, age, month, playerRanking, rankingPo
                                 const playerWtaRank = rankingPositions.WTA || 9999;
                                 if (playerWtaRank > req) rankLocked = true;
                             } else if (systemKey === 'ITF') {
-                                const sysPoints = playerRanking[systemKey] || 0;
+                                // ITF 与 WTA 共享职业积分池
+                                const sysPoints = playerRanking.WTA || 0;
                                 if (sysPoints < req) rankLocked = true;
                             }
                         }

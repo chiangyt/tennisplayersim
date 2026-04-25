@@ -132,11 +132,11 @@ function route() {
                 if (targetMonth > 12) targetMonth = 1;
                 const playerRanking = rm.getAllRankings(state.ranking);
                 const wtaNpcs = (state.world && state.world.wta) || [];
-                const proTotalPts = (playerRanking.ITF || 0) + (playerRanking.WTA || 0);
+                const proTotalPts = playerRanking.WTA || 0;
                 const proRank = computeProfessionalRank(proTotalPts, wtaNpcs);
                 const wtaRankForGate = proRank !== null ? proRank : 9999;
                 const regMatches = getEventsForPlayer(STATIC_DATA, player.age, targetMonth, playerRanking, { WTA: wtaRankForGate });
-                app.innerHTML = registrationPage.render(player, regMatches, targetMonth);
+                app.innerHTML = registrationPage.render(player, regMatches, targetMonth, playerRanking, proRank);
                 registrationPage.init();
             });
             break;
@@ -517,7 +517,7 @@ window._cutscenePickOption = function(optionIndex) {
     if (remaining.length > 0) showCutscene(remaining[0], state);
 };
 
-// ========== sendPlan 全局函数（供 main_logic.js 调用）==========
+// ========== sendPlan 全局函数 ==========
 window.sendPlan = function () {
     if (window.__tutorialActive) {
         // 教程模式：关闭弹窗但不实际执行计划、不推进月份
@@ -570,11 +570,21 @@ window.sendPlan = function () {
         ? [...new Set([...readIds, ...monthNews.map(n => n._source_id)])]
         : readIds;
 
+    const _countUnread = (data) => Object.values(data || {})
+        .filter(c => c && typeof c === 'object')
+        .reduce((sum, c) => sum + (c.unread_count || 0), 0);
+    const unreadBefore = _countUnread(socialData);
+
     player.executePlan(actions, allTournaments, rankingData, socialTrigger);
     player.updateTimeAndAge();
     rm.updateWorldNpcs(worldData, player.year, player.month);
     player.ranking_points = rm.refreshRanking(rankingData, player.year, player.month, player.age);
     socialMgr.triggerMonthlyMessages(socialData);
+
+    const newMsgCount = _countUnread(socialData) - unreadBefore;
+    if (newMsgCount > 0) {
+        player.log.push(`📨 收到 ${newMsgCount} 条新消息，记得打开手机查看～`);
+    }
 
     // NPC 解锁检查（幂等），收集新解锁的剧情
     const totalMonths = (player.year - 2024) * 12 + player.month;
@@ -604,7 +614,7 @@ window.sendPlan = function () {
     setTimeout(() => route(), 50);
 };
 
-// ========== main_logic.js 初始化 ==========
+// ========== 月度计划 UI 初始化 ==========
 function initMainLogic() {
     // 初始化动作池拖拽
     const pool = document.getElementById('actionPool');
@@ -700,6 +710,7 @@ function validatePlan() {
             const id = item.getAttribute('data-id');
             if (id === 'play_match') cost += 50;
             else if (id.startsWith('train_')) cost += (id === 'train_wisdom') ? 20 : 25;
+            else if (id === 'play_game') cost += 10;
             else cost -= 30;
             count++;
         }
@@ -741,6 +752,15 @@ window.performHit = function () {
     setTimeout(() => img.classList.remove('hit-animation'), 200);
 };
 
+window._planShowHelp = function () {
+    const ov = document.getElementById('planHelpOverlay');
+    if (ov) ov.style.display = 'flex';
+};
+window._planHideHelp = function () {
+    const ov = document.getElementById('planHelpOverlay');
+    if (ov) ov.style.display = 'none';
+};
+
 window.clearPlan = function () {
     for (let i = 1; i <= 4; i++) {
         const slot = document.getElementById(`slot-${i}`);
@@ -750,7 +770,7 @@ window.clearPlan = function () {
 };
 
 window.repeatLast = function () {
-    const saved = JSON.parse(localStorage.getItem('last_success_plan') || '["train_tennis","train_tennis","rest","train_tennis"]');
+    const saved = JSON.parse(localStorage.getItem('last_success_plan') || '["train_power","train_technique","rest","train_agility"]');
 
     if (saved.includes('play_match') && !window.HAS_REGISTRATION) {
         alert("⚠️ 规划失败：你上月参加了比赛，但本月尚未报名任何赛事，请重新规划行程。");
@@ -760,17 +780,19 @@ window.repeatLast = function () {
     saved.forEach((id, i) => {
         let el = '';
         if (id === 'play_match') {
-            el = `<div class="drag-item match-item" data-id="play_match">🏆 参加比赛 </div>`;
+            el = `<div class="drag-item match-item plan-action" data-id="play_match">参加比赛</div>`;
         } else if (id.startsWith('train_')) {
-            let label = "🎾 网球训练";
+            let label = "网球训练";
             let colorStyle = "background:#e3f2fd; color:#1976d2;";
-            if (id === 'train_wisdom') { label = "📚 录像复盘"; colorStyle = "background:#fff3e0; color:#ef6c00;"; }
-            else if (id === 'train_power') { label = "💪 力量专项"; colorStyle = "background:#ffebee; color:#c62828;"; }
-            else if (id === 'train_technique') { label = "🎯 技术专项"; colorStyle = "background:#e8f5e9; color:#2e7d32;"; }
-            else if (id === 'train_agility') { label = "⚡ 敏捷专项"; colorStyle = "background:#f3e5f5; color:#7b1fa2;"; }
-            el = `<div class="drag-item" data-id="${id}" style="${colorStyle}">${label}</div>`;
+            if (id === 'train_wisdom') { label = "录像复盘"; colorStyle = "background:#fff3e0; color:#ef6c00;"; }
+            else if (id === 'train_power') { label = "力量专项"; colorStyle = "background:#ffebee; color:#c62828;"; }
+            else if (id === 'train_technique') { label = "技术专项"; colorStyle = "background:#e8f5e9; color:#2e7d32;"; }
+            else if (id === 'train_agility') { label = "敏捷专项"; colorStyle = "background:#f3e5f5; color:#7b1fa2;"; }
+            el = `<div class="drag-item plan-action" data-id="${id}" style="${colorStyle}">${label}</div>`;
+        } else if (id === 'play_game') {
+            el = '<div class="drag-item plan-action" data-id="play_game" style="background:#e0f7fa; color:#00838f;">打游戏</div>';
         } else {
-            el = '<div class="drag-item" data-id="rest" style="background:#eeeeee; color:#616161;">💤 休息</div>';
+            el = '<div class="drag-item plan-action" data-id="rest" style="background:#eeeeee; color:#616161;">休息</div>';
         }
         const slot = document.getElementById(`slot-${i + 1}`);
         if (slot) slot.innerHTML = el;
