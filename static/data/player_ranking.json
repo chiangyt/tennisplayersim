@@ -1,13 +1,13 @@
 {
   "CTJ": {
     "summary": {
-      "total_effective_points": 950,
+      "total_effective_points": 240,
       "ranking_system": "Best-of-8",
       "last_updated": "2024-03"
     },
     "point_history": [
       {
-        "points": 100,
+        "points": 20,
         "year": 2023,
         "month": 4,
         "desc": "B市锦标赛U12冠军(折算)",
@@ -16,7 +16,7 @@
         "is_expired": false
       },
       {
-        "points": 150,
+        "points": 40,
         "year": 2023,
         "month": 8,
         "desc": "A市锦标赛U12冠军(折算)",
@@ -25,7 +25,7 @@
         "is_expired": false
       },
       {
-        "points": 200,
+        "points": 80,
         "year": 2023,
         "month": 10,
         "desc": "全国冠军赛U12冠军(折算)",
@@ -34,7 +34,7 @@
         "is_expired": false
       },
       {
-        "points": 500,
+        "points": 100,
         "year": 2023,
         "month": 12,
         "desc": "U12全国年终总决赛冠军(折算)",
@@ -47,7 +47,7 @@
   "ITF_Junior": {
     "summary": {
       "total_effective_points": 0,
-      "ranking_system": "Best-of-6",
+      "ranking_system": "Best-of-8",
       "last_updated": ""
     },
     "point_history": []
@@ -55,7 +55,7 @@
   "ITF": {
     "summary": {
       "total_effective_points": 0,
-      "ranking_system": "Best-of-6",
+      "ranking_system": "Best-of-8",
       "last_updated": ""
     },
     "point_history": []
@@ -63,7 +63,7 @@
   "WTA": {
     "summary": {
       "total_effective_points": 0,
-      "ranking_system": "Best-of-6",
+      "ranking_system": "Best-of-8",
       "last_updated": ""
     },
     "point_history": []
