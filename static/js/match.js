@@ -243,7 +243,7 @@ export function simulateMatch(player, matchInfo, rankingData) {
 }
 
 /**
- * 大满贯赛事专属模拟（128签，6轮制）
+ * 大满贯赛事专属模拟（64签，6轮制）
  * @param {object} player
  * @param {object} matchInfo
  * @param {object} allTournaments
