@@ -1,29 +1,25 @@
-// Prize money tables (CNY), indexed by round result
+// Prize money tables (CNY), aligned with character.js _PRIZE_TABLES
 const _PRIZE_TABLES = {
-    A2000:  [0, 200, 500, 1000, 2000, 3000],
-    A2500:  [0, 300, 700, 1500, 2500, 4000],
-    A1500:  [0, 150, 400, 800, 1500, 2200],
-    B1000:  [0, 100, 200, 500, 800, 1000],
     J500:   [0, 500, 1200, 2500, 5000, 8000],
     J300:   [0, 300, 700, 1500, 3000, 5000],
-    J200:   [0, 150, 400, 800, 1500, 2500],
     J100:   [0, 100, 300, 700, 1500, 2500],
-    J60:    [0, 50, 150, 300, 600, 1000],
-    J30:    [0, 30, 80, 150, 300, 500],
     W15:    [100, 800, 1600, 3000, 5500, 10000],
     W35:    [500, 1500, 3000, 6000, 10000, 20000],
     W75:    [5000, 7000, 15000, 28000, 40000, 70000],
     W100:   [8000, 14000, 23000, 40000, 60000, 100000],
     WTA250: [10000, 18000, 30000, 60000, 100000, 180000],
     WTA500: [60000, 140000, 200000, 350000, 600000, 1000000],
-    WTA1000:[350000, 600000, 1300000, 250000, 4000000, 7000000],
-    GS:     [1000000, 2000000, 3000000, 5000000, 9000000, 15000000, 30000000],
+    WTA1000:[280000, 350000, 600000, 1300000, 2500000, 4000000, 7000000],
+    GS:     [800000, 1000000, 2000000, 3000000, 5000000, 9000000, 17000000, 30000000],
 };
-const _STD_ROUNDS = ["R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
-const _GS_ROUNDS  = ["R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
+const _STD_ROUNDS    = ["R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
+const _WTA1000_ROUNDS= ["R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
+const _GS_ROUNDS     = ["R128", "R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
 
 function _getRounds(t) {
-    return t.points.length === 7 ? _GS_ROUNDS : _STD_ROUNDS;
+    if (t.level_code === 'GS') return _GS_ROUNDS;
+    if (t.level_code === 'WTA1000') return _WTA1000_ROUNDS;
+    return _STD_ROUNDS;
 }
 
 function _fmt(n) {
@@ -184,9 +180,10 @@ function _renderCTJ(player, ctjData) {
             <i class="bi bi-trophy-fill me-1"></i> ${levelName.replace(/_/g, ' ')}
         </div>`;
         for (const t of events) {
+            const tagged = { ...t, _system: 'CTJ' };
             const idx = window._calTournamentData.length;
-            window._calTournamentData.push(t);
-            html += _makeCard(t, player, idx);
+            window._calTournamentData.push(tagged);
+            html += _makeCard(tagged, player, idx);
         }
     }
     return html;
@@ -243,15 +240,16 @@ function _renderWTA(player, wtaData) {
 function _buildDetailHTML(t) {
     const rounds = _getRounds(t);
     const prizeArr = _PRIZE_TABLES[t.level_code] || [];
+    const isCtj = t._system === 'CTJ';
     let rowsHTML = '';
     for (let i = 0; i < rounds.length; i++) {
         const pts = t.points[i] ?? '—';
-        const prize = _fmt(prizeArr[i] || 0);
         const isChamp = i === rounds.length - 1;
+        const prizeCell = isCtj ? '' : `<td>${_fmt(prizeArr[i] || 0)}</td>`;
         rowsHTML += `<tr class="${isChamp ? 'cal-champion-row' : ''}">
             <td style="font-weight:${isChamp ? 900 : 400};">${rounds[i]}${isChamp ? ' 🏆' : ''}</td>
             <td>${pts}</td>
-            <td>${prize}</td>
+            ${prizeCell}
         </tr>`;
     }
 
@@ -281,11 +279,12 @@ function _buildDetailHTML(t) {
             <tr>
                 <th>轮次</th>
                 <th>排名积分</th>
-                <th>奖金</th>
+                ${isCtj ? '' : '<th>奖金</th>'}
             </tr>
         </thead>
         <tbody>${rowsHTML}</tbody>
     </table>
+    ${isCtj ? '<div class="text-muted small mt-2">CTJ 青少年赛事仅提供积分与荣誉，无现金奖励。</div>' : ''}
     <button class="cal-close-btn" onclick="window._calCloseDetail()">关闭</button>`;
 }
 
