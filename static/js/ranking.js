@@ -99,7 +99,6 @@ export class RankingManager {
      */
     generateDynamicRankings() {
         const competitors = [];
-        let currentPts = 2800;
 
         const fullNames = new Set();
         while (fullNames.size < 100) {
@@ -109,16 +108,33 @@ export class RankingManager {
         }
         const nameList = Array.from(fullNames);
 
-        for (let i = 1; i <= 100; i++) {
-            const drop = Math.floor(Math.random() * 16) + 15; // randint(15, 30)
-            currentPts -= drop;
-
+        // CTJ 基准积分：头部约 4000，尾部接近 0
+        const CTJ_BASE = [
+            4000, 3500, 3100, 2800, 2550, 2350, 2180, 2030, 1900, 1780,  // 1~10
+            1690, 1610, 1540, 1480, 1420, 1370, 1320, 1270, 1220, 1170,  // 11~20
+            1120, 1080, 1040, 1000,  960,  925,  890,  855,  825,  795,  // 21~30
+             765,  735,  705,  675,  645,  615,  585,  555,  530,  505,  // 31~40
+             480,  455,  430,  405,  380,  360,  340,  320,  300,  280,  // 41~50
+             260,  245,  230,  215,  200,  185,  170,  158,  146,  134,  // 51~60
+             122,  112,  102,   93,   85,   77,   70,   64,   58,   52,  // 61~70
+              47,   42,   38,   34,   30,   27,   24,   21,   19,   17,  // 71~80
+              15,   13,   11,   10,    9,    8,    7,    6,    5,    4,  // 81~90
+               4,    3,    3,    2,    2,    2,    1,    1,    1,    1,  // 91~100
+        ];
+        for (let i = 0; i < 100; i++) {
+            const base = CTJ_BASE[i];
+            // 头部噪声大（±4%），中段 ±3%，尾部 ±2 分
+            const ratio = i < 10 ? 0.04 : (i < 50 ? 0.03 : 0.02);
+            const span = Math.max(2, Math.floor(base * ratio));
+            const noise = Math.floor(Math.random() * (span * 2 + 1)) - span;
             competitors.push({
-                rank: i,
-                name: nameList[i - 1],
-                points: Math.max(0, currentPts)
+                rank: i + 1,
+                name: nameList[i],
+                points: Math.max(0, base + noise)
             });
         }
+        competitors.sort((a, b) => b.points - a.points);
+        for (let i = 0; i < competitors.length; i++) competitors[i].rank = i + 1;
 
         // WTA 排名 — 30 人，从 NAME_POOL 取名
         // 基准积分：模拟真实 WTA 分布（头部陡降，中段缓降）
@@ -146,12 +162,12 @@ export class RankingManager {
 
         // ITF Junior 排名 — 60 人，国际青少年球员
         const ITF_JR_BASE = [
-            1200, 1100, 1000, 950, 900, 850, 800, 750, 720, 700, // 1~10
-            680,  660,  640,  620, 600, 580, 560, 540, 520, 500, // 11~20
-            480,  460,  440,  420, 400, 385, 370, 355, 340, 325, // 21~30
-            310,  300,  290,  280, 270, 260, 250, 240, 230, 220, // 31~40
-            210,  200,  190,  180, 170, 160, 150, 140, 130, 120, // 41~50
-            110,  105,  100,   95,  90,  85,  80,  75,  70,  65, // 51~60
+            2800, 2600, 2400, 2250, 2150, 2050, 1980, 1920, 1860, 1800, // 1~10
+            1750, 1700, 1660, 1620, 1580, 1540, 1500, 1460, 1430, 1400, // 11~20
+            1370, 1340, 1310, 1280, 1250, 1220, 1190, 1160, 1130, 1100, // 21~30
+            1060, 1020,  980,  940,  900,  860,  820,  780,  740,  700, // 31~40
+             660,  620,  580,  540,  500,  460,  420,  380,  340,  300, // 41~50
+             270,  240,  215,  190,  165,  145,  125,  105,   85,   65, // 51~60
         ];
         const shuffledJrNames = [...JUNIOR_NAMES].sort(() => Math.random() - 0.5);
         const itfJuniorRankings = [];
@@ -177,14 +193,31 @@ export class RankingManager {
     updateWorldNpcs(worldData, currentYear, currentMonth) {
         if (!worldData) return;
 
-        // 模拟竞争对手 (Competitors) 的变动
+        // 模拟竞争对手 (Competitors) 的变动 — 按现积分档分级波动，保持头尾差距
         for (const npc of worldData.competitors) {
-            const choices = [
-                Math.floor(Math.random() * 61) + 20,    // 获得好成绩: randint(20, 80)
-                -(Math.floor(Math.random() * 21) + 10),  // 积分过期掉分: randint(-30, -10)
-                0                                         // 没参赛
-            ];
-            const change = choices[Math.floor(Math.random() * choices.length)];
+            const tier = npc.points >= 1800 ? 'top'
+                : npc.points >= 600 ? 'mid'
+                : npc.points >= 100 ? 'low'
+                : 'tail';
+            let change = 0;
+            const roll = Math.random();
+            if (tier === 'top') {
+                if (roll < 0.4)       change = 100 + Math.floor(Math.random() * 300);   // 冠军/亚军
+                else if (roll < 0.75) change = -(80 + Math.floor(Math.random() * 170)); // 旧分过期
+                else                  change = Math.floor(Math.random() * 61) - 30;
+            } else if (tier === 'mid') {
+                if (roll < 0.35)      change = 50 + Math.floor(Math.random() * 150);
+                else if (roll < 0.7)  change = -(40 + Math.floor(Math.random() * 110));
+                else                  change = Math.floor(Math.random() * 41) - 20;
+            } else if (tier === 'low') {
+                if (roll < 0.4)       change = 20 + Math.floor(Math.random() * 60);
+                else if (roll < 0.75) change = -(10 + Math.floor(Math.random() * 40));
+                else                  change = Math.floor(Math.random() * 17) - 8;
+            } else {
+                if (roll < 0.5)       change = 3 + Math.floor(Math.random() * 12);
+                else if (roll < 0.9)  change = -(1 + Math.floor(Math.random() * 4));
+                else                  change = 0;
+            }
             npc.points = Math.max(0, npc.points + change);
         }
 
