@@ -194,7 +194,7 @@ export class RankingManager {
     updateWorldNpcs(worldData, currentYear, currentMonth) {
         if (!worldData) return;
 
-        // 模拟竞争对手 (Competitors) 的变动 — 按现积分档分级波动，保持头尾差距
+        // 模拟竞争对手 (Competitors) 的变动 — 各档涨跌概率配平，每月期望均值 ≈ 0
         for (const npc of worldData.competitors) {
             const tier = npc.points >= 1800 ? 'top'
                 : npc.points >= 600 ? 'mid'
@@ -203,45 +203,43 @@ export class RankingManager {
             let change = 0;
             const roll = Math.random();
             if (tier === 'top') {
-                if (roll < 0.4)       change = 100 + Math.floor(Math.random() * 300);   // 冠军/亚军
-                else if (roll < 0.75) change = -(80 + Math.floor(Math.random() * 170)); // 旧分过期
+                if (roll < 0.35)      change = 80 + Math.floor(Math.random() * 220);
+                else if (roll < 0.75) change = -(80 + Math.floor(Math.random() * 200));
                 else                  change = Math.floor(Math.random() * 61) - 30;
             } else if (tier === 'mid') {
-                if (roll < 0.35)      change = 50 + Math.floor(Math.random() * 150);
-                else if (roll < 0.7)  change = -(40 + Math.floor(Math.random() * 110));
+                if (roll < 0.30)      change = 50 + Math.floor(Math.random() * 150);
+                else if (roll < 0.65) change = -(50 + Math.floor(Math.random() * 130));
                 else                  change = Math.floor(Math.random() * 41) - 20;
             } else if (tier === 'low') {
-                if (roll < 0.4)       change = 20 + Math.floor(Math.random() * 60);
-                else if (roll < 0.75) change = -(10 + Math.floor(Math.random() * 40));
+                if (roll < 0.35)      change = 20 + Math.floor(Math.random() * 60);
+                else if (roll < 0.70) change = -(20 + Math.floor(Math.random() * 50));
                 else                  change = Math.floor(Math.random() * 17) - 8;
             } else {
-                if (roll < 0.5)       change = 3 + Math.floor(Math.random() * 12);
-                else if (roll < 0.9)  change = -(1 + Math.floor(Math.random() * 4));
+                if (roll < 0.45)      change = 3 + Math.floor(Math.random() * 12);
+                else if (roll < 0.85) change = -(2 + Math.floor(Math.random() * 8));
                 else                  change = 0;
             }
             npc.points = Math.max(0, npc.points + change);
         }
 
-        // 模拟 WTA 30 人的积分变动（名额池分配，保证事件互斥）
-        // 本月名额池：1个冠军、2个好成绩、5个小涨、4个掉分、其余不变
+        // 模拟 WTA 30 人的积分变动 — 配对涨跌，事件池近似守恒
+        const _flux = (m) => m + Math.floor(Math.random() * Math.max(1, Math.floor(m * 0.3)));
         const eventPool = [
-            1500 + Math.floor(Math.random() * 500),                    // 冠军 ×1
-            300 + Math.floor(Math.random() * 500),                     // 好成绩 ×2
-            300 + Math.floor(Math.random() * 500),
-            30 + Math.floor(Math.random() * 150),                      // 小涨 ×5
-            30 + Math.floor(Math.random() * 150),
-            30 + Math.floor(Math.random() * 150),
-            30 + Math.floor(Math.random() * 150),
-            30 + Math.floor(Math.random() * 150),
-            -(300 + Math.floor(Math.random() * 1700)),                 // 掉分 ×4
-            -(300 + Math.floor(Math.random() * 1700)),
-            -(300 + Math.floor(Math.random() * 1700)),
-            -(300 + Math.floor(Math.random() * 1700)),
+            +_flux(1500), -_flux(1500),  // 冠军 / 大跌（积分过期或伤病）×1 对
+            +_flux(500),  -_flux(500),   // 大涨 / 大跌 ×2 对
+            +_flux(500),  -_flux(500),
+            +_flux(150),  -_flux(150),   // 小涨 / 小跌 ×4 对
+            +_flux(150),  -_flux(150),
+            +_flux(150),  -_flux(150),
+            +_flux(150),  -_flux(150),
         ];
-        // 其余球员本月有比赛参与，小幅浮动 ±100
-        while (eventPool.length < worldData.wta.length) {
-            eventPool.push(Math.floor(Math.random() * 101) - 100);
+        // 其余球员本月小幅浮动 ±50（同样 +/- 数量相等）
+        const fillerCount = worldData.wta.length - eventPool.length;
+        for (let i = 0; i < Math.floor(fillerCount / 2); i++) {
+            const v = 10 + Math.floor(Math.random() * 41);
+            eventPool.push(+v, -v);
         }
+        while (eventPool.length < worldData.wta.length) eventPool.push(0);
 
         // 随机打乱名额池，分配给球员
         eventPool.sort(() => Math.random() - 0.5);
@@ -249,21 +247,21 @@ export class RankingManager {
             worldData.wta[i].points = Math.max(500, worldData.wta[i].points + eventPool[i]);
         }
 
-        // 模拟 ITF Junior 60 人积分变动
+        // 模拟 ITF Junior 60 人积分变动 — 同样使用配对涨跌
         if (worldData.itf_junior && worldData.itf_junior.length > 0) {
             const jrPool = [
-                300 + Math.floor(Math.random() * 200),  // 好成绩 ×1
-                80 + Math.floor(Math.random() * 80),    // 小涨 ×4
-                80 + Math.floor(Math.random() * 80),
-                80 + Math.floor(Math.random() * 80),
-                80 + Math.floor(Math.random() * 80),
-                -(50 + Math.floor(Math.random() * 150)), // 掉分 ×3
-                -(50 + Math.floor(Math.random() * 150)),
-                -(50 + Math.floor(Math.random() * 150)),
+                +_flux(300), -_flux(300),
+                +_flux(120), -_flux(120),
+                +_flux(120), -_flux(120),
+                +_flux(60),  -_flux(60),
+                +_flux(60),  -_flux(60),
             ];
-            while (jrPool.length < worldData.itf_junior.length) {
-                jrPool.push(Math.floor(Math.random() * 21) - 10);
+            const jrFillerCount = worldData.itf_junior.length - jrPool.length;
+            for (let i = 0; i < Math.floor(jrFillerCount / 2); i++) {
+                const v = 5 + Math.floor(Math.random() * 16);
+                jrPool.push(+v, -v);
             }
+            while (jrPool.length < worldData.itf_junior.length) jrPool.push(0);
             jrPool.sort(() => Math.random() - 0.5);
             for (let i = 0; i < worldData.itf_junior.length; i++) {
                 worldData.itf_junior[i].points = Math.max(0, worldData.itf_junior[i].points + jrPool[i]);
@@ -274,37 +272,36 @@ export class RankingManager {
             }
         }
 
-        // 头部洗牌：保证榜单每月都有明显名次更替，避免高分玩家长期占位
-        // 在排名前 N 中随机抽 dropCount 个掉大分，在 N..2N 中抽 promoteCount 个涨大分
-        const _shakeup = (arr, topN, midN, dropCount, promoteCount, dropMin, dropMax, promoMin, promoMax, floor) => {
-            if (!arr || arr.length === 0) return;
-            const sortedIdx = arr
-                .map((_, i) => i)
-                .sort((a, b) => arr[b].points - arr[a].points);
-            const topPool = sortedIdx.slice(0, Math.min(topN, sortedIdx.length));
-            const midPool = sortedIdx.slice(topN, Math.min(topN + midN, sortedIdx.length));
-            const _pick = (pool, k) => {
-                const src = [...pool];
-                const out = [];
-                for (let i = 0; i < k && src.length > 0; i++) {
-                    out.push(src.splice(Math.floor(Math.random() * src.length), 1)[0]);
+        // 头部轮换：在前 topN 与中段 midN 中各抽 swapCount 个，配对交换积分。
+        // 这样总分守恒、每个分段的积分区间不变，但榜单上的名字会真实换位。
+        const _swapShake = (arr, topN, midN, swapCount) => {
+            if (!arr || arr.length < topN + midN) return;
+            const sortedIdx = arr.map((_, i) => i).sort((a, b) => arr[b].points - arr[a].points);
+            const topPool = sortedIdx.slice(0, topN);
+            const midPool = sortedIdx.slice(topN, topN + midN);
+            const _shuffle = (xs) => {
+                for (let i = xs.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [xs[i], xs[j]] = [xs[j], xs[i]];
                 }
-                return out;
+                return xs;
             };
-            for (const i of _pick(topPool, dropCount)) {
-                const drop = dropMin + Math.floor(Math.random() * (dropMax - dropMin + 1));
-                arr[i].points = Math.max(floor, arr[i].points - drop);
-            }
-            for (const i of _pick(midPool, promoteCount)) {
-                const gain = promoMin + Math.floor(Math.random() * (promoMax - promoMin + 1));
-                arr[i].points += gain;
+            const topPick = _shuffle([...topPool]).slice(0, swapCount);
+            const midPick = _shuffle([...midPool]).slice(0, swapCount);
+            const n = Math.min(topPick.length, midPick.length);
+            for (let k = 0; k < n; k++) {
+                const ti = topPick[k];
+                const mi = midPick[k];
+                const tmp = arr[ti].points;
+                arr[ti].points = arr[mi].points;
+                arr[mi].points = tmp;
             }
         };
 
-        _shakeup(worldData.competitors, 15, 30, 2, 2, 400, 900, 400, 900, 0);
-        _shakeup(worldData.wta,         10, 20, 2, 2, 800, 1800, 800, 1800, 500);
+        _swapShake(worldData.competitors, 12, 25, 2);
+        _swapShake(worldData.wta,          5, 15, 1);
         if (worldData.itf_junior) {
-            _shakeup(worldData.itf_junior, 12, 20, 2, 2, 250, 600, 250, 600, 0);
+            _swapShake(worldData.itf_junior, 10, 20, 2);
         }
 
         // 重新排序
