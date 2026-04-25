@@ -85,7 +85,7 @@ function _getSystemFromLevelCode(levelCode) {
 
 /**
  * 根据体系和年龄确定 Best-of-N 的 N 值
- * CTJ: 8, ITF_Junior: 6
+ * CTJ: 8, ITF_Junior: 8
  * ITF / WTA: 14~17岁算10站，18岁+算12站
  */
 function _getLimitForSystem(systemKey, age) {
@@ -175,18 +175,6 @@ function _autoUpdatePlayerPoints(player, eventInfo, reachedRound, points, rankin
  */
 export function simulateMatch(player, matchInfo, rankingData) {
     const baseReq = matchInfo.req_stats;
-    let oppWisMin, oppWisMax, oppPerMin, oppPerMax;
-
-    if (baseReq < 40) {
-        oppWisMin = 5; oppWisMax = 10;
-        oppPerMin = 0; oppPerMax = 5;
-    } else if (baseReq < 70) {
-        oppWisMin = 10; oppWisMax = 20;
-        oppPerMin = 5; oppPerMax = 10;
-    } else {
-        oppWisMin = 20; oppWisMax = 30;
-        oppPerMin = 10; oppPerMax = 15;
-    }
 
     const playerPower = (player.general_stats * 0.5 + player.wisdom * 0.4 + player.perseverance * 0.1) * _randUniform(0.95, 1.05);
     const rounds = ["R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
@@ -201,25 +189,19 @@ export function simulateMatch(player, matchInfo, rankingData) {
     // 比赛循环
     for (let i = 0; i < 5; i++) {
         const difficultyFactor = 1 + i * 0.06;
-        const oppStat = baseReq * difficultyFactor;
-        const oppWisdom = _randInt(oppWisMin, oppWisMax) * difficultyFactor;
-        const oppPerseverance = _randInt(oppPerMin, oppPerMax) * difficultyFactor;
-        const oppPower = (oppStat * 0.5 + oppWisdom * 0.4 + oppPerseverance * 0.1) * _randUniform(0.95, 1.05);
-
-        let effectivePlayerPower;
-        let matchupDesc;
+        let oppStat = baseReq * difficultyFactor;
+        let matchupDesc = '';
 
         if (isAdvanced) {
             const oppType = _randChoice(_OPP_TYPES);
             const [factor, desc] = _matchupFactor(playerType, oppType);
-            effectivePlayerPower = oppStat * factor;
+            oppStat = oppStat / factor;
             matchupDesc = desc;
-        } else {
-            effectivePlayerPower = playerPower;
-            matchupDesc = '';
         }
 
-        const diff = effectivePlayerPower - oppPower;
+        const oppPower = oppStat * _randUniform(0.95, 1.05);
+
+        const diff = playerPower - oppPower;
         let win;
         if (diff > 5) {
             win = true;
@@ -271,10 +253,6 @@ export function simulateMatch(player, matchInfo, rankingData) {
 export function simulateGsMatch(player, matchInfo, rankingData) {
     const baseReq = matchInfo.req_stats;
 
-    // 大满贯对手均为顶尖职业球员
-    const oppWisMin = 30, oppWisMax = 45;
-    const oppPerMin = 20, oppPerMax = 30;
-
     const playerPower = (
         player.general_stats * 0.5 +
         player.wisdom * 0.4 +
@@ -292,29 +270,18 @@ export function simulateGsMatch(player, matchInfo, rankingData) {
 
     for (let i = 0; i < 6; i++) {
         const difficultyFactor = 1 + i * 0.08;
-        const oppStat = baseReq * difficultyFactor;
-        const oppWisdom = _randInt(oppWisMin, oppWisMax) * difficultyFactor;
-        const oppPerseverance = _randInt(oppPerMin, oppPerMax) * difficultyFactor;
-        const oppPower = (
-            oppStat * _randUniform(0.82, 1.22) +
-            oppWisdom * 0.25 +
-            oppPerseverance * 0.15
-        );
-
-        let effectivePlayerPower;
-        let matchupDesc;
+        let oppStat = baseReq * difficultyFactor;
+        let matchupDesc = '';
 
         if (isAdvanced) {
             const oppType = _randChoice(_OPP_TYPES);
             const [factor, desc] = _matchupFactor(playerType, oppType);
-            effectivePlayerPower = oppStat * factor;
+            oppStat = oppStat / factor;
             matchupDesc = desc;
-        } else {
-            effectivePlayerPower = playerPower;
-            matchupDesc = '';
         }
+        const oppPower = oppStat * _randUniform(0.82, 1.22);
 
-        const diff = effectivePlayerPower - oppPower + _randUniform(-10, 10);
+        const diff = playerPower - oppPower + _randUniform(-10, 10);
         let win;
         if (diff > 10) {
             win = Math.random() < 0.90;

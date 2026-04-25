@@ -25,6 +25,9 @@ Thumbs.db
 # Logs
 *.log
 
+# Local docs
+*.md
+!README.md
 tasks/
 
 pngtrim.py
