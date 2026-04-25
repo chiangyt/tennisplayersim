@@ -6,7 +6,7 @@
       "month": 1,
       "location": "墨尔本",
       "level_code": "GS",
-      "req_stats": 230,
+      "req_stats": 150,
       "req_ranking": 100,
       "points": [70, 130, 240, 430, 780, 1300, 2000]
     },
@@ -16,7 +16,7 @@
       "month": 5,
       "location": "巴黎",
       "level_code": "GS",
-      "req_stats": 230,
+      "req_stats": 150,
       "req_ranking": 100,
       "points": [70, 130, 240, 430, 780, 1300, 2000]
     },
@@ -26,7 +26,7 @@
       "month": 7,
       "location": "伦敦",
       "level_code": "GS",
-      "req_stats": 230,
+      "req_stats": 150,
       "req_ranking": 100,
       "points": [70, 130, 240, 430, 780, 1300, 2000]
     },
@@ -36,7 +36,7 @@
       "month": 9,
       "location": "纽约",
       "level_code": "GS",
-      "req_stats": 230,
+      "req_stats": 150,
       "req_ranking": 100,
       "points": [70, 130, 240, 430, 780, 1300, 2000]
     }
@@ -48,7 +48,7 @@
       "month": 2,
       "location": "多哈",
       "level_code": "WTA1000",
-      "req_stats": 200,
+      "req_stats": 180,
       "req_ranking": 70,
       "points": [60, 120, 215, 390, 650, 1000]
     },
@@ -58,7 +58,7 @@
       "month": 2,
       "location": "迪拜",
       "level_code": "WTA1000",
-      "req_stats": 200,
+      "req_stats": 180,
       "req_ranking": 70,
       "points": [60, 120, 215, 390, 650, 1000]
     },
@@ -68,7 +68,7 @@
       "month": 3,
       "location": "印第安维尔斯",
       "level_code": "WTA1000",
-      "req_stats": 200,
+      "req_stats": 180,
       "req_ranking": 70,
       "points": [60, 120, 215, 390, 650, 1000]
     },
@@ -78,7 +78,7 @@
       "month": 3,
       "location": "迈阿密",
       "level_code": "WTA1000",
-      "req_stats": 200,
+      "req_stats": 180,
       "req_ranking": 70,
       "points": [60, 120, 215, 390, 650, 1000]
     },
@@ -88,7 +88,7 @@
       "month": 4,
       "location": "马德里",
       "level_code": "WTA1000",
-      "req_stats": 200,
+      "req_stats": 180,
       "req_ranking": 70,
       "points": [60, 120, 215, 390, 650, 1000]
     },
@@ -98,7 +98,7 @@
       "month": 5,
       "location": "罗马",
       "level_code": "WTA1000",
-      "req_stats": 200,
+      "req_stats": 180,
       "req_ranking": 70,
       "points": [60, 120, 215, 390, 650, 1000]
     },
@@ -108,7 +108,7 @@
       "month": 8,
       "location": "蒙特利尔",
       "level_code": "WTA1000",
-      "req_stats": 200,
+      "req_stats": 180,
       "req_ranking": 70,
       "points": [60, 120, 215, 390, 650, 1000]
     },
@@ -118,7 +118,7 @@
       "month": 8,
       "location": "辛辛那提",
       "level_code": "WTA1000",
-      "req_stats": 200,
+      "req_stats": 180,
       "req_ranking": 70,
       "points": [60, 120, 215, 390, 650, 1000]
     },
@@ -128,7 +128,7 @@
       "month": 9,
       "location": "北京",
       "level_code": "WTA1000",
-      "req_stats": 200,
+      "req_stats": 180,
       "req_ranking": 70,
       "points": [60, 120, 215, 390, 650, 1000]
     },
@@ -138,7 +138,7 @@
       "month": 10,
       "location": "武汉",
       "level_code": "WTA1000",
-      "req_stats": 200,
+      "req_stats": 180,
       "req_ranking": 70,
       "points": [60, 120, 215, 390, 650, 1000]
     }
@@ -150,7 +150,7 @@
       "month": 1,
       "location": "布里斯班",
       "level_code": "WTA500",
-      "req_stats": 165,
+      "req_stats": 160,
       "req_ranking": 80,
       "points": [1, 60, 108, 195, 325, 500]
     },
@@ -160,7 +160,7 @@
       "month": 1,
       "location": "阿德莱德",
       "level_code": "WTA500",
-      "req_stats": 165,
+      "req_stats": 160,
       "req_ranking": 80,
       "points": [1, 60, 108, 195, 325, 500]
     },
@@ -170,7 +170,7 @@
       "month": 4,
       "location": "斯图加特",
       "level_code": "WTA500",
-      "req_stats": 165,
+      "req_stats": 160,
       "req_ranking": 80,
       "points": [1, 60, 108, 195, 325, 500]
     },
@@ -180,7 +180,7 @@
       "month": 6,
       "location": "斯海尔托亨博斯",
       "level_code": "WTA500",
-      "req_stats": 165,
+      "req_stats": 160,
       "req_ranking": 80,
       "points": [1, 60, 108, 195, 325, 500]
     },
@@ -190,7 +190,7 @@
       "month": 6,
       "location": "柏林",
       "level_code": "WTA500",
-      "req_stats": 165,
+      "req_stats": 160,
       "req_ranking": 80,
       "points": [1, 60, 108, 195, 325, 500]
     },
@@ -200,7 +200,7 @@
       "month": 6,
       "location": "巴德洪堡",
       "level_code": "WTA500",
-      "req_stats": 165,
+      "req_stats": 160,
       "req_ranking": 80,
       "points": [1, 60, 108, 195, 325, 500]
     },
@@ -210,7 +210,7 @@
       "month": 8,
       "location": "华盛顿",
       "level_code": "WTA500",
-      "req_stats": 165,
+      "req_stats": 160,
       "req_ranking": 80,
       "points": [1, 60, 108, 195, 325, 500]
     },
@@ -220,7 +220,7 @@
       "month": 9,
       "location": "瓜达拉哈拉",
       "level_code": "WTA500",
-      "req_stats": 165,
+      "req_stats": 160,
       "req_ranking": 80,
       "points": [1, 60, 108, 195, 325, 500]
     },
@@ -230,7 +230,7 @@
       "month": 9,
       "location": "首尔",
       "level_code": "WTA500",
-      "req_stats": 165,
+      "req_stats": 160,
       "req_ranking": 80,
       "points": [1, 60, 108, 195, 325, 500]
     },
@@ -240,7 +240,7 @@
       "month": 9,
       "location": "新加坡",
       "level_code": "WTA500",
-      "req_stats": 165,
+      "req_stats": 160,
       "req_ranking": 80,
       "points": [1, 60, 108, 195, 325, 500]
     },
@@ -250,7 +250,7 @@
       "month": 10,
       "location": "大阪",
       "level_code": "WTA500",
-      "req_stats": 165,
+      "req_stats": 160,
       "req_ranking": 80,
       "points": [1, 60, 108, 195, 325, 500]
     },
@@ -260,7 +260,7 @@
       "month": 10,
       "location": "宁波",
       "level_code": "WTA500",
-      "req_stats": 165,
+      "req_stats": 160,
       "req_ranking": 80,
       "points": [1, 60, 108, 195, 325, 500]
     },
@@ -270,7 +270,7 @@
       "month": 11,
       "location": "香港",
       "level_code": "WTA500",
-      "req_stats": 165,
+      "req_stats": 160,
       "req_ranking": 80,
       "points": [1, 60, 108, 195, 325, 500]
     },
@@ -280,7 +280,7 @@
       "month": 12,
       "location": "深圳",
       "level_code": "WTA500",
-      "req_stats": 165,
+      "req_stats": 160,
       "req_ranking": 80,
       "points": [1, 60, 108, 195, 325, 500]
     }
@@ -292,7 +292,7 @@
       "month": 1,
       "location": "霍巴特",
       "level_code": "WTA250",
-      "req_stats": 135,
+      "req_stats": 130,
       "req_ranking": 150,
       "points": [1, 30, 54, 98, 163, 250]
     },
@@ -302,7 +302,7 @@
       "month": 2,
       "location": "华欣",
       "level_code": "WTA250",
-      "req_stats": 135,
+      "req_stats": 130,
       "req_ranking": 150,
       "points": [1, 30, 54, 98, 163, 250]
     },
@@ -312,7 +312,7 @@
       "month": 3,
       "location": "瓜达拉哈拉",
       "level_code": "WTA250",
-      "req_stats": 135,
+      "req_stats": 130,
       "req_ranking": 150,
       "points": [1, 30, 54, 98, 163, 250]
     },
@@ -322,7 +322,7 @@
       "month": 4,
       "location": "波哥大",
       "level_code": "WTA250",
-      "req_stats": 135,
+      "req_stats": 130,
       "req_ranking": 150,
       "points": [1, 30, 54, 98, 163, 250]
     },
@@ -332,7 +332,7 @@
       "month": 5,
       "location": "拉巴特",
       "level_code": "WTA250",
-      "req_stats": 135,
+      "req_stats": 130,
       "req_ranking": 150,
       "points": [1, 30, 54, 98, 163, 250]
     },
@@ -342,7 +342,7 @@
       "month": 6,
       "location": "诺丁汉",
       "level_code": "WTA250",
-      "req_stats": 135,
+      "req_stats": 130,
       "req_ranking": 150,
       "points": [1, 30, 54, 98, 163, 250]
     },
@@ -352,7 +352,7 @@
       "month": 6,
       "location": "伊斯特本",
       "level_code": "WTA250",
-      "req_stats": 135,
+      "req_stats": 130,
       "req_ranking": 150,
       "points": [1, 30, 54, 98, 163, 250]
     },
@@ -362,7 +362,7 @@
       "month": 7,
       "location": "洛桑",
       "level_code": "WTA250",
-      "req_stats": 135,
+      "req_stats": 130,
       "req_ranking": 150,
       "points": [1, 30, 54, 98, 163, 250]
     },
@@ -372,7 +372,7 @@
       "month": 7,
       "location": "巴勒莫",
       "level_code": "WTA250",
-      "req_stats": 135,
+      "req_stats": 130,
       "req_ranking": 150,
       "points": [1, 30, 54, 98, 163, 250]
     },
@@ -382,7 +382,7 @@
       "month": 8,
       "location": "布拉格",
       "level_code": "WTA250",
-      "req_stats": 135,
+      "req_stats": 130,
       "req_ranking": 150,
       "points": [1, 30, 54, 98, 163, 250]
     },
@@ -392,7 +392,7 @@
       "month": 9,
       "location": "郑州",
       "level_code": "WTA250",
-      "req_stats": 135,
+      "req_stats": 130,
       "req_ranking": 150,
       "points": [1, 30, 54, 98, 163, 250]
     },
@@ -402,7 +402,7 @@
       "month": 10,
       "location": "广州",
       "level_code": "WTA250",
-      "req_stats": 135,
+      "req_stats": 130,
       "req_ranking": 150,
       "points": [1, 30, 54, 98, 163, 250]
     },
@@ -412,7 +412,7 @@
       "month": 11,
       "location": "九江",
       "level_code": "WTA250",
-      "req_stats": 135,
+      "req_stats": 130,
       "req_ranking": 150,
       "points": [1, 30, 54, 98, 163, 250]
     },
@@ -422,7 +422,7 @@
       "month": 11,
       "location": "金奈",
       "level_code": "WTA250",
-      "req_stats": 135,
+      "req_stats": 130,
       "req_ranking": 150,
       "points": [1, 30, 54, 98, 163, 250]
     },
@@ -432,7 +432,7 @@
       "month": 12,
       "location": "苏梅岛",
       "level_code": "WTA250",
-      "req_stats": 135,
+      "req_stats": 130,
       "req_ranking": 150,
       "points": [1, 30, 54, 98, 163, 250]
     }

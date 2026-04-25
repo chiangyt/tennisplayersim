@@ -212,7 +212,7 @@ export function simulateMatch(player, matchInfo, rankingData) {
         if (isAdvanced) {
             const oppType = _randChoice(_OPP_TYPES);
             const [factor, desc] = _matchupFactor(playerType, oppType);
-            effectivePlayerPower = playerPower * factor;
+            effectivePlayerPower = oppStat * factor;
             matchupDesc = desc;
         } else {
             effectivePlayerPower = playerPower;
@@ -279,7 +279,7 @@ export function simulateGsMatch(player, matchInfo, rankingData) {
         player.general_stats * 0.5 +
         player.wisdom * 0.4 +
         player.perseverance * 0.1
-    ) * _randUniform(0.95, 1.05);
+    ) * _randUniform(0.90, 1.10);
 
     // 7个节点：currentRound=0 代表在 R64 出局，6 代表夺冠
     const rounds = ["R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
@@ -296,8 +296,10 @@ export function simulateGsMatch(player, matchInfo, rankingData) {
         const oppWisdom = _randInt(oppWisMin, oppWisMax) * difficultyFactor;
         const oppPerseverance = _randInt(oppPerMin, oppPerMax) * difficultyFactor;
         const oppPower = (
-            oppStat * 0.5 + oppWisdom * 0.4 + oppPerseverance * 0.1
-        ) * _randUniform(0.95, 1.05);
+            oppStat * _randUniform(0.82, 1.22) +
+            oppWisdom * 0.25 +
+            oppPerseverance * 0.15
+        );
 
         let effectivePlayerPower;
         let matchupDesc;
@@ -305,21 +307,21 @@ export function simulateGsMatch(player, matchInfo, rankingData) {
         if (isAdvanced) {
             const oppType = _randChoice(_OPP_TYPES);
             const [factor, desc] = _matchupFactor(playerType, oppType);
-            effectivePlayerPower = playerPower * factor;
+            effectivePlayerPower = oppStat * factor;
             matchupDesc = desc;
         } else {
             effectivePlayerPower = playerPower;
             matchupDesc = '';
         }
 
-        const diff = effectivePlayerPower - oppPower;
+        const diff = effectivePlayerPower - oppPower + _randUniform(-10, 10);
         let win;
-        if (diff > 5) {
-            win = true;
-        } else if (Math.abs(diff) < 5) {
+        if (diff > 10) {
+            win = Math.random() < 0.90;
+        } else if (Math.abs(diff) < 10) {
             win = Math.random() < 0.5;
         } else {
-            win = Math.random() < 0.15;
+            win = Math.random() < 0.25;
         }
 
         if (win) {
