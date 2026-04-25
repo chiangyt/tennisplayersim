@@ -222,39 +222,61 @@ export class RankingManager {
             npc.points = Math.max(0, npc.points + change);
         }
 
-        // 模拟 WTA 30 人的积分变动 — 配对涨跌，事件池近似守恒
-        const _flux = (m) => m + Math.floor(Math.random() * Math.max(1, Math.floor(m * 0.3)));
-        const eventPool = [
-            +_flux(1500), -_flux(1500),  // 冠军 / 大跌（积分过期或伤病）×1 对
-            +_flux(500),  -_flux(500),   // 大涨 / 大跌 ×2 对
-            +_flux(500),  -_flux(500),
-            +_flux(150),  -_flux(150),   // 小涨 / 小跌 ×4 对
-            +_flux(150),  -_flux(150),
-            +_flux(150),  -_flux(150),
-            +_flux(150),  -_flux(150),
+        // 模拟 WTA 30 人月度积分变动 — 真实滚动期净变化，配对涨跌守恒
+        // 含义：每名 NPC 都同时有"新成绩入账"和"去年同期赛事过期出账"，事件池给出的是净差。
+        const _flux = (mag) => mag + Math.floor(Math.random() * Math.max(1, Math.floor(mag * 0.3)));
+        const _shuffleArr = (xs) => {
+            for (let i = xs.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [xs[i], xs[j]] = [xs[j], xs[i]];
+            }
+            return xs;
+        };
+
+        // 先排序定位 top 8
+        worldData.wta.sort((a, b) => b.points - a.points);
+
+        // Top 8 专属：1 对 ±700~1100 的强波动（GS 冠军入账 / 旧 GS 集中过期）
+        const top8Pair = _shuffleArr([0, 1, 2, 3, 4, 5, 6, 7]).slice(0, 2);
+        const bigMag = 700 + Math.floor(Math.random() * 401);
+        worldData.wta[top8Pair[0]].points += bigMag;
+        worldData.wta[top8Pair[1]].points = Math.max(500, worldData.wta[top8Pair[1]].points - bigMag);
+
+        // 其余 22 人：常规配对池，单人封顶 ±520 左右
+        const otherWtaEvents = [
+            +_flux(400), -_flux(400),  // 状态起伏 ×1 对
+            +_flux(220), -_flux(220),  // 上升 / 下滑 ×2 对
+            +_flux(220), -_flux(220),
+            +_flux(120), -_flux(120),  // 微幅 ×4 对
+            +_flux(120), -_flux(120),
+            +_flux(120), -_flux(120),
+            +_flux(120), -_flux(120),
         ];
-        // 其余球员本月小幅浮动 ±50（同样 +/- 数量相等）
-        const fillerCount = worldData.wta.length - eventPool.length;
-        for (let i = 0; i < Math.floor(fillerCount / 2); i++) {
-            const v = 10 + Math.floor(Math.random() * 41);
-            eventPool.push(+v, -v);
-        }
-        while (eventPool.length < worldData.wta.length) eventPool.push(0);
-
-        // 随机打乱名额池，分配给球员
-        eventPool.sort(() => Math.random() - 0.5);
+        const otherIdx = [];
         for (let i = 0; i < worldData.wta.length; i++) {
-            worldData.wta[i].points = Math.max(500, worldData.wta[i].points + eventPool[i]);
+            if (!top8Pair.includes(i)) otherIdx.push(i);
+        }
+        const otherFillerCount = otherIdx.length - otherWtaEvents.length;
+        for (let i = 0; i < Math.floor(otherFillerCount / 2); i++) {
+            const v = 20 + Math.floor(Math.random() * 41);
+            otherWtaEvents.push(+v, -v);
+        }
+        while (otherWtaEvents.length < otherIdx.length) otherWtaEvents.push(0);
+
+        otherWtaEvents.sort(() => Math.random() - 0.5);
+        for (let k = 0; k < otherIdx.length; k++) {
+            const i = otherIdx[k];
+            worldData.wta[i].points = Math.max(500, worldData.wta[i].points + otherWtaEvents[k]);
         }
 
-        // 模拟 ITF Junior 60 人积分变动 — 同样使用配对涨跌
+        // 模拟 ITF Junior 60 人积分变动 — 同款配对涨跌，单人单月封顶 ±200
         if (worldData.itf_junior && worldData.itf_junior.length > 0) {
             const jrPool = [
-                +_flux(300), -_flux(300),
-                +_flux(120), -_flux(120),
-                +_flux(120), -_flux(120),
-                +_flux(60),  -_flux(60),
-                +_flux(60),  -_flux(60),
+                +_flux(150), -_flux(150),
+                +_flux(80),  -_flux(80),
+                +_flux(80),  -_flux(80),
+                +_flux(40),  -_flux(40),
+                +_flux(40),  -_flux(40),
             ];
             const jrFillerCount = worldData.itf_junior.length - jrPool.length;
             for (let i = 0; i < Math.floor(jrFillerCount / 2); i++) {
@@ -272,37 +294,7 @@ export class RankingManager {
             }
         }
 
-        // 头部轮换：在前 topN 与中段 midN 中各抽 swapCount 个，配对交换积分。
-        // 这样总分守恒、每个分段的积分区间不变，但榜单上的名字会真实换位。
-        const _swapShake = (arr, topN, midN, swapCount) => {
-            if (!arr || arr.length < topN + midN) return;
-            const sortedIdx = arr.map((_, i) => i).sort((a, b) => arr[b].points - arr[a].points);
-            const topPool = sortedIdx.slice(0, topN);
-            const midPool = sortedIdx.slice(topN, topN + midN);
-            const _shuffle = (xs) => {
-                for (let i = xs.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [xs[i], xs[j]] = [xs[j], xs[i]];
-                }
-                return xs;
-            };
-            const topPick = _shuffle([...topPool]).slice(0, swapCount);
-            const midPick = _shuffle([...midPool]).slice(0, swapCount);
-            const n = Math.min(topPick.length, midPick.length);
-            for (let k = 0; k < n; k++) {
-                const ti = topPick[k];
-                const mi = midPick[k];
-                const tmp = arr[ti].points;
-                arr[ti].points = arr[mi].points;
-                arr[mi].points = tmp;
-            }
-        };
-
-        _swapShake(worldData.competitors, 12, 25, 2);
-        _swapShake(worldData.wta,          5, 15, 1);
-        if (worldData.itf_junior) {
-            _swapShake(worldData.itf_junior, 10, 20, 2);
-        }
+        // 名次轮换：相邻名次小幅积分对调（彼此差距不大，对调≈名次互换），不引入额外分数
 
         // 重新排序
         worldData.competitors.sort((a, b) => b.points - a.points);
