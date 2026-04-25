@@ -1,4 +1,4 @@
-// 14岁后对手类型系统
+// 对手类型系统
 const _OPP_TYPES = ['power', 'technique', 'agility'];
 const _TYPE_ZH = { power: '力量型', technique: '技术型', agility: '敏捷型' };
 // power 克制 technique，technique 克制 agility，agility 克制 power
@@ -15,6 +15,20 @@ function _randInt(a, b) {
 
 function _randChoice(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function _specialtyTotal(player) {
+    if (!Number.isFinite(player.power) || !Number.isFinite(player.technique) || !Number.isFinite(player.agility)) {
+        const base = Number.isFinite(player.general_stats) ? player.general_stats / 3 : 10;
+        player.power = base;
+        player.technique = base;
+        player.agility = base;
+    }
+    return player.power + player.technique + player.agility;
+}
+
+function _computeGeneralStats(player) {
+    return _specialtyTotal(player) * 0.7 + player.wisdom * 0.2 + player.perseverance * 0.1;
 }
 
 /**
@@ -42,27 +56,23 @@ function _matchupFactor(playerType, oppType) {
 }
 
 /**
- * 将比赛增益分配到属性，14岁前加综合素质，14岁后随机分配到三项专项。
+ * 将比赛增益分配到三项专项。
  * 返回描述增益的字符串。
  */
 function _applyStatGain(player, gain) {
-    if (player.age >= 14 && player.power !== null) {
-        const weights = [Math.random(), Math.random(), Math.random()];
-        const totalW = weights[0] + weights[1] + weights[2];
-        const pG = gain * weights[0] / totalW;
-        const tG = gain * weights[1] / totalW;
-        const aG = gain - pG - tG;
-        player.power = Math.min(100, player.power + pG);
-        player.technique = Math.min(100, player.technique + tG);
-        player.agility = Math.min(100, player.agility + aG);
-        player.general_stats = player.power + player.technique + player.agility;
-        player.perseverance = Math.min(100, player.perseverance + gain);
-        return `力量+${pG.toFixed(2)} 技术+${tG.toFixed(2)} 敏捷+${aG.toFixed(2)} 毅力+${(gain).toFixed(2)}`;
-    } else {
-        player.general_stats = Math.min(100, player.general_stats + gain);
-        player.perseverance = Math.min(100, player.perseverance + gain);
-        return `综合素质+${gain.toFixed(2)} 毅力+${(gain).toFixed(2)}`;
-    }
+    _specialtyTotal(player);
+
+    const weights = [Math.random(), Math.random(), Math.random()];
+    const totalW = weights[0] + weights[1] + weights[2];
+    const pG = gain * weights[0] / totalW;
+    const tG = gain * weights[1] / totalW;
+    const aG = gain - pG - tG;
+    player.power = Math.min(100, player.power + pG);
+    player.technique = Math.min(100, player.technique + tG);
+    player.agility = Math.min(100, player.agility + aG);
+    player.perseverance = Math.min(100, player.perseverance + gain);
+    player.general_stats = _computeGeneralStats(player);
+    return `力量+${pG.toFixed(2)} 技术+${tG.toFixed(2)} 敏捷+${aG.toFixed(2)} 毅力+${(gain).toFixed(2)}`;
 }
 
 /**
@@ -71,11 +81,9 @@ function _applyStatGain(player, gain) {
 function _getSystemFromLevelCode(levelCode) {
     if (!levelCode) return "ITF_Junior";
     const lc = levelCode.toUpperCase();
-    if (lc.startsWith('W') && !lc.startsWith('WTA')) {
-        return "ITF";       // W15/W35/W75/W100 → ITF 女子职业体系
-    }
-    if (lc.startsWith('WTA') || lc === 'GS') {
-        return "WTA";       // WTA250/WTA500/WTA1000/GS → WTA 体系
+    // 成人职业赛事统一计入 WTA 排名池：ITF W15/W35/W75/W100 与 WTA250/500/1000/GS 是同一套积分
+    if ((lc.startsWith('W') && !lc.startsWith('WTA')) || lc.startsWith('WTA') || lc === 'GS') {
+        return "WTA";
     }
     if (lc.startsWith('J')) {
         return "ITF_Junior";
@@ -91,7 +99,7 @@ function _getSystemFromLevelCode(levelCode) {
 function _getLimitForSystem(systemKey, age) {
     if (systemKey === 'CTJ') return 8;
     if (systemKey === 'ITF_Junior') return 8;
-    if (systemKey === 'ITF' || systemKey === 'WTA') {
+    if (systemKey === 'WTA') {
         return age >= 18 ? 12 : 10;
     }
     return 6;
@@ -176,28 +184,22 @@ function _autoUpdatePlayerPoints(player, eventInfo, reachedRound, points, rankin
 export function simulateMatch(player, matchInfo, rankingData) {
     const baseReq = matchInfo.req_stats;
 
-    const playerPower = (player.general_stats * 0.6 + player.wisdom * 0.25 + player.perseverance * 0.15) * _randUniform(0.95, 1.05);
+    player.general_stats = _computeGeneralStats(player);
+    const playerPower = player.general_stats * _randUniform(0.95, 1.05);
     const rounds = ["R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
     let currentRound = 0;
     let statGain = 0.0;
     const matchLogs = [];
 
-    // 14岁后启用打法克制体系
-    const isAdvanced = player.age >= 14 && player.power !== null;
-    const playerType = isAdvanced ? _getPlayerType(player.playstyle) : null;
+    const playerType = _getPlayerType(player.playstyle);
 
     // 比赛循环
     for (let i = 0; i < 5; i++) {
         const difficultyFactor = 1 + i * 0.06;
         let oppStat = baseReq * difficultyFactor;
-        let matchupDesc = '';
-
-        if (isAdvanced) {
-            const oppType = _randChoice(_OPP_TYPES);
-            const [factor, desc] = _matchupFactor(playerType, oppType);
-            oppStat = oppStat / factor;
-            matchupDesc = desc;
-        }
+        const oppType = _randChoice(_OPP_TYPES);
+        const [factor, matchupDesc] = _matchupFactor(playerType, oppType);
+        oppStat = oppStat / factor;
 
         const oppPower = oppStat * _randUniform(0.95, 1.05);
 
@@ -252,26 +254,21 @@ export function simulateMatch(player, matchInfo, rankingData) {
 export function simulateWta1000Match(player, matchInfo, rankingData) {
     const baseReq = matchInfo.req_stats;
 
-    const playerPower = (player.general_stats * 0.6 + player.wisdom * 0.25 + player.perseverance * 0.15) * _randUniform(0.95, 1.05);
+    player.general_stats = _computeGeneralStats(player);
+    const playerPower = player.general_stats * _randUniform(0.95, 1.05);
     const rounds = ["R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
     let currentRound = 0;
     let statGain = 0.0;
     const matchLogs = [];
 
-    const isAdvanced = player.age >= 14 && player.power !== null;
-    const playerType = isAdvanced ? _getPlayerType(player.playstyle) : null;
+    const playerType = _getPlayerType(player.playstyle);
 
     for (let i = 0; i < 6; i++) {
         const difficultyFactor = 1 + i * 0.06;
         let oppStat = baseReq * difficultyFactor;
-        let matchupDesc = '';
-
-        if (isAdvanced) {
-            const oppType = _randChoice(_OPP_TYPES);
-            const [factor, desc] = _matchupFactor(playerType, oppType);
-            oppStat = oppStat / factor;
-            matchupDesc = desc;
-        }
+        const oppType = _randChoice(_OPP_TYPES);
+        const [factor, matchupDesc] = _matchupFactor(playerType, oppType);
+        oppStat = oppStat / factor;
 
         const oppPower = oppStat * _randUniform(0.95, 1.05);
 
@@ -325,11 +322,8 @@ export function simulateWta1000Match(player, matchInfo, rankingData) {
 export function simulateGsMatch(player, matchInfo, rankingData) {
     const baseReq = matchInfo.req_stats;
 
-    const playerPower = (
-        player.general_stats * 0.6 +
-        player.wisdom * 0.25 +
-        player.perseverance * 0.15
-    ) * _randUniform(0.90, 1.10);
+    player.general_stats = _computeGeneralStats(player);
+    const playerPower = player.general_stats * _randUniform(0.90, 1.10);
 
     // 8个节点：currentRound=0 代表在 R128 出局，7 代表夺冠
     const rounds = ["R128", "R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
@@ -337,20 +331,14 @@ export function simulateGsMatch(player, matchInfo, rankingData) {
     let statGain = 0.0;
     const matchLogs = [];
 
-    const isAdvanced = player.age >= 14 && player.power !== null;
-    const playerType = isAdvanced ? _getPlayerType(player.playstyle) : null;
+    const playerType = _getPlayerType(player.playstyle);
 
     for (let i = 0; i < 7; i++) {
         const difficultyFactor = 1 + i * 0.08;
         let oppStat = baseReq * difficultyFactor;
-        let matchupDesc = '';
-
-        if (isAdvanced) {
-            const oppType = _randChoice(_OPP_TYPES);
-            const [factor, desc] = _matchupFactor(playerType, oppType);
-            oppStat = oppStat / factor;
-            matchupDesc = desc;
-        }
+        const oppType = _randChoice(_OPP_TYPES);
+        const [factor, matchupDesc] = _matchupFactor(playerType, oppType);
+        oppStat = oppStat / factor;
         const oppPower = oppStat * _randUniform(0.82, 1.22);
 
         const diff = playerPower - oppPower + _randUniform(-10, 10);

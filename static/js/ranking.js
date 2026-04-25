@@ -34,8 +34,9 @@ export class RankingManager {
      * @returns {number} total effective points
      */
     refreshRanking(rankingData, currentYear, currentMonth, age) {
-        const systemKey = age < 14 ? "CTJ" : "ITF_Junior";
-        const limit = age < 14 ? 8 : 6;
+        // CTJ 报名窗口为 12–14 岁；15 岁起切到 Junior 滚动维护
+        const systemKey = age < 15 ? "CTJ" : "ITF_Junior";
+        const limit = 8;
 
         if (!rankingData[systemKey]) {
             rankingData[systemKey] = { summary: {}, point_history: [] };
@@ -273,6 +274,39 @@ export class RankingManager {
             }
         }
 
+        // 头部洗牌：保证榜单每月都有明显名次更替，避免高分玩家长期占位
+        // 在排名前 N 中随机抽 dropCount 个掉大分，在 N..2N 中抽 promoteCount 个涨大分
+        const _shakeup = (arr, topN, midN, dropCount, promoteCount, dropMin, dropMax, promoMin, promoMax, floor) => {
+            if (!arr || arr.length === 0) return;
+            const sortedIdx = arr
+                .map((_, i) => i)
+                .sort((a, b) => arr[b].points - arr[a].points);
+            const topPool = sortedIdx.slice(0, Math.min(topN, sortedIdx.length));
+            const midPool = sortedIdx.slice(topN, Math.min(topN + midN, sortedIdx.length));
+            const _pick = (pool, k) => {
+                const src = [...pool];
+                const out = [];
+                for (let i = 0; i < k && src.length > 0; i++) {
+                    out.push(src.splice(Math.floor(Math.random() * src.length), 1)[0]);
+                }
+                return out;
+            };
+            for (const i of _pick(topPool, dropCount)) {
+                const drop = dropMin + Math.floor(Math.random() * (dropMax - dropMin + 1));
+                arr[i].points = Math.max(floor, arr[i].points - drop);
+            }
+            for (const i of _pick(midPool, promoteCount)) {
+                const gain = promoMin + Math.floor(Math.random() * (promoMax - promoMin + 1));
+                arr[i].points += gain;
+            }
+        };
+
+        _shakeup(worldData.competitors, 15, 30, 2, 2, 400, 900, 400, 900, 0);
+        _shakeup(worldData.wta,         10, 20, 2, 2, 800, 1800, 800, 1800, 500);
+        if (worldData.itf_junior) {
+            _shakeup(worldData.itf_junior, 12, 20, 2, 2, 250, 600, 250, 600, 0);
+        }
+
         // 重新排序
         worldData.competitors.sort((a, b) => b.points - a.points);
         for (let i = 0; i < worldData.competitors.length; i++) {
@@ -281,6 +315,12 @@ export class RankingManager {
         worldData.wta.sort((a, b) => b.points - a.points);
         for (let i = 0; i < worldData.wta.length; i++) {
             worldData.wta[i].rank = i + 1;
+        }
+        if (worldData.itf_junior) {
+            worldData.itf_junior.sort((a, b) => b.points - a.points);
+            for (let i = 0; i < worldData.itf_junior.length; i++) {
+                worldData.itf_junior[i].rank = i + 1;
+            }
         }
     }
 }

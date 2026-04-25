@@ -6,7 +6,7 @@
       "month": 12,
       "location": "全国巡回",
       "level_code": "A2000",
-      "req_stats": 60,
+      "req_stats": 50,
       "points": [300, 500, 800, 1200, 1500, 2000]
     },
     {
@@ -15,7 +15,7 @@
       "month": 11,
       "location": "上海",
       "level_code": "A2500",
-      "req_stats": 65,
+      "req_stats": 55,
       "points": [500, 800, 1100, 1500, 2000, 2500]
     },
     {
@@ -24,7 +24,7 @@
       "month": 10,
       "location": "北京",
       "level_code": "A1500",
-      "req_stats": 55,
+      "req_stats": 45,
       "points": [200, 350, 600, 800, 1100, 1500]
     }
   ],
@@ -35,7 +35,7 @@
       "month": 6,
       "location": "泉州",
       "level_code": "B800",
-      "req_stats": 45,
+      "req_stats": 42,
       "points": [80, 160, 240, 400, 560, 800]
     },
     {
@@ -44,7 +44,7 @@
       "month": 5,
       "location": "深圳",
       "level_code": "B600",
-      "req_stats": 42,
+      "req_stats": 38,
       "points": [60, 120, 150, 300, 420, 600]
     },
     {
@@ -53,7 +53,7 @@
       "month": 4,
       "location": "珠海",
       "level_code": "B500",
-      "req_stats": 40,
+      "req_stats": 45,
       "points": [50, 100, 125, 250, 350, 500]
     },
     {
@@ -62,7 +62,7 @@
       "month": 9,
       "location": "上海",
       "level_code": "B800",
-      "req_stats": 50,
+      "req_stats": 42,
       "points": [80, 160, 240, 400, 560, 800]
     },
     {
@@ -71,7 +71,7 @@
       "month": 1,
       "location": "广州",
       "level_code": "B600",
-      "req_stats": 45,
+      "req_stats": 38,
       "points": [60, 120, 150, 300, 420, 600]
     },
     {
@@ -80,7 +80,7 @@
       "month": 2,
       "location": "武汉",
       "level_code": "B500",
-      "req_stats": 41,
+      "req_stats": 35,
       "points": [50, 100, 125, 250, 350, 500]
     },
     {
@@ -89,7 +89,7 @@
       "month": 3,
       "location": "成都",
       "level_code": "B600",
-      "req_stats": 45,
+      "req_stats": 38,
       "points": [60, 120, 150, 300, 420, 600]
     },
     {
@@ -98,7 +98,7 @@
       "month": 7,
       "location": "西安",
       "level_code": "B500",
-      "req_stats": 41,
+      "req_stats": 35,
       "points": [50, 100, 125, 250, 350, 500]
     },
     {
@@ -107,7 +107,7 @@
       "month": 8,
       "location": "南京",
       "level_code": "B600",
-      "req_stats": 45,
+      "req_stats": 38,
       "points": [60, 120, 150, 300, 420, 600]
     },
     {
@@ -116,7 +116,7 @@
       "month": 10,
       "location": "北京",
       "level_code": "B800",
-      "req_stats": 50,
+      "req_stats": 42,
       "points": [80, 160, 240, 400, 560, 800]
     },
     {
@@ -125,7 +125,7 @@
       "month": 11,
       "location": "广州",
       "level_code": "B600",
-      "req_stats": 45,
+      "req_stats": 38,
       "points": [60, 120, 150, 300, 420, 600]
     },
     {
@@ -134,7 +134,7 @@
       "month": 12,
       "location": "深圳",
       "level_code": "B800",
-      "req_stats": 50,
+      "req_stats": 42,
       "points": [80, 160, 240, 400, 560, 800]
     }
   ],
@@ -145,7 +145,7 @@
       "month": 6,
       "location": "重庆",
       "level_code": "C400",
-      "req_stats": 38,
+      "req_stats": 32,
       "points": [40, 80, 120, 200, 280, 400]
     },
     {
@@ -154,7 +154,7 @@
       "month": 5,
       "location": "梅州",
       "level_code": "C200",
-      "req_stats": 32,
+      "req_stats": 25,
       "points": [20, 40, 60, 100, 140, 200]
     },
     {
@@ -163,7 +163,7 @@
       "month": 2,
       "location": "市体育馆",
       "level_code": "C100",
-      "req_stats": 28,
+      "req_stats": 20,
       "points": [10, 20, 25, 50, 70, 100]
     },
     {
@@ -172,7 +172,7 @@
       "month": 1,
       "location": "成都",
       "level_code": "C200",
-      "req_stats": 32,
+      "req_stats": 25,
       "points": [20, 40, 60, 100, 140, 200]
     },
     {
@@ -181,7 +181,7 @@
       "month": 3,
       "location": "嘉兴",
       "level_code": "C200",
-      "req_stats": 32,
+      "req_stats": 25,
       "points": [20, 40, 60, 100, 140, 200]
     },
     {
@@ -190,7 +190,7 @@
       "month": 4,
       "location": "厦门",
       "level_code": "C200",
-      "req_stats": 32,
+      "req_stats": 25,
       "points": [20, 40, 60, 100, 140, 200]
     },
     {
@@ -199,7 +199,7 @@
       "month": 7,
       "location": "成都",
       "level_code": "C200",
-      "req_stats": 32,
+      "req_stats": 25,
       "points": [20, 40, 60, 100, 140, 200]
     },
     {
@@ -208,7 +208,7 @@
       "month": 8,
       "location": "长沙",
       "level_code": "C100",
-      "req_stats": 28,
+      "req_stats": 20,
       "points": [10, 20, 25, 50, 70, 100]
     },
     {
@@ -217,7 +217,7 @@
       "month": 9,
       "location": "昆明",
       "level_code": "C400",
-      "req_stats": 38,
+      "req_stats": 32,
       "points": [40, 80, 120, 200, 280, 400]
     },
     {
@@ -226,7 +226,7 @@
       "month": 10,
       "location": "南京",
       "level_code": "C400",
-      "req_stats": 38,
+      "req_stats": 32,
       "points": [40, 80, 120, 200, 280, 400]
     },
     {
@@ -235,7 +235,7 @@
       "month": 11,
       "location": "西安",
       "level_code": "C400",
-      "req_stats": 38,
+      "req_stats": 32,
       "points": [40, 80, 120, 200, 280, 400]
     },
     {
@@ -244,7 +244,7 @@
       "month": 12,
       "location": "杭州",
       "level_code": "C200",
-      "req_stats": 30,
+      "req_stats": 25,
       "points": [20, 40, 60, 100, 140, 200]
     }
   ]
