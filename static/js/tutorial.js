@@ -18,7 +18,7 @@ const STEPS = [
         id: 'personal-info',
         target: '.footer-menu .btn-menu:nth-child(2)',
         title: '🎾 个人信息',
-        body: '点击「个人信息」可查看身高、打法和六维属性。\n\n<b>综合能力</b> 是赛场战力，公式：\n力量+技术+敏捷  ×0.7\n智慧  ×0.2\n毅力  ×0.1\n\n力量/技术/敏捷靠专项训练涨；智慧靠录像复盘；毅力主要靠比赛累积。',
+        body: '点开后可查看身高、打法和六维属性。<b>综合能力</b>= 力量/技术/敏捷×0.7 + 智慧×0.2 + 毅力×0.1。详细公式弹窗里也会再标注一次。',
     },
     {
         id: 'open-schedule',
@@ -277,21 +277,32 @@ function _positionTooltipNear(targetEl, tooltip) {
     const vh = window.innerHeight;
     const gap = 14;
     const tooltipW = Math.min(280, vw - 16);
-    const tooltipH = 190;
 
-    let top, left;
-    if (r.bottom + gap + tooltipH <= vh) {
+    // 先固定宽度并临时显形以便测量实际高度（内容多/少都准确）
+    tooltip.style.width = tooltipW + 'px';
+    tooltip.style.left = '-9999px';
+    tooltip.style.top = '0px';
+    tooltip.style.transform = '';
+    const tooltipH = Math.min(tooltip.offsetHeight || 200, vh - 16);
+
+    const spaceBelow = vh - r.bottom - gap;
+    const spaceAbove = r.top - gap;
+
+    let top;
+    if (tooltipH <= spaceBelow) {
         top = r.bottom + gap;
+    } else if (tooltipH <= spaceAbove) {
+        top = r.top - gap - tooltipH;
     } else {
-        top = Math.max(8, r.top - gap - tooltipH);
+        // 上下都装不下，选择空间更大的一侧并贴边
+        top = spaceAbove >= spaceBelow ? 8 : Math.max(8, vh - tooltipH - 8);
     }
-    left = r.left + r.width / 2 - tooltipW / 2;
+
+    let left = r.left + r.width / 2 - tooltipW / 2;
     left = Math.max(8, Math.min(vw - tooltipW - 8, left));
 
     tooltip.style.top = top + 'px';
     tooltip.style.left = left + 'px';
-    tooltip.style.transform = '';
-    tooltip.style.width = tooltipW + 'px';
 }
 
 function _centerTooltip(tooltip) {
