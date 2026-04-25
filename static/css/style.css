@@ -497,6 +497,20 @@ body {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.75; }
 }
+.new-message-banner {
+    background: #4a90e2;
+    color: #fff;
+    font-weight: 900;
+    font-size: 14px;
+    text-align: center;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-bottom: 2px solid #000;
+    flex-shrink: 0;
+}
+.new-message-banner:active {
+    background: #2f6bb8;
+}
 
 /* ===== 新手引导 Tutorial ===== */
 #tut-overlay {

@@ -1,4 +1,4 @@
-export function render(player, breakingNews = false) {
+export function render(player, breakingNews = false, unreadMessages = 0) {
     const gainFactors = _initGainFactors(player.playstyle);
     const isRegistered = !!(player.scheduled_tournaments && player.scheduled_tournaments[String(player.month)]);
     const currentEvent = player.scheduled_tournaments ? player.scheduled_tournaments[String(player.month)] : null;
@@ -7,6 +7,10 @@ export function render(player, breakingNews = false) {
     const breakingBanner = breakingNews ? `
     <div class="breaking-news-banner" onclick="location.hash='#/news'">
         📰 好像有重大新闻，快去看看吧！
+    </div>` : '';
+    const messageBanner = unreadMessages > 0 ? `
+    <div class="new-message-banner" onclick="location.hash='#/messages'">
+        💬 你有 ${unreadMessages} 条新消息，点击查看
     </div>` : '';
 
     return `
@@ -27,6 +31,7 @@ export function render(player, breakingNews = false) {
         </div>
     </div>
     ${breakingBanner}
+    ${messageBanner}
     <div class="story-content" id="logBox">
         ${(player.log || []).map((line, i, arr) => `
             <div class="log-item ${i === arr.length - 1 ? 'fw-bold' : 'text-muted'}">${line}</div>
@@ -83,13 +88,13 @@ function _renderScheduleModal(player, isRegistered) {
         <div class="drag-item plan-action" data-id="rest" style="background:#eeeeee; color:#616161;">休息</div>`;
 
     const helpRows = [
-        ['参加比赛', '当月已报赛事', '体力 -50；按战绩获积分/奖金'],
-        ['力量专项', '体力 ≥ 25', `体力 -25；力量 +${pg}`],
-        ['技术专项', '体力 ≥ 25', `体力 -25；技术 +${tg}`],
-        ['敏捷专项', '体力 ≥ 25', `体力 -25；敏捷 +${ag}`],
-        ['录像复盘', '体力 ≥ 20', '体力 -20；智慧 +1.0'],
+        ['参加比赛', '当月已报赛事', '体力 -50；冠军 心情 +10，否则 -10；按战绩获积分/奖金'],
+        ['力量专项', '体力 ≥ 25', `体力 -25；心情 -5；力量 +${pg}`],
+        ['技术专项', '体力 ≥ 25', `体力 -25；心情 -5；技术 +${tg}`],
+        ['敏捷专项', '体力 ≥ 25', `体力 -25；心情 -5；敏捷 +${ag}`],
+        ['录像复盘', '体力 ≥ 20', '体力 -20；心情 -5；智慧 +1'],
         ['打游戏',   '体力 ≥ 10', '体力 -10；心情 +20'],
-        ['休息',     '无',         '体力 +30'],
+        ['休息',     '无',         '体力 +30；心情 +5'],
     ].map(([n, req, gain]) => `
         <tr><td class="fw-bold">${n}</td><td>${req}</td><td>${gain}</td></tr>`).join('');
     const helpHtml = `
