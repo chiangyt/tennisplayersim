@@ -94,7 +94,11 @@ function route() {
             renderPage(() => {
                 const player = state.player;
                 const breaking = hasBreakingNews(NEWS_DATA, player.year, player.month, state.readNews || []);
-                app.innerHTML = mainPage.render(player, breaking);
+                const chats = socialMgr.getAllChats(state.social);
+                const unreadMessages = Object.values(chats)
+                    .filter(c => c && typeof c === 'object')
+                    .reduce((sum, c) => sum + (c.unread_count || 0), 0);
+                app.innerHTML = mainPage.render(player, breaking, unreadMessages);
                 mainPage.init(player);
                 initMainLogic();
                 TutorialManager.maybeStart();
@@ -546,12 +550,16 @@ window.sendPlan = function () {
     const player = TennisGirl.fromJSON(state.player);
 
     if (!player.canAffordActions(actions)) {
-        player.log.push("⚠️ 体力预估不足，请重新规划计划。");
+        // 保留这次尚未执行的计划，下次打开行程安排可直接调整
+        localStorage.setItem('pending_plan', JSON.stringify(actions));
+        player.log.push("⚠️ 体力预估不足，已保留你的安排，请打开行程安排调整。");
         GameState.updatePlayer(player.toJSON());
         location.hash = '#/main';
         route();
         return;
     }
+    // 计划顺利执行，清掉残留的待执行草稿
+    localStorage.removeItem('pending_plan');
 
     const allTournaments = loadTournaments(STATIC_DATA);
     const rankingData = state.ranking;
@@ -570,21 +578,11 @@ window.sendPlan = function () {
         ? [...new Set([...readIds, ...monthNews.map(n => n._source_id)])]
         : readIds;
 
-    const _countUnread = (data) => Object.values(data || {})
-        .filter(c => c && typeof c === 'object')
-        .reduce((sum, c) => sum + (c.unread_count || 0), 0);
-    const unreadBefore = _countUnread(socialData);
-
     player.executePlan(actions, allTournaments, rankingData, socialTrigger);
     player.updateTimeAndAge();
     rm.updateWorldNpcs(worldData, player.year, player.month);
     player.ranking_points = rm.refreshRanking(rankingData, player.year, player.month, player.age);
     socialMgr.triggerMonthlyMessages(socialData);
-
-    const newMsgCount = _countUnread(socialData) - unreadBefore;
-    if (newMsgCount > 0) {
-        player.log.push(`📨 收到 ${newMsgCount} 条新消息，记得打开手机查看～`);
-    }
 
     // NPC 解锁检查（幂等），收集新解锁的剧情
     const totalMonths = (player.year - 2024) * 12 + player.month;
@@ -692,6 +690,22 @@ function initMainLogic() {
                 e.preventDefault();
             }
         });
+    }
+
+    // 恢复上次因体力不足被退回的计划
+    const pending = localStorage.getItem('pending_plan');
+    if (pending) {
+        try {
+            const ids = JSON.parse(pending);
+            if (Array.isArray(ids) && ids.length > 0) {
+                ids.forEach((id, i) => {
+                    const slot = document.getElementById(`slot-${i + 1}`);
+                    if (!slot || !id) return;
+                    const tpl = document.querySelector(`#actionPool .drag-item[data-id="${id}"]`);
+                    if (tpl) slot.innerHTML = tpl.outerHTML;
+                });
+            }
+        } catch {}
     }
 
     validatePlan();
