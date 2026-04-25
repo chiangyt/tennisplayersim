@@ -71,7 +71,7 @@ function _renderScheduleModal(player, isRegistered) {
     if (player.age < 14) {
         actionItems += `
             <div class="drag-item" data-id="train_tennis" style="background:#e3f2fd; color:#1976d2;">🎾 网球训练（体力-25 / 综合+1.5）</div>
-            <div class="drag-item" data-id="train_wisdom" style="background:#fff3e0; color:#ef6c00;">📚 录像复盘（体力-20 / 智慧+1.2）</div>`;
+            <div class="drag-item" data-id="train_wisdom" style="background:#fff3e0; color:#ef6c00;">📚 录像复盘（体力-20 / 智慧+1）</div>`;
     } else {
         const gf = _initGainFactors(player.playstyle);
         const pg = (1.2 * gf.power).toFixed(1);

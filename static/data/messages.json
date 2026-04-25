@@ -255,7 +255,7 @@
           },
           {
             "text": "看心情吧，比赛会很累。",
-            "effect": {"mood": 5},
+            "effect": {"stamina": 5},
             "next_story": {"content": "那我给你准备点能量零食，别太绷着。"}
           }
         ]
@@ -552,7 +552,7 @@
           },
           {
             "text": "那次你的反手有进步，让我跑得很累。",
-            "effect": {"mood": 5, "perseverance": 1},
+            "effect": {"mood": 5},
             "next_story": {"content": "互相学习！下次比赛希望再遇到你。"}
           }
         ]
@@ -568,7 +568,7 @@
           },
           {
             "text": "还没确定，要看积分情况。",
-            "effect": {"mood": 3},
+            "effect": {"mood": 5},
             "next_story": {"content": "明白，赛程安排不容易。有消息告诉我。"}
           }
         ]
@@ -584,7 +584,7 @@
           },
           {
             "text": "好啊，我也在研究反制切球的打法。",
-            "effect": {"wisdom": 2},
+            "effect": {"wisdom": 1},
             "next_story": {"content": "我们俩真的都很拼，互相卷对方哈哈。"}
           }
         ]
@@ -598,7 +598,7 @@
         "options": [
           {
             "text": "今天打得很激烈，谢谢你让我看到了差距！",
-            "effect": {"perseverance": 2},
+            "effect": {"mood": 5},
             "next_story": {"content": "我也是！你的底线很强，下次我不会手软。以后保持联系！"}
           },
           {
@@ -633,7 +633,7 @@
           },
           {
             "text": "确实不容易，我练了好久才入门。",
-            "effect": {"mood": 3},
+            "effect": {"mood": 5},
             "next_story": {"content": "我就说嘛，你们专业选手太厉害了。"}
           }
         ]
@@ -644,12 +644,12 @@
         "options": [
           {
             "text": "当然欢迎，你来了我会更有动力！",
-            "effect": {"mood": 5, "perseverance": 1},
+            "effect": {"mood": 5},
             "next_story": {"content": "那我一定去！给你准备个横幅哈哈。"}
           },
           {
             "text": "赛场可能比较远，你看情况吧。",
-            "effect": {"mood": 3},
+            "effect": {"mood": 5},
             "next_story": {"content": "那就下次吧，我在学校帮你祈祷！"}
           }
         ]
@@ -665,7 +665,7 @@
           },
           {
             "text": "累了就想着目标，然后就又撑过去了。",
-            "effect": {"perseverance": 2},
+            "effect": {"stamina": 5},
             "next_story": {"content": "好励志！你是我们班的榜样！"}
           }
         ]
@@ -714,7 +714,7 @@
           },
           {
             "text": "先了解一下，具体是哪方面的资源？",
-            "effect": {"wisdom": 2},
+            "effect": {"wisdom": 1},
             "next_story": {"content": "主要是装备支持和部分赛事报名费减免，后续还有更多。"}
           }
         ]
@@ -725,12 +725,12 @@
         "options": [
           {
             "text": "谢谢您告诉我，我会继续努力！",
-            "effect": {"mood": 5, "perseverance": 1},
+            "effect": {"mood": 5},
             "next_story": {"content": "好好加油，机会都是留给有准备的人的。"}
           },
           {
             "text": "压力有点大，希望不要影响比赛状态。",
-            "effect": {"mood": 3},
+            "effect": {"mood": 5},
             "next_story": {"content": "放轻松，我们关注的是长期发展，不是一两场比赛。"}
           }
         ]
@@ -746,7 +746,7 @@
           },
           {
             "text": "要先看看赛程安排，不影响比赛的话可以。",
-            "effect": {"wisdom": 2},
+            "effect": {"stamina": 5},
             "next_story": {"content": "理解，运动成绩永远是第一位，我们会配合你的时间。"}
           }
         ]
@@ -760,7 +760,7 @@
         "options": [
           {
             "text": "你好，请问是通过什么渠道知道我的？",
-            "effect": {"wisdom": 3},
+            "effect": {"mood": 5},
             "next_story": {"content": "我们一直在关注国内有潜力的年轻球员，你最近的成绩让我们很感兴趣。"}
           },
           {
