@@ -32,7 +32,9 @@ Thumbs.db
 tasks/
 
 pngtrim.py
-phothos/
+photos/
+.github/
+
 
 # Python backend (kept locally, not tracked)
 *.py
