@@ -612,6 +612,23 @@ function _makeTwinPonytailsCutscene() {
     };
 }
 
+function _makeStoreSnacksCutscene() {
+    return {
+        type: 'special',
+        story: {
+            label: '特殊事件',
+            name: '便利店零食',
+            theme: '#ffd56b',
+            image: 'static/images/store.png',
+            title: '便利店零食',
+            content: '难得休息，去便利店买点零食吃。',
+            options: [
+                { text: '继续' }
+            ]
+        }
+    };
+}
+
 function _addImageMemory(player, id, story) {
     if (!story || !story.image) return false;
     player.memories = Array.isArray(player.memories) ? player.memories : [];
@@ -643,6 +660,15 @@ function _maybeTriggerTwinPonytailsEvent(player) {
 
     player.twin_ponytails_event_seen = true;
     player.log.push(`🎀 特殊事件：妈妈心血来潮给你做了新造型。`);
+    return true;
+}
+
+function _maybeTriggerStoreSnacksEvent(player) {
+    if (player.store_snacks_event_seen) return false;
+    if (player.age !== 14 || player.month !== 3) return false;
+
+    player.store_snacks_event_seen = true;
+    player.log.push(`🏪 特殊事件：难得休息，去便利店买点零食吃。`);
     return true;
 }
 
@@ -1075,6 +1101,11 @@ window.sendPlan = function () {
     if (_maybeTriggerTwinPonytailsEvent(player)) {
         const cutscene = _makeTwinPonytailsCutscene(player);
         _addImageMemory(player, 'twin_ponytails_13_2', cutscene.story);
+        newCutscenes.push(cutscene);
+    }
+    if (_maybeTriggerStoreSnacksEvent(player)) {
+        const cutscene = _makeStoreSnacksCutscene(player);
+        _addImageMemory(player, 'store_snacks_14_3', cutscene.story);
         newCutscenes.push(cutscene);
     }
     if (hadBirthday) {
