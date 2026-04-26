@@ -8,7 +8,7 @@ import { getNewsForMonth, hasBreakingNews, fillNames } from './news.js';
 
 import * as createPage from './pages/create.js';
 import * as mainPage from './pages/main-page.js';
-import * as phonePage from './pages/phone.js';
+import * as phonePage from './pages/phone.js?v=20260426-memories';
 import * as calendarPage from './pages/calendar.js';
 import * as registrationPage from './pages/registration.js';
 import * as rankingPage from './pages/ranking-page.js';
@@ -18,7 +18,7 @@ import * as newsPage from './pages/news-page.js';
 import * as savePage from './pages/save-page.js';
 import * as shopPage from './pages/shop.js';
 import * as inventoryPage from './pages/inventory.js';
-import * as memoriesPage from './pages/memories.js';
+import * as memoriesPage from './pages/memories.js?v=20260426-memories';
 import { TutorialManager } from './tutorial.js';
 
 // ========== 全局单例 ==========
