@@ -33,7 +33,7 @@ tasks/
 
 pngtrim.py
 photos/
-.github/
+
 
 
 # Python backend (kept locally, not tracked)
