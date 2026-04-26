@@ -8,6 +8,7 @@ venv/
 .venv/
 env/
 .env
+api_kay_env
 
 # IDE files
 .idea/
