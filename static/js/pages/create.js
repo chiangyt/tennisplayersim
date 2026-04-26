@@ -24,6 +24,13 @@ export function render() {
                         <input class="form-check-input ms-0 me-2" type="radio" name="style" id="style3" value="跑动防守型">
                         <label class="form-check-label" for="style3">跑动防守型 (跑不死/防守硬)</label>
                     </div>
+                    <div class="mt-3 p-3 text-start" style="background:#f8f9fa; border:2px solid #000; border-radius:12px;">
+                        <div class="fw-bold mb-2">打法克制</div>
+                        <div class="small fw-bold mb-1">底线力量型 克制 灵巧战术型</div>
+                        <div class="small fw-bold mb-1">灵巧战术型 克制 跑动防守型</div>
+                        <div class="small fw-bold mb-2">跑动防守型 克制 底线力量型</div>
+                        <div class="small text-muted">比赛中克制对手会降低对手本轮强度；被对手克制时，对手本轮强度会提高。</div>
+                    </div>
                 </div>
                 <button type="submit" class="btn w-100" style="background: var(--comic-white) !important; color: #000 !important; border: 3px solid #000 !important; border-radius: 15px !important; padding: 15px; font-weight: 900; font-size: 1.2rem; box-shadow: 4px 4px 0px #000;">开启职业生涯</button>
             </form>

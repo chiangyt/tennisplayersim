@@ -27,10 +27,10 @@ export function render(charId, char) {
     if (char.pending_title) {
         inputBarText = char.pending_title;
         inputBarClass = 'text-dark';
-    } else if (char.pending_options) {
+    } else if (char.pending_options && char.pending_options.length > 0) {
         inputBarText = '有新消息待回复...';
     } else {
-        inputBarText = '暂无回复内容...';
+        inputBarText = '目前没有可回复的消息';
     }
 
     let trayContent = '';
@@ -45,7 +45,7 @@ export function render(charId, char) {
         trayContent = `
             <div class="text-center py-4">
                 <i class="bi bi-chat-dots fs-1 text-muted d-block mb-2"></i>
-                <p class="fw-bold text-muted">目前没有可回复的内容...</p>
+                <p class="fw-bold text-muted">目前没有可回复的消息</p>
             </div>`;
     }
 

@@ -522,6 +522,92 @@ window._cutscenePickOption = function(optionIndex) {
 };
 
 // ========== sendPlan 全局函数 ==========
+function _hasDuplicateMatches(actions) {
+    return actions.filter(id => id === 'play_match').length > 1;
+}
+
+function _canAffordActionsFrom(stamina, actions) {
+    let simStamina = stamina;
+
+    for (const action of actions) {
+        let cost = 0;
+        if (action === 'play_match') {
+            cost = 50;
+        } else if (action && action.startsWith('train_')) {
+            cost = action === 'train_wisdom' ? 20 : 25;
+        } else if (action === 'play_game') {
+            cost = 10;
+        } else if (action === 'rest') {
+            simStamina = Math.min(100, simStamina + 30);
+            continue;
+        } else {
+            continue;
+        }
+
+        if (simStamina < cost) return false;
+        simStamina -= cost;
+    }
+
+    return true;
+}
+
+function _findAutoStaminaItems(player, actions) {
+    const currentStamina = Math.max(0, Math.min(100, Number.isFinite(player.stamina) ? player.stamina : 100));
+    if (_canAffordActionsFrom(currentStamina, actions)) return [];
+
+    let neededBoost = null;
+    for (let boost = 1; boost <= 100 - currentStamina; boost++) {
+        if (_canAffordActionsFrom(Math.min(100, currentStamina + boost), actions)) {
+            neededBoost = boost;
+            break;
+        }
+    }
+    if (neededBoost === null) return null;
+
+    const inventory = player.inventory || {};
+    const units = (SHOP_DATA.consumables || [])
+        .filter(item => (item.effect && item.effect.stamina > 0) && (inventory[item.id] || 0) > 0)
+        .flatMap(item => Array.from({ length: inventory[item.id] }, () => ({
+            item,
+            value: item.effect.stamina
+        })));
+
+    const states = new Map([[0, []]]);
+    for (const unit of units) {
+        const snapshot = [...states.entries()];
+        for (const [total, picked] of snapshot) {
+            const nextTotal = Math.min(100, total + unit.value);
+            const nextPicked = [...picked, unit.item];
+            const current = states.get(nextTotal);
+            if (!current || nextPicked.length < current.length) {
+                states.set(nextTotal, nextPicked);
+            }
+        }
+    }
+
+    let best = null;
+    for (const [total, items] of states.entries()) {
+        if (total < neededBoost || items.length === 0) continue;
+        if (
+            !best ||
+            items.length < best.items.length ||
+            (items.length === best.items.length && total < best.total)
+        ) {
+            best = { total, items };
+        }
+    }
+
+    return best ? best.items : null;
+}
+
+function _summarizeItems(items) {
+    const counts = new Map();
+    for (const item of items) {
+        counts.set(item.name, (counts.get(item.name) || 0) + 1);
+    }
+    return [...counts.entries()].map(([name, count]) => `${name} x${count}`).join('、');
+}
+
 window.sendPlan = function () {
     if (window.__tutorialActive) {
         // 教程模式：关闭弹窗但不实际执行计划、不推进月份
@@ -546,16 +632,50 @@ window.sendPlan = function () {
         }
     }
 
+    if (_hasDuplicateMatches(actions)) {
+        const warn = document.getElementById('dragWarn');
+        if (warn) {
+            warn.innerText = `⚠️ ${window.PLAYER_NAME}本月只能安排一次比赛。`;
+            warn.style.display = 'block';
+        }
+        return;
+    }
+
     const state = GameState.current;
     const player = TennisGirl.fromJSON(state.player);
 
     if (!player.canAffordActions(actions)) {
+        const autoItems = _findAutoStaminaItems(player, actions);
+        if (!autoItems || autoItems.length === 0) {
+            localStorage.setItem('pending_plan', JSON.stringify(actions));
+            alert(`⚠️ 体力不足，${player.name}无法支撑该计划。安排已保留。`);
+            return;
+        }
+
+        const itemSummary = _summarizeItems(autoItems);
+        const ok = confirm(`体力不足，是否自动使用 ${itemSummary} 后执行本月计划？`);
+        if (!ok) {
+            localStorage.setItem('pending_plan', JSON.stringify(actions));
+            return;
+        }
+
+        for (const item of autoItems) {
+            player.useItem(item);
+        }
+
+        if (!player.canAffordActions(actions)) {
+            localStorage.setItem('pending_plan', JSON.stringify(actions));
+            alert(`⚠️ 使用道具后体力仍不足，${player.name}无法支撑该计划。安排已保留。`);
+            GameState.updatePlayer(player.toJSON());
+            route();
+            return;
+        }
+    }
+
+    if (!player.canAffordActions(actions)) {
         // 保留这次尚未执行的计划，下次打开行程安排可直接调整
         localStorage.setItem('pending_plan', JSON.stringify(actions));
-        player.log.push("⚠️ 体力预估不足，已保留你的安排，请打开行程安排调整。");
-        GameState.updatePlayer(player.toJSON());
-        location.hash = '#/main';
-        route();
+        alert(`⚠️ 体力不足，${player.name}无法支撑该计划。安排已保留。`);
         return;
     }
     // 计划顺利执行，清掉残留的待执行草稿
@@ -614,6 +734,20 @@ window.sendPlan = function () {
 
 // ========== 月度计划 UI 初始化 ==========
 function initMainLogic() {
+    function countPlannedMatches() {
+        let count = 0;
+        for (let i = 1; i <= 4; i++) {
+            const slot = document.getElementById(`slot-${i}`);
+            const item = slot ? slot.children[0] : null;
+            if (item && item.getAttribute('data-id') === 'play_match') count++;
+        }
+        return count;
+    }
+
+    function warnDuplicateMatch() {
+        alert(`${window.PLAYER_NAME}本月只能安排一次比赛。`);
+    }
+
     // 初始化动作池拖拽
     const pool = document.getElementById('actionPool');
     if (pool && typeof Sortable !== 'undefined') {
@@ -639,6 +773,10 @@ function initMainLogic() {
                             if (child !== newItem) container.removeChild(child);
                         });
                     }
+                    if (newItem.getAttribute('data-id') === 'play_match' && countPlannedMatches() > 1) {
+                        container.removeChild(newItem);
+                        warnDuplicateMatch();
+                    }
                     if (typeof performHit === 'function') performHit();
                     validatePlan();
                 },
@@ -658,7 +796,7 @@ function initMainLogic() {
             if (actionId === 'play_match') {
                 const existingMatch = document.querySelector('.target-slot [data-id="play_match"]');
                 if (existingMatch) {
-                    alert(`${window.PLAYER_NAME}本月已经报过名了，不能参加两场比赛。`);
+                    warnDuplicateMatch();
                     return;
                 }
             }
@@ -698,9 +836,14 @@ function initMainLogic() {
         try {
             const ids = JSON.parse(pending);
             if (Array.isArray(ids) && ids.length > 0) {
+                let restoredMatch = false;
                 ids.forEach((id, i) => {
                     const slot = document.getElementById(`slot-${i + 1}`);
                     if (!slot || !id) return;
+                    if (id === 'play_match') {
+                        if (restoredMatch) id = 'rest';
+                        else restoredMatch = true;
+                    }
                     const tpl = document.querySelector(`#actionPool .drag-item[data-id="${id}"]`);
                     if (tpl) slot.innerHTML = tpl.outerHTML;
                 });
@@ -714,18 +857,16 @@ function initMainLogic() {
 // ========== 计划验证（全局）==========
 window.validatePlan = validatePlan;
 function validatePlan() {
-    const stamina = window.PLAYER_STAMINA || 100;
-    let cost = 0, count = 0;
+    let count = 0, matchCount = 0;
 
     for (let i = 1; i <= 4; i++) {
         const slot = document.getElementById(`slot-${i}`);
         const item = slot ? slot.children[0] : null;
         if (item) {
             const id = item.getAttribute('data-id');
-            if (id === 'play_match') cost += 50;
-            else if (id.startsWith('train_')) cost += (id === 'train_wisdom') ? 20 : 25;
-            else if (id === 'play_game') cost += 10;
-            else cost -= 30;
+            if (id === 'play_match') {
+                matchCount++;
+            }
             count++;
         }
     }
@@ -734,7 +875,13 @@ function validatePlan() {
     const warn = document.getElementById('dragWarn');
 
     if (count === 4) {
-        if (stamina >= cost) {
+        if (matchCount > 1) {
+            if (btn) btn.disabled = true;
+            if (warn) {
+                warn.innerText = `⚠️ ${window.PLAYER_NAME}本月只能安排一次比赛。`;
+                warn.style.display = 'block';
+            }
+        } else {
             if (window.__tutorialActive) window.dispatchEvent(new Event('tut:slots-filled'));
             if (btn) btn.disabled = false;
             if (warn) warn.style.display = 'none';
@@ -745,12 +892,6 @@ function validatePlan() {
                 if (item) currentPlan.push(item.getAttribute('data-id'));
             }
             localStorage.setItem('last_success_plan', JSON.stringify(currentPlan));
-        } else {
-            if (btn) btn.disabled = true;
-            if (warn) {
-                warn.innerText = `⚠️ 体力不足，${window.PLAYER_NAME}无法支撑该计划！`;
-                warn.style.display = 'block';
-            }
         }
     } else {
         if (btn) btn.disabled = true;
@@ -785,6 +926,7 @@ window.clearPlan = function () {
 
 window.repeatLast = function () {
     const saved = JSON.parse(localStorage.getItem('last_success_plan') || '["train_power","train_technique","rest","train_agility"]');
+    let usedMatch = false;
 
     if (saved.includes('play_match') && !window.HAS_REGISTRATION) {
         alert("⚠️ 规划失败：你上月参加了比赛，但本月尚未报名任何赛事，请重新规划行程。");
@@ -792,6 +934,10 @@ window.repeatLast = function () {
     }
 
     saved.forEach((id, i) => {
+        if (id === 'play_match') {
+            if (usedMatch) id = 'rest';
+            else usedMatch = true;
+        }
         let el = '';
         if (id === 'play_match') {
             el = `<div class="drag-item match-item plan-action" data-id="play_match">参加比赛</div>`;

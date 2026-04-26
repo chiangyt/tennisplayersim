@@ -58,6 +58,10 @@ export function render(player) {
             padding: 15px; margin-bottom: 15px;
             box-shadow: 4px 4px 0px rgba(0,0,0,0.05);
         }
+        .rank-card.me-inline {
+            background: #fff8cc;
+            border-color: #d6a900;
+        }
         .rank-num { min-width: 55px; padding-right: 10px; flex-shrink: 0; font-weight: 900; font-style: italic; color: var(--comic-purple); font-size: 1.2rem; white-space: nowrap; }
         .player-info { flex: 1; font-weight: bold; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
         .pts-val { font-weight: 900; }
@@ -189,15 +193,48 @@ export function init(playerPointsData, worldRankingData, playerYear, playerMonth
             </div>`;
     }
 
+    function _playerBadgeHtml() {
+        return `<span style="background:#ffde00;border:2px solid #000;padding:1px 5px;border-radius:5px;font-size:0.7rem;margin-left:6px;">YOU</span>`;
+    }
+
+    function _rankCardHtml(p, mode) {
+        const playerAttrs = p.isPlayer
+            ? ` onclick="showPointsDetail('${mode}')" style="cursor:pointer;"`
+            : '';
+        return `
+            <div class="rank-card ${p.isPlayer ? 'me-inline' : ''}"${playerAttrs}>
+                <div class="rank-num">#${p.displayRank}</div>
+                <div class="player-info">${p.name}${p.isPlayer ? _playerBadgeHtml() : ''}</div>
+                <div class="pts-val">${p.points}</div>
+            </div>`;
+    }
+
+    function _buildTopListWithPlayer(npcs, playerPoints, includePlayer) {
+        const rows = [...npcs]
+            .sort((a, b) => b.points - a.points)
+            .map(p => ({ ...p, isPlayer: false }));
+
+        if (includePlayer && playerPoints > 0) {
+            const playerRank = rows.filter(n => n.points > playerPoints).length + 1;
+            rows.splice(playerRank - 1, 0, {
+                name: playerName,
+                points: playerPoints,
+                isPlayer: true
+            });
+        }
+
+        return rows.slice(0, 20).map((p, index) => ({
+            ...p,
+            displayRank: index + 1
+        }));
+    }
+
     function renderCtjList() {
         const el = document.getElementById('leaderboard-ctj');
         if (!el) return;
-        el.innerHTML = ctjNpcs.slice(0, 20).map(p => `
-            <div class="rank-card">
-                <div class="rank-num">#${p.rank}</div>
-                <div class="player-info">${p.name}</div>
-                <div class="pts-val">${p.points}</div>
-            </div>`).join('');
+        const playerRank = ctjNpcs.filter(p => p.points > ctjPts).length + 1;
+        const rows = _buildTopListWithPlayer(ctjNpcs, ctjPts, playerRank <= 20);
+        el.innerHTML = rows.map(p => _rankCardHtml(p, 'ctj')).join('');
     }
 
     function renderItfJrList() {
@@ -210,35 +247,17 @@ export function init(playerPointsData, worldRankingData, playerYear, playerMonth
         const sorted = [...itfJrNpcs].sort((a, b) => b.points - a.points);
         const playerRank = sorted.filter(n => n.points > itfJrPts).length + 1;
 
-        let merged;
-        if (itfJrPts > 0 && playerRank <= sorted.length) {
-            merged = [...sorted];
-            merged.splice(playerRank - 1, 0, { rank: playerRank, name: playerName, points: itfJrPts, isPlayer: true });
-            merged = merged.slice(0, 22);
-        } else {
-            merged = sorted.slice(0, 20);
-        }
-
-        let html = merged.map(p => {
-            const youBadge = p.isPlayer
-                ? `<span style="background:#ffde00;border:2px solid #000;padding:1px 5px;border-radius:5px;font-size:0.7rem;margin-left:6px;">YOU</span>`
-                : '';
-            const cardStyle = p.isPlayer ? 'border:3px solid #ffde00;background:#fffbe6;' : '';
-            return `
-                <div class="rank-card" style="${cardStyle}">
-                    <div class="rank-num">#${p.rank}</div>
-                    <div class="player-info">${p.name}${youBadge}</div>
-                    <div class="pts-val">${p.points}</div>
-                </div>`;
-        }).join('');
+        let html = _buildTopListWithPlayer(sorted, itfJrPts, playerRank <= 20)
+            .map(p => _rankCardHtml(p, 'itfjr'))
+            .join('');
 
         if (itfJrPts > 0 && playerRank > sorted.length) {
             html += `
                 <div style="text-align:center;color:#aaa;padding:8px 0;font-size:13px;">· · ·</div>
-                <div class="rank-card" style="border:3px solid #ffde00;background:#fffbe6;">
+                <div class="rank-card me-inline">
                     <div class="rank-num">#${playerRank}</div>
                     <div class="player-info">${playerName}
-                        <span style="background:#ffde00;border:2px solid #000;padding:1px 5px;border-radius:5px;font-size:0.7rem;margin-left:6px;">YOU</span>
+                        ${_playerBadgeHtml()}
                     </div>
                     <div class="pts-val">${itfJrPts}</div>
                 </div>`;
@@ -260,35 +279,17 @@ export function init(playerPointsData, worldRankingData, playerYear, playerMonth
             rank: proRank, name: playerName, points: proTotalPts, isPlayer: true
         } : null;
 
-        let merged;
-        if (playerCard && proRank <= npcTop.length) {
-            merged = [...npcTop];
-            merged.splice(proRank - 1, 0, playerCard);
-            merged = merged.slice(0, 22);
-        } else {
-            merged = npcTop.slice(0, 20);
-        }
-
-        let html = merged.map(p => {
-            const youBadge = p.isPlayer
-                ? `<span style="background:#ffde00;border:2px solid #000;padding:1px 5px;border-radius:5px;font-size:0.7rem;margin-left:6px;">YOU</span>`
-                : '';
-            const cardStyle = p.isPlayer ? 'border:3px solid #ffde00;background:#fffbe6;' : '';
-            return `
-                <div class="rank-card" style="${cardStyle}">
-                    <div class="rank-num">#${p.rank}</div>
-                    <div class="player-info">${p.name}${youBadge}</div>
-                    <div class="pts-val">${p.points}</div>
-                </div>`;
-        }).join('');
+        let html = _buildTopListWithPlayer(npcTop, proTotalPts, !!playerCard && proRank <= 20)
+            .map(p => _rankCardHtml(p, 'pro'))
+            .join('');
 
         if (playerCard && proRank > npcTop.length) {
             html += `
                 <div style="text-align:center;color:#aaa;padding:8px 0;font-size:13px;">· · ·</div>
-                <div class="rank-card" style="border:3px solid #ffde00;background:#fffbe6;">
+                <div class="rank-card me-inline">
                     <div class="rank-num">#${proRank}${proRank >= 1500 ? '+' : ''}</div>
                     <div class="player-info">${playerName}
-                        <span style="background:#ffde00;border:2px solid #000;padding:1px 5px;border-radius:5px;font-size:0.7rem;margin-left:6px;">YOU</span>
+                        ${_playerBadgeHtml()}
                     </div>
                     <div class="pts-val">${proTotalPts}</div>
                 </div>`;
@@ -309,11 +310,13 @@ export function init(playerPointsData, worldRankingData, playerYear, playerMonth
             const rank = allComp.filter(p => p.points > ctjPts).length + 1;
             document.getElementById('my-bar-pts').innerText = ctjPts;
             document.getElementById('my-live-rank').innerText = '#' + rank;
+            stickyEl.style.display = rank <= 20 ? 'none' : 'flex';
             stickyEl.onclick = () => window.showPointsDetail('ctj');
         } else if (type === 'itfjr') {
             const rank = itfJrNpcs.filter(p => p.points > itfJrPts).length + 1;
             document.getElementById('my-bar-pts').innerText = itfJrPts;
             document.getElementById('my-live-rank').innerText = itfJrPts > 0 ? '#' + rank : '#—';
+            stickyEl.style.display = (itfJrPts > 0 && rank <= 20) ? 'none' : 'flex';
             stickyEl.onclick = () => window.showPointsDetail('itfjr');
         } else {
             const rankStr = proRank !== null
@@ -321,6 +324,7 @@ export function init(playerPointsData, worldRankingData, playerYear, playerMonth
                 : '#—';
             document.getElementById('my-bar-pts').innerText = proTotalPts;
             document.getElementById('my-live-rank').innerText = rankStr;
+            stickyEl.style.display = (proRank !== null && proRank <= 20) ? 'none' : 'flex';
             stickyEl.onclick = () => window.showPointsDetail('pro');
         }
     }

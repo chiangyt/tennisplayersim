@@ -102,7 +102,6 @@ export class TennisGirl {
                 const prize = _computePrizeMoney(matchInfo?.level_code, reachedRoundName);
                 if (prize > 0) {
                     this.money += prize;
-                    this.log.push(`💰 奖金入账：¥${prize.toLocaleString()}`);
                 }
 
                 if (reachedRoundName === "冠军") {
@@ -117,6 +116,7 @@ export class TennisGirl {
                     this.mood -= 10;
                 }
                 this.log.push(...matchLogs);
+                this.log.push(`📊 本站收益：积分 +${pEarned}，奖金 ¥${prize.toLocaleString()}`);
             } else if (act.includes("train_")) {
                 this.mood -= 5;
                 this.log.push(this.train(act.split("_")[1]));

@@ -325,7 +325,7 @@ export class SocialManager {
             if (allCandidates.length === 0) continue;
 
             const idle = char.msg_idle_months || 0;
-            const prob = Math.min(1.0, (idle + 1) * 0.35);
+            const prob = Math.min(0.60, (idle + 1) * 0.18);
 
             if (Math.random() < prob) {
                 const chosen = allCandidates[Math.floor(Math.random() * allCandidates.length)];

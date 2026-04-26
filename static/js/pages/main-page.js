@@ -200,7 +200,7 @@ function _renderScheduleModal(player, isRegistered) {
                     <div class="schedule-grid">
                         ${weekSlots}
                     </div>
-                    <div id="dragWarn" class="text-danger mt-1" style="display:none;font-size:12px;">⚠️ 体力不足，请安排休息！</div>
+                    <div id="dragWarn" class="text-danger mt-1" style="display:none;font-size:12px;"></div>
                 </div>
                 <div class="modal-footer border-0 flex-column py-2 px-3">
                     <div class="d-flex w-100 gap-2 mb-2">
