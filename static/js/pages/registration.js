@@ -5,16 +5,6 @@ const _SYS_LABELS = {
     ITF: 'ITF 职业',
     WTA: 'WTA 职业',
 };
-const _ITF_TRAVEL_FEES = {
-    W15: 5000,
-    W35: 5000,
-    W75: 8000,
-    W100: 8000,
-};
-
-function _getItfTravelFee(levelCode) {
-    return _ITF_TRAVEL_FEES[levelCode] || 0;
-}
 
 function _renderMatchCard(player, match, targetMonth, playerRanking, proRank) {
     const bookedEvent = player.scheduled_tournaments ? player.scheduled_tournaments[String(targetMonth)] : null;
@@ -49,13 +39,6 @@ function _renderMatchCard(player, match, targetMonth, playerRanking, proRank) {
             ? `职业积分 ${need}`
             : `职业积分 无门槛`;
         suggestLabel = match.req_stats != null ? `建议综合能力 ${match.req_stats}` : '';
-        const travelFee = _getItfTravelFee(match.level_code);
-        if (travelFee > 0) {
-            const travelLabel = player.has_entered_professional_itf
-                ? `差旅费 ¥${travelFee.toLocaleString()}`
-                : `首站差旅费免扣，之后 ¥${travelFee.toLocaleString()}`;
-            suggestLabel = suggestLabel ? `${suggestLabel}；${travelLabel}` : travelLabel;
-        }
     } else if (sys === 'WTA') {
         const need = match.req_ranking || 0;
         isLocked = !!match.is_rank_locked || (need > 0 && playerWtaRank > need);
@@ -272,7 +255,12 @@ export function init() {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             const tournamentId = form.getAttribute('data-tournament-id');
-            window.dispatchEvent(new CustomEvent('game:register', { detail: { tournamentId } }));
+            window.dispatchEvent(new CustomEvent('game:register', {
+                detail: {
+                    tournamentId,
+                    sourceSelector: `.register-form[data-tournament-id="${tournamentId}"]`
+                }
+            }));
         });
     });
 

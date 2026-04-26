@@ -18,6 +18,7 @@ import * as newsPage from './pages/news-page.js';
 import * as savePage from './pages/save-page.js';
 import * as shopPage from './pages/shop.js';
 import * as inventoryPage from './pages/inventory.js';
+import * as memoriesPage from './pages/memories.js';
 import { TutorialManager } from './tutorial.js';
 
 // ========== 全局单例 ==========
@@ -30,6 +31,85 @@ let BASE_MESSAGES = {};
 let SHOP_DATA = {};
 
 const app = document.getElementById('app');
+
+function _positionProfessionalIntro(targetEl, tooltip) {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const pad = 6;
+
+    if (targetEl) {
+        const r = targetEl.getBoundingClientRect();
+        document.getElementById('pro-itf-top').style.cssText =
+            `top:0;left:0;width:${vw}px;height:${Math.max(0, r.top - pad)}px`;
+        document.getElementById('pro-itf-left').style.cssText =
+            `top:${Math.max(0, r.top - pad)}px;left:0;width:${Math.max(0, r.left - pad)}px;height:${r.height + pad * 2}px`;
+        document.getElementById('pro-itf-right').style.cssText =
+            `top:${Math.max(0, r.top - pad)}px;left:${r.right + pad}px;width:${vw}px;height:${r.height + pad * 2}px`;
+        document.getElementById('pro-itf-bottom').style.cssText =
+            `top:${r.bottom + pad}px;left:0;width:${vw}px;height:${vh}px`;
+
+        targetEl.classList.add('tut-spotlight-el');
+        targetEl.dataset.proItfOrigPos = targetEl.style.position;
+        targetEl.dataset.proItfOrigZ = targetEl.style.zIndex;
+        targetEl.style.position = 'relative';
+        targetEl.style.zIndex = '10001';
+    } else {
+        document.getElementById('pro-itf-top').style.cssText =
+            `top:0;left:0;width:${vw}px;height:${vh}px`;
+        ['pro-itf-left', 'pro-itf-right', 'pro-itf-bottom'].forEach(id => {
+            document.getElementById(id).style.cssText = 'display:none';
+        });
+    }
+
+    tooltip.style.top = '50%';
+    tooltip.style.left = '50%';
+    tooltip.style.transform = 'translate(-50%, -50%)';
+    tooltip.style.width = Math.min(320, vw - 32) + 'px';
+}
+
+function _clearProfessionalIntro(targetEl) {
+    if (targetEl) {
+        targetEl.classList.remove('tut-spotlight-el');
+        targetEl.style.position = targetEl.dataset.proItfOrigPos || '';
+        targetEl.style.zIndex = targetEl.dataset.proItfOrigZ || '';
+        delete targetEl.dataset.proItfOrigPos;
+        delete targetEl.dataset.proItfOrigZ;
+    }
+    document.getElementById('pro-itf-overlay')?.remove();
+    document.getElementById('tut-tooltip')?.remove();
+}
+
+function _showProfessionalItfIntro(targetSelector, onConfirm) {
+    if (window.__tutorialActive || document.getElementById('tut-tooltip')) {
+        onConfirm();
+        return;
+    }
+
+    const targetEl = targetSelector ? document.querySelector(targetSelector) : null;
+    const overlay = document.createElement('div');
+    overlay.id = 'pro-itf-overlay';
+    overlay.innerHTML =
+        '<div class="tut-panel" id="pro-itf-top"></div>' +
+        '<div class="tut-panel" id="pro-itf-left"></div>' +
+        '<div class="tut-panel" id="pro-itf-right"></div>' +
+        '<div class="tut-panel" id="pro-itf-bottom"></div>';
+    document.body.appendChild(overlay);
+
+    const tooltip = document.createElement('div');
+    tooltip.id = 'tut-tooltip';
+    tooltip.innerHTML =
+        '<div class="tut-progress">职业阶段</div>' +
+        '<div class="tut-title">正式进入职业赛场</div>' +
+        '<div class="tut-body">从现在开始，参赛不再只是积累经验。差旅、参赛和生活成本都需要自己承担，奖金和成绩会直接影响资金状况。<br><br>第一次报名 ITF 职业赛事先不扣差旅费；之后报名 W15/W35 需要 ¥5,000，W75/W100 需要 ¥8,000。</div>' +
+        '<div class="tut-actions"><button class="tut-btn-next" id="pro-itf-ok">我知道了</button></div>';
+    document.body.appendChild(tooltip);
+
+    _positionProfessionalIntro(targetEl, tooltip);
+    document.getElementById('pro-itf-ok').addEventListener('click', () => {
+        _clearProfessionalIntro(targetEl);
+        onConfirm();
+    });
+}
 
 // ========== 启动 ==========
 async function boot() {
@@ -229,6 +309,13 @@ function route() {
             });
             break;
 
+        case 'memories':
+            renderPage(() => {
+                app.innerHTML = memoriesPage.render(state.player);
+                memoriesPage.init(state.player);
+            });
+            break;
+
         default:
             // 未知路由 → 主页
             location.hash = state ? '#/main' : '#/create';
@@ -266,6 +353,7 @@ function setupGameEvents() {
     // 报名赛事
     window.addEventListener('game:register', (e) => {
         const tournamentId = parseInt(e.detail.tournamentId, 10);
+        const sourceSelector = e.detail.sourceSelector;
         const state = GameState.current;
         const player = TennisGirl.fromJSON(state.player);
         const allData = loadTournaments(STATIC_DATA);
@@ -280,12 +368,26 @@ function setupGameEvents() {
             return;
         }
 
-        if (selectedEvent) {
-            player.applyForTournament(selectedEvent);
+        const finishRegistration = () => {
+            const result = player.applyForTournament(selectedEvent);
             GameState.updatePlayer(player.toJSON());
-        }
+            if (result && result.ok !== false) {
+                location.hash = '#/main';
+            } else {
+                route();
+            }
+        };
 
-        location.hash = '#/main';
+        if (selectedEvent) {
+            const isFirstProfessionalItf = ['W15', 'W35', 'W75', 'W100'].includes(selectedEvent.level_code)
+                && !player.has_entered_professional_itf;
+            if (isFirstProfessionalItf) {
+                _showProfessionalItfIntro(sourceSelector, finishRegistration);
+                return;
+            }
+
+            finishRegistration();
+        }
     });
 
     // 聊天回复
@@ -431,6 +533,7 @@ function _makeBirthdayCutscene(player) {
             label: '特殊事件',
             name: '新的生日',
             theme: '#ffd56b',
+            icon: 'birthday',
             image: 'static/images/birthday.png',
             title: '新的一年',
             content: `祝${player.name}生日快乐！你今年 ${player.age} 岁了，离职业梦想又近了一步。`,
@@ -441,6 +544,108 @@ function _makeBirthdayCutscene(player) {
     };
 }
 
+function _makeCtjHardWinCutscene(player) {
+    return {
+        type: 'special',
+        story: {
+            label: '特殊事件',
+            name: '艰难取胜',
+            theme: '#ffd56b',
+            image: 'static/images/win_hard.png',
+            title: '艰难取胜',
+            content: `${player.name}在比赛中顶住了最胶着的局面。那些差点被逆转的回合，最后都变成了继续咬住比分的底气。毅力 +5。`,
+            options: [
+                { text: '继续' }
+            ]
+        }
+    };
+}
+
+function _makeItfJuniorFlightCutscene(player) {
+    return {
+        type: 'special',
+        story: {
+            label: '特殊事件',
+            name: '第一次出国比赛',
+            theme: '#ffd56b',
+            image: 'static/images/plane.png',
+            title: '第一次坐飞机出国比赛',
+            content: `${player.name}第一次坐上飞机，去国外参加 ITF Junior 比赛。舷窗外的云层、陌生的机场和新的对手，让这场旅程变成了真正走向世界的开始。`,
+            options: [
+                { text: '继续' }
+            ]
+        }
+    };
+}
+
+function _makeShanghaiTripCutscene(player) {
+    return {
+        type: 'special',
+        story: {
+            label: '特殊事件',
+            name: '上海旅行',
+            theme: '#ffd56b',
+            image: 'static/images/shanghai.png',
+            title: '暑假的上海',
+            content: `暑假和妈妈去了上海。外滩的风、热闹的街道和难得放松的几天，成为训练之外很珍贵的一段记忆。`,
+            options: [
+                { text: '继续' }
+            ]
+        }
+    };
+}
+
+function _makeTwinPonytailsCutscene() {
+    return {
+        type: 'special',
+        story: {
+            label: '特殊事件',
+            name: '新造型',
+            theme: '#ffd56b',
+            image: 'static/images/twin_ponytails.png',
+            title: '新造型',
+            content: '妈妈心血来潮非要给我做新造型',
+            options: [
+                { text: '继续' }
+            ]
+        }
+    };
+}
+
+function _addImageMemory(player, id, story) {
+    if (!story || !story.image) return false;
+    player.memories = Array.isArray(player.memories) ? player.memories : [];
+    if (player.memories.some(memory => memory.id === id)) return false;
+
+    player.memories.push({
+        id,
+        title: story.title || story.name || '特殊事件',
+        image: story.image,
+        content: story.content || '',
+        year: player.year,
+        month: player.month
+    });
+    return true;
+}
+
+function _maybeTriggerShanghaiTripEvent(player) {
+    if (player.shanghai_trip_event_seen) return false;
+    if (player.age !== 12 || player.month !== 7) return false;
+
+    player.shanghai_trip_event_seen = true;
+    player.log.push(`🌆 特殊事件：暑假和妈妈去了上海旅游。`);
+    return true;
+}
+
+function _maybeTriggerTwinPonytailsEvent(player) {
+    if (player.twin_ponytails_event_seen) return false;
+    if (player.age !== 13 || player.month !== 2) return false;
+
+    player.twin_ponytails_event_seen = true;
+    player.log.push(`🎀 特殊事件：妈妈心血来潮给你做了新造型。`);
+    return true;
+}
+
 function _renderSpecialCutscene(cutscene) {
     const story = cutscene.story;
     const options = story.options || [];
@@ -448,6 +653,16 @@ function _renderSpecialCutscene(cutscene) {
         <button class="cs-special-btn" onclick="window._cutscenePickOption(${i})">
             ${opt.text}
         </button>`).join('');
+    const iconSvg = story.icon === 'birthday'
+        ? `<svg width="30" height="30" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17 30h30v18H17z" stroke="#000" stroke-width="5" stroke-linejoin="round"/>
+                        <path d="M21 30c0 5 6 5 6 0 0 5 6 5 6 0 0 5 6 5 6 0 0 5 6 5 6 0" stroke="#000" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M25 22h14" stroke="#000" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M32 22V11" stroke="#000" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M32 7c-5 5-5 9 0 12 5-3 5-7 0-12z" stroke="#000" stroke-width="4" stroke-linejoin="round"/>
+                        <path d="M12 50h40" stroke="#000" stroke-width="5" stroke-linecap="round"/>
+                    </svg>`
+        : '';
 
     const el = document.createElement('div');
     el.id = 'cutscene-overlay';
@@ -520,14 +735,7 @@ function _renderSpecialCutscene(cutscene) {
         <div class="cs-special-card">
             <div style="display:flex;align-items:center;gap:12px;">
                 <div class="cs-special-icon" aria-hidden="true">
-                    <svg width="30" height="30" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M17 30h30v18H17z" stroke="#000" stroke-width="5" stroke-linejoin="round"/>
-                        <path d="M21 30c0 5 6 5 6 0 0 5 6 5 6 0 0 5 6 5 6 0 0 5 6 5 6 0" stroke="#000" stroke-width="4" stroke-linecap="round"/>
-                        <path d="M25 22h14" stroke="#000" stroke-width="5" stroke-linecap="round"/>
-                        <path d="M32 22V11" stroke="#000" stroke-width="5" stroke-linecap="round"/>
-                        <path d="M32 7c-5 5-5 9 0 12 5-3 5-7 0-12z" stroke="#000" stroke-width="4" stroke-linejoin="round"/>
-                        <path d="M12 50h40" stroke="#000" stroke-width="5" stroke-linecap="round"/>
-                    </svg>
+                    ${iconSvg}
                 </div>
                 <div>
                     <div style="font-weight:900;font-size:15px;">${story.title}</div>
@@ -849,7 +1057,31 @@ window.sendPlan = function () {
     // NPC 解锁检查（幂等），收集新解锁的剧情
     const totalMonths = (player.year - 2024) * 12 + player.month;
     const newCutscenes = [...(state.pending_cutscenes || [])];
-    if (hadBirthday) newCutscenes.push(_makeBirthdayCutscene(player));
+    if (player.just_triggered_ctj_hard_win_event) {
+        const cutscene = _makeCtjHardWinCutscene(player);
+        _addImageMemory(player, 'ctj_hard_win', cutscene.story);
+        newCutscenes.push(cutscene);
+    }
+    if (player.just_triggered_itf_junior_flight_event) {
+        const cutscene = _makeItfJuniorFlightCutscene(player);
+        _addImageMemory(player, 'itf_junior_first_flight', cutscene.story);
+        newCutscenes.push(cutscene);
+    }
+    if (_maybeTriggerShanghaiTripEvent(player)) {
+        const cutscene = _makeShanghaiTripCutscene(player);
+        _addImageMemory(player, 'shanghai_trip_12_7', cutscene.story);
+        newCutscenes.push(cutscene);
+    }
+    if (_maybeTriggerTwinPonytailsEvent(player)) {
+        const cutscene = _makeTwinPonytailsCutscene(player);
+        _addImageMemory(player, 'twin_ponytails_13_2', cutscene.story);
+        newCutscenes.push(cutscene);
+    }
+    if (hadBirthday) {
+        const cutscene = _makeBirthdayCutscene(player);
+        _addImageMemory(player, `birthday_${player.age}`, cutscene.story);
+        newCutscenes.push(cutscene);
+    }
     const _c1 = (player.just_reached_semifinal || player.just_won_championship)
         ? socialMgr.unlockNpc(socialData, 'rival_player', 'rival_unlock') : null;
     if (_c1 && _c1.story) newCutscenes.push(_c1);

@@ -19,6 +19,7 @@ const _ITF_TRAVEL_FEES = {
 const _STD_ROUNDS = ["R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
 const _WTA1000_ROUNDS = ["R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
 const _GS_ROUNDS  = ["R128", "R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
+const _CTJ_HARD_WIN_EVENT_CHANCE = 0.3;
 function _computePrizeMoney(levelCode, roundName) {
     if (!levelCode) return 0;
     const table = _PRIZE_TABLES[levelCode];
@@ -32,6 +33,16 @@ function _computePrizeMoney(levelCode, roundName) {
 
 function _computeItfTravelFee(levelCode) {
     return _ITF_TRAVEL_FEES[levelCode] || 0;
+}
+
+function _isCtjEvent(matchInfo) {
+    const levelCode = String(matchInfo?.level_code || '').toUpperCase();
+    return /^[ABC]\d+/.test(levelCode);
+}
+
+function _isItfJuniorEvent(matchInfo) {
+    const levelCode = String(matchInfo?.level_code || '').toUpperCase();
+    return levelCode.startsWith('J');
 }
 
 export class TennisGirl {
@@ -50,6 +61,7 @@ export class TennisGirl {
         this.money = 500;
         this.inventory = {};
         this.purchased_gifts = [];
+        this.memories = [];
         this.height = 165.0;
 
         // Core attributes: general_stats is the weighted comprehensive ability.
@@ -67,6 +79,8 @@ export class TennisGirl {
         this.scheduled_tournaments = {};
         this.first_champion_sent = false;
         this.has_entered_professional_itf = false;
+        this.ctj_hard_win_event_seen = false;
+        this.itf_junior_flight_event_seen = false;
     }
 
     _initGainFactors(style) {
@@ -125,6 +139,8 @@ export class TennisGirl {
                 }
                 this.log.push(...matchLogs);
                 this.log.push(`📊 本站收益：积分 +${pEarned}，奖金 ¥${prize.toLocaleString()}`);
+                this._maybeTriggerCtjHardWinEvent(matchInfo, reachedRoundName);
+                this._maybeTriggerItfJuniorFlightEvent(matchInfo);
             } else if (act.includes("train_")) {
                 this.mood -= 5;
                 this.log.push(this.train(act.split("_")[1]));
@@ -229,14 +245,15 @@ export class TennisGirl {
         }
 
         const travelFee = _computeItfTravelFee(eventData.level_code);
+        let showProfessionalItfIntro = false;
         if (travelFee > 0) {
             if (!this.has_entered_professional_itf) {
                 this.has_entered_professional_itf = true;
-                this.log.push(`🎾 第一次报名 ITF 职业赛事：从现在开始，你正式进入需要自负盈亏的职业阶段。差旅、参赛和生活成本都要靠成绩与奖金支撑；这次首站先不扣差旅费。`);
+                showProfessionalItfIntro = true;
             } else {
                 if (this.money < travelFee) {
                     this.log.push(`⚠️ 报名失败：${eventData.name} 需要 ¥${travelFee.toLocaleString()} 差旅费，当前资金不足。`);
-                    return false;
+                    return { ok: false };
                 }
                 this.money -= travelFee;
                 this.log.push(`🚆 ITF 参赛差旅费支出：¥${travelFee.toLocaleString()}。`);
@@ -252,7 +269,7 @@ export class TennisGirl {
         };
 
         this.log.push(`📅 报名成功！已预定 ${targetMonth}月 ${eventData.name}。记得在行程中安排 ⚡参加比赛（体力-50），请确保届时体力充足。`);
-        return true;
+        return { ok: true, showProfessionalItfIntro };
     }
 
     clearPastTournaments() {
@@ -344,6 +361,28 @@ export class TennisGirl {
         this.general_stats = this._computeGeneralStats();
     }
 
+    _maybeTriggerCtjHardWinEvent(matchInfo, reachedRoundName) {
+        if (this.ctj_hard_win_event_seen || !_isCtjEvent(matchInfo)) return false;
+        if (reachedRoundName === _STD_ROUNDS[0]) return false;
+        if (Math.random() >= _CTJ_HARD_WIN_EVENT_CHANCE) return false;
+
+        this.ctj_hard_win_event_seen = true;
+        this.just_triggered_ctj_hard_win_event = true;
+        this.perseverance = Math.min(100, this.perseverance + 5);
+        this._recalculateGeneralStats();
+        this.log.push(`🌟 特殊事件：${this.name}在CTJ赛场艰难取胜，毅力 +5。`);
+        return true;
+    }
+
+    _maybeTriggerItfJuniorFlightEvent(matchInfo) {
+        if (this.itf_junior_flight_event_seen || !_isItfJuniorEvent(matchInfo)) return false;
+
+        this.itf_junior_flight_event_seen = true;
+        this.just_triggered_itf_junior_flight_event = true;
+        this.log.push(`✈️ 特殊事件：第一次坐飞机出国参加 ITF Junior 比赛。`);
+        return true;
+    }
+
     _normalizeSpecialtyStats() {
         const hasSpecialties = Number.isFinite(this.power)
             && Number.isFinite(this.technique)
@@ -359,7 +398,7 @@ export class TennisGirl {
     }
 
     toJSON() {
-        const excludedKeys = new Set(['gain_factors', 'just_won_championship', 'just_reached_semifinal']);
+        const excludedKeys = new Set(['gain_factors', 'just_won_championship', 'just_reached_semifinal', 'just_triggered_ctj_hard_win_event', 'just_triggered_itf_junior_flight_event']);
         const data = {};
         for (const [k, v] of Object.entries(this)) {
             if (!excludedKeys.has(k)) {

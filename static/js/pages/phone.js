@@ -120,6 +120,7 @@ export function render(player, totalUnread) {
         .icon-rank { background-color: var(--color-rank) !important; }
         .icon-shop { background-color: #ffc8dd !important; }
         .icon-inv  { background-color: #cdb4db !important; }
+        .icon-memory { background-color: #c7f9cc !important; }
         .phone-bottom {
             flex-shrink: 0;
             display: flex;
@@ -195,6 +196,10 @@ export function render(player, totalUnread) {
                 <a href="#/shop" class="app-item">
                     <div class="app-icon icon-shop">🛍️</div>
                     <span class="app-name">商城</span>
+                </a>
+                <a href="#/memories" class="app-item">
+                    <div class="app-icon icon-memory">📷</div>
+                    <span class="app-name">回忆</span>
                 </a>
                 <a href="#/inventory" class="app-item">
                     <div class="app-icon icon-inv">🎒</div>
