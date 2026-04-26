@@ -424,16 +424,157 @@ function setupGameEvents() {
 }
 
 // ========== 解锁剧情弹窗 ==========
+function _makeBirthdayCutscene(player) {
+    return {
+        type: 'special',
+        story: {
+            label: '特殊事件',
+            name: '新的生日',
+            theme: '#ffd56b',
+            image: 'static/images/birthday.png',
+            title: '新的一年',
+            content: `祝${player.name}生日快乐！你今年 ${player.age} 岁了，离职业梦想又近了一步。`,
+            options: [
+                { text: '继续' }
+            ]
+        }
+    };
+}
+
+function _renderSpecialCutscene(cutscene) {
+    const story = cutscene.story;
+    const options = story.options || [];
+    const optBtns = options.map((opt, i) => `
+        <button class="cs-special-btn" onclick="window._cutscenePickOption(${i})">
+            ${opt.text}
+        </button>`).join('');
+
+    const el = document.createElement('div');
+    el.id = 'cutscene-overlay';
+    el.style.cssText = 'position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.65);display:flex;align-items:center;justify-content:center;padding:10px;';
+    el.innerHTML = `
+        <style>
+            @keyframes _csPop { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+            .cs-special-card {
+                width: min(360px, calc(100vw - 20px));
+                background: #fff;
+                border: 4px solid #000;
+                border-radius: 16px;
+                box-shadow: 8px 8px 0 rgba(0,0,0,0.75);
+                padding: 18px 20px 22px;
+                animation: _csPop 0.22s ease;
+            }
+            .cs-special-icon {
+                width: 46px; height: 46px;
+                border: 3px solid #000;
+                border-radius: 50%;
+                background: #ffd56b;
+                display: flex; align-items: center; justify-content: center;
+                flex-shrink: 0;
+                box-shadow: 2px 2px 0 #000;
+            }
+            .cs-special-badge {
+                display: inline-block;
+                background: #ffe48a;
+                border: 2px solid #000;
+                border-radius: 6px;
+                padding: 2px 10px;
+                font-size: 11px;
+                font-weight: 900;
+                line-height: 1.2;
+                margin-top: 6px;
+            }
+            .cs-special-image {
+                width: 100%;
+                display: block;
+                border: 3px solid #000;
+                border-radius: 9px;
+                margin: 16px 0;
+                image-rendering: pixelated;
+            }
+            .cs-special-text {
+                border: 3px solid #000;
+                border-radius: 12px;
+                padding: 14px 16px;
+                font-size: 14px;
+                font-weight: 900;
+                line-height: 1.8;
+                margin-bottom: 14px;
+                background: #fff;
+            }
+            .cs-special-btn {
+                width: 100%;
+                text-align: left;
+                padding: 12px 16px;
+                border: 4px solid #000;
+                border-radius: 12px;
+                background: #fff;
+                font-size: 14px;
+                font-weight: 900;
+                cursor: pointer;
+                color: #111;
+                box-shadow: 3px 3px 0 #000;
+            }
+            .cs-special-btn:active { transform: translate(2px, 2px); box-shadow: 0 0 0 #000; }
+        </style>
+        <div class="cs-special-card">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <div class="cs-special-icon" aria-hidden="true">
+                    <svg width="30" height="30" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17 30h30v18H17z" stroke="#000" stroke-width="5" stroke-linejoin="round"/>
+                        <path d="M21 30c0 5 6 5 6 0 0 5 6 5 6 0 0 5 6 5 6 0 0 5 6 5 6 0" stroke="#000" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M25 22h14" stroke="#000" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M32 22V11" stroke="#000" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M32 7c-5 5-5 9 0 12 5-3 5-7 0-12z" stroke="#000" stroke-width="4" stroke-linejoin="round"/>
+                        <path d="M12 50h40" stroke="#000" stroke-width="5" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div>
+                    <div style="font-weight:900;font-size:15px;">${story.title}</div>
+                    <span class="cs-special-badge">${story.label || '特殊事件'}</span>
+                </div>
+            </div>
+            <img class="cs-special-image" src="${story.image}" alt="${story.title}">
+            <div class="cs-special-text">${story.content || ''}</div>
+            <div>${optBtns}</div>
+        </div>`;
+    document.body.appendChild(el);
+}
+
 function showCutscene(cutscene, state) {
     const { charId, story } = cutscene;
-    const npc = state.social[charId];
-    if (!npc || !story) return;
+    if (!story) return;
+    const isSpecial = cutscene.type === 'special';
+    if (isSpecial) {
+        _renderSpecialCutscene(cutscene);
+        return;
+    }
+    const npc = isSpecial
+        ? {
+            name: story.name || '特别事件',
+            theme: story.theme || '#ffd56b',
+            avatar_icon: story.avatar_icon || 'bi-stars'
+        }
+        : state.social[charId];
+    if (!npc) return;
 
     const options = story.options || [];
     const optBtns = options.map((opt, i) => `
         <button class="cs-opt-btn" onclick="window._cutscenePickOption(${i})">
             ${opt.text}
         </button>`).join('');
+    const imageHtml = story.image ? `
+            <div style="
+                background:#fff;
+                border:3px solid #000;
+                border-radius:14px;
+                box-shadow:3px 3px 0px #000;
+                padding:10px;
+                margin-bottom:16px;
+                text-align:center;
+            ">
+                <img src="${story.image}" alt="${npc.name}" style="max-width:100%;width:220px;height:auto;display:block;margin:0 auto;">
+            </div>` : '';
 
     const el = document.createElement('div');
     el.id = 'cutscene-overlay';
@@ -475,9 +616,10 @@ function showCutscene(cutscene, state) {
                 </div>
                 <div>
                     <div style="font-weight:900;font-size:15px;margin-bottom:4px;">${npc.name}</div>
-                    <span style="font-size:11px;background:#ffd56b;border:2px solid #000;border-radius:5px;padding:1px 7px;font-weight:700;">✨ 新联系人</span>
+                    <span style="font-size:11px;background:#ffd56b;border:2px solid #000;border-radius:5px;padding:1px 7px;font-weight:700;">${story.label || (isSpecial ? '✨ 特别事件' : '✨ 新联系人')}</span>
                 </div>
             </div>
+            ${imageHtml}
             <div style="
                 background: #fdfaf6;
                 border: 3px solid #000;
@@ -497,12 +639,12 @@ window._cutscenePickOption = function(optionIndex) {
     const state = GameState.current;
     const cutscenes = state.pending_cutscenes || [];
     if (!cutscenes.length) return;
-    const { charId, story } = cutscenes[0];
+    const { charId, story, type } = cutscenes[0];
     const option = (story.options || [])[optionIndex];
     if (!option) return;
 
     const socialData = state.social;
-    const char = socialData[charId];
+    const char = type === 'special' ? null : socialData[charId];
     if (char) {
         if (!char.history) char.history = [];
         char.history.push({ role: 'me', content: option.text });
@@ -699,7 +841,7 @@ window.sendPlan = function () {
         : readIds;
 
     player.executePlan(actions, allTournaments, rankingData, socialTrigger);
-    player.updateTimeAndAge();
+    const hadBirthday = player.updateTimeAndAge();
     rm.updateWorldNpcs(worldData, player.year, player.month);
     player.ranking_points = rm.refreshRanking(rankingData, player.year, player.month, player.age);
     socialMgr.triggerMonthlyMessages(socialData);
@@ -707,6 +849,7 @@ window.sendPlan = function () {
     // NPC 解锁检查（幂等），收集新解锁的剧情
     const totalMonths = (player.year - 2024) * 12 + player.month;
     const newCutscenes = [...(state.pending_cutscenes || [])];
+    if (hadBirthday) newCutscenes.push(_makeBirthdayCutscene(player));
     const _c1 = (player.just_reached_semifinal || player.just_won_championship)
         ? socialMgr.unlockNpc(socialData, 'rival_player', 'rival_unlock') : null;
     if (_c1 && _c1.story) newCutscenes.push(_c1);

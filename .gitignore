@@ -8,7 +8,7 @@ venv/
 .venv/
 env/
 .env
-api_kay_env
+api_key.env
 
 # IDE files
 .idea/
@@ -32,6 +32,7 @@ Thumbs.db
 tasks/
 
 pngtrim.py
+phothos/
 
 # Python backend (kept locally, not tracked)
 *.py

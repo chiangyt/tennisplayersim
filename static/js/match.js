@@ -31,6 +31,12 @@ function _computeGeneralStats(player) {
     return _specialtyTotal(player) * 0.7 + player.wisdom * 0.2 + player.perseverance * 0.1;
 }
 
+function _roundsForPointsTable(pointsTable) {
+    return pointsTable.length === 7
+        ? ["R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"]
+        : ["R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
+}
+
 /**
  * 从 playstyle 字符串判断打法类型
  */
@@ -186,7 +192,7 @@ export function simulateMatch(player, matchInfo, rankingData) {
 
     player.general_stats = _computeGeneralStats(player);
     const playerPower = player.general_stats * _randUniform(0.95, 1.05);
-    const rounds = ["R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
+    const rounds = _roundsForPointsTable(matchInfo.points_table || []);
     let currentRound = 0;
     let statGain = 0.0;
     const matchLogs = [];
@@ -194,7 +200,7 @@ export function simulateMatch(player, matchInfo, rankingData) {
     const playerType = _getPlayerType(player.playstyle);
 
     // 比赛循环
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < rounds.length - 1; i++) {
         const difficultyFactor = 1 + i * 0.06;
         let oppStat = baseReq * difficultyFactor;
         const oppType = _randChoice(_OPP_TYPES);
@@ -227,7 +233,7 @@ export function simulateMatch(player, matchInfo, rankingData) {
         }
     }
 
-    if (currentRound === 5) {
+    if (currentRound === rounds.length - 1) {
         const bonus = 0.5;
         statGain += bonus;
         const bonusDesc = _applyStatGain(player, bonus);

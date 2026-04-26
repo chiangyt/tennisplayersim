@@ -5,6 +5,16 @@ const _SYS_LABELS = {
     ITF: 'ITF 职业',
     WTA: 'WTA 职业',
 };
+const _ITF_TRAVEL_FEES = {
+    W15: 5000,
+    W35: 5000,
+    W75: 8000,
+    W100: 8000,
+};
+
+function _getItfTravelFee(levelCode) {
+    return _ITF_TRAVEL_FEES[levelCode] || 0;
+}
 
 function _renderMatchCard(player, match, targetMonth, playerRanking, proRank) {
     const bookedEvent = player.scheduled_tournaments ? player.scheduled_tournaments[String(targetMonth)] : null;
@@ -39,6 +49,13 @@ function _renderMatchCard(player, match, targetMonth, playerRanking, proRank) {
             ? `职业积分 ${need}`
             : `职业积分 无门槛`;
         suggestLabel = match.req_stats != null ? `建议综合能力 ${match.req_stats}` : '';
+        const travelFee = _getItfTravelFee(match.level_code);
+        if (travelFee > 0) {
+            const travelLabel = player.has_entered_professional_itf
+                ? `差旅费 ¥${travelFee.toLocaleString()}`
+                : `首站差旅费免扣，之后 ¥${travelFee.toLocaleString()}`;
+            suggestLabel = suggestLabel ? `${suggestLabel}；${travelLabel}` : travelLabel;
+        }
     } else if (sys === 'WTA') {
         const need = match.req_ranking || 0;
         isLocked = !!match.is_rank_locked || (need > 0 && playerWtaRank > need);
@@ -232,7 +249,7 @@ function _buildHelpHTML() {
         <h6>🔓 报名门槛</h6>
         <ul>
             <li><strong>CTJ</strong>：看<strong>综合能力</strong>是否达到<strong>能力门槛</strong>，与积分无关。</li>
-            <li><strong>ITF Junior</strong>：独立维护一套 <strong>Junior 积分</strong>，J500 需 700，J300 需 350，逐级递减；CTJ 积分不可折算。</li>
+            <li><strong>ITF Junior</strong>：独立维护一套 <strong>Junior 积分</strong>，青少年大满贯 / J500 需 700，J300 需 350，逐级递减；CTJ 积分不可折算。</li>
             <li><strong>ITF 职业 / WTA 职业</strong>：<strong>共享同一套职业积分池</strong>（W15/W35/W75/W100 与 WTA250/500/1000/GS 都计入 WTA 排名）。ITF 类卡片看<strong>积分门槛</strong>，WTA 类卡片看<strong>世界排名</strong>名次。</li>
             <li class="text-muted" style="font-size:12px;">每张卡片下方的「建议综合能力」是该轮对手的赛事基线值，未达硬门槛但能力差太多很难赢首轮。</li>
         </ul>
@@ -241,9 +258,9 @@ function _buildHelpHTML() {
     <div class="reg-help-section">
         <h6>📊 积分与奖金</h6>
         <ul>
-            <li>比赛进入每一轮都能获得排名积分和奖金（冠军最高）。</li>
+            <li>比赛进入每一轮都能获得排名积分；青少年赛事无现金奖金，职业赛事按轮次发放奖金。</li>
             <li>每个体系独立维护积分池，<strong>滚动 12 个月</strong>内的最好 N 站成绩计入。</li>
-            <li>具体每轮可得积分与奖金可在<strong>赛季日历</strong>点击赛事查看。</li>
+            <li>具体每轮可得积分与职业赛事奖金可在<strong>赛季日历</strong>点击赛事查看。</li>
         </ul>
     </div>
 

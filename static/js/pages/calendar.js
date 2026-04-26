@@ -1,8 +1,5 @@
 // Prize money tables (CNY), aligned with character.js _PRIZE_TABLES
 const _PRIZE_TABLES = {
-    J500:   [0, 500, 1200, 2500, 5000, 8000],
-    J300:   [0, 300, 700, 1500, 3000, 5000],
-    J100:   [0, 100, 300, 700, 1500, 2500],
     W15:    [100, 800, 1600, 3000, 5500, 10000],
     W35:    [500, 1500, 3000, 6000, 10000, 20000],
     W75:    [5000, 7000, 15000, 28000, 40000, 70000],
@@ -13,12 +10,14 @@ const _PRIZE_TABLES = {
     GS:     [800000, 1000000, 2000000, 3000000, 5000000, 9000000, 17000000, 30000000],
 };
 const _STD_ROUNDS    = ["R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
+const _JGS_ROUNDS    = ["R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
 const _WTA1000_ROUNDS= ["R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
 const _GS_ROUNDS     = ["R128", "R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
 
 function _getRounds(t) {
     if (t.level_code === 'GS') return _GS_ROUNDS;
     if (t.level_code === 'WTA1000') return _WTA1000_ROUNDS;
+    if (t.level_code === 'JGS') return _JGS_ROUNDS;
     return _STD_ROUNDS;
 }
 
@@ -240,12 +239,12 @@ function _renderWTA(player, wtaData) {
 function _buildDetailHTML(t) {
     const rounds = _getRounds(t);
     const prizeArr = _PRIZE_TABLES[t.level_code] || [];
-    const isCtj = t._system === 'CTJ';
+    const hasPrize = t._system !== 'CTJ' && !(t.level_code || '').startsWith('J');
     let rowsHTML = '';
     for (let i = 0; i < rounds.length; i++) {
         const pts = t.points[i] ?? '—';
         const isChamp = i === rounds.length - 1;
-        const prizeCell = isCtj ? '' : `<td>${_fmt(prizeArr[i] || 0)}</td>`;
+        const prizeCell = hasPrize ? `<td>${_fmt(prizeArr[i] || 0)}</td>` : '';
         rowsHTML += `<tr class="${isChamp ? 'cal-champion-row' : ''}">
             <td style="font-weight:${isChamp ? 900 : 400};">${rounds[i]}${isChamp ? ' 🏆' : ''}</td>
             <td>${pts}</td>
@@ -279,12 +278,12 @@ function _buildDetailHTML(t) {
             <tr>
                 <th>轮次</th>
                 <th>排名积分</th>
-                ${isCtj ? '' : '<th>奖金</th>'}
+                ${hasPrize ? '<th>奖金</th>' : ''}
             </tr>
         </thead>
         <tbody>${rowsHTML}</tbody>
     </table>
-    ${isCtj ? '<div class="text-muted small mt-2">CTJ 青少年赛事仅提供积分与荣誉，无现金奖励。</div>' : ''}
+    ${hasPrize ? '' : '<div class="text-muted small mt-2">青少年赛事仅提供积分与荣誉，无现金奖励。</div>'}
     <button class="cal-close-btn" onclick="window._calCloseDetail()">关闭</button>`;
 }
 

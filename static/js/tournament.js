@@ -1,4 +1,5 @@
 const _ITF_JUNIOR_ENTRY_POINTS = {
+    'JGS': 700,
     'J500': 700,
     'J300': 350,
     'J200': 150,

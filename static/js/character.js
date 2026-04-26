@@ -1,9 +1,6 @@
 import { simulateMatch, simulateGsMatch, simulateWta1000Match } from './match.js';
 
 const _PRIZE_TABLES = {
-    J500:   [0, 500,   1200,  2500,  5000,  8000],
-    J300:   [0, 300,   700,   1500,  3000,  5000],
-    J100:   [0, 100,   300,   700,   1500,  2500],
     W15:    [100, 800,   1600,  3000,  5500,  10000],
     W35:    [500, 1500,  3000,  6000,  10000, 20000],
     W75:    [5000, 7000,  15000,  28000, 40000, 70000],
@@ -12,6 +9,12 @@ const _PRIZE_TABLES = {
     WTA500: [60000, 140000, 200000, 350000, 600000, 1000000],
     WTA1000: [280000, 350000, 600000, 1300000, 2500000, 4000000, 7000000],
     GS:     [800000, 1000000, 2000000, 3000000, 5000000, 9000000, 17000000, 30000000],
+};
+const _ITF_TRAVEL_FEES = {
+    W15: 5000,
+    W35: 5000,
+    W75: 8000,
+    W100: 8000,
 };
 const _STD_ROUNDS = ["R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
 const _WTA1000_ROUNDS = ["R64", "R32", "R16", "1/4决赛", "半决赛", "决赛", "冠军"];
@@ -25,6 +28,10 @@ function _computePrizeMoney(levelCode, roundName) {
         : _STD_ROUNDS;
     const idx = rounds.indexOf(roundName);
     return idx >= 0 ? (table[idx] || 0) : 0;
+}
+
+function _computeItfTravelFee(levelCode) {
+    return _ITF_TRAVEL_FEES[levelCode] || 0;
 }
 
 export class TennisGirl {
@@ -59,6 +66,7 @@ export class TennisGirl {
         this.log = ["12岁的夏天，你的职业球员之路正式开启了。"];
         this.scheduled_tournaments = {};
         this.first_champion_sent = false;
+        this.has_entered_professional_itf = false;
     }
 
     _initGainFactors(style) {
@@ -220,6 +228,21 @@ export class TennisGirl {
             targetMonth = 1;
         }
 
+        const travelFee = _computeItfTravelFee(eventData.level_code);
+        if (travelFee > 0) {
+            if (!this.has_entered_professional_itf) {
+                this.has_entered_professional_itf = true;
+                this.log.push(`🎾 第一次报名 ITF 职业赛事：从现在开始，你正式进入需要自负盈亏的职业阶段。差旅、参赛和生活成本都要靠成绩与奖金支撑；这次首站先不扣差旅费。`);
+            } else {
+                if (this.money < travelFee) {
+                    this.log.push(`⚠️ 报名失败：${eventData.name} 需要 ¥${travelFee.toLocaleString()} 差旅费，当前资金不足。`);
+                    return false;
+                }
+                this.money -= travelFee;
+                this.log.push(`🚆 ITF 参赛差旅费支出：¥${travelFee.toLocaleString()}。`);
+            }
+        }
+
         this.scheduled_tournaments[String(targetMonth)] = {
             id: eventData.id,
             name: eventData.name,
@@ -249,7 +272,6 @@ export class TennisGirl {
             this.year += 1;
             this.age += 1;
             hadBirthday = true;
-            this.log.push(`🎂 祝${this.name}生日快乐！你今年 ${this.age} 岁了，离职业梦想又近了一步。`);
 
             // Height growth: random range per age, tapers off after 16
             const growthRanges = {
