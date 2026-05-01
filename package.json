@@ -1,0 +1,14 @@
+{
+  "name": "tennis-player-sim",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check:js": "node scripts/check-js-syntax.mjs",
+    "check:data": "node scripts/check-data.mjs",
+    "analyze:pre14": "node scripts/analyze-pre14-max.mjs",
+    "test:unit": "node scripts/run-unit-tests.mjs",
+    "test": "npm run test:unit",
+    "qa": "node scripts/run-qa.mjs"
+  }
+}
